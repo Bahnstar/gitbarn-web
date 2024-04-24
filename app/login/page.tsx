@@ -1,4 +1,3 @@
-import Link from "next/link"
 import { SubmitButton } from "./submit-button"
 import { signIn, signUp } from "../../server/handlers/auth"
 import Toaster from "@/components/Toaster"
