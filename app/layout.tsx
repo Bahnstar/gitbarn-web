@@ -1,5 +1,7 @@
 import { GeistSans } from "geist/font/sans"
+import { Toaster } from "sonner"
 import "./globals.css"
+import Footer from "@/components/Footer"
 
 const defaultUrl = process.env.VERCEL_URL
     ? `https://${process.env.VERCEL_URL}`
@@ -15,7 +17,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     return (
         <html lang="en" className={GeistSans.className}>
             <body>
-                <main className="flex min-h-screen flex-col items-center">{children}</main>
+                <main className="min-w-screen flex min-h-screen flex-col bg-gray-100">
+                    <Toaster />
+                    <div className="flex-1">{children}</div>
+                    <Footer />
+                </main>
             </body>
         </html>
     )
