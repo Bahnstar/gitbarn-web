@@ -5,6 +5,7 @@ import { redirect } from "next/navigation"
 import MobileSidebar from "./MobileSidebar"
 import NavButtons from "./NavButtons"
 import AuthButton from "./AuthButton"
+import Link from "next/link"
 
 const Sidebar = async ({ children }: Readonly<{ children: React.ReactNode }>) => {
     const supabase = createClient()
@@ -59,8 +60,8 @@ const Sidebar = async ({ children }: Readonly<{ children: React.ReactNode }>) =>
                             <NavButtons />
 
                             <li className="-mx-6 mt-auto">
-                                <a
-                                    href="#"
+                                <Link
+                                    href="/profile"
                                     className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50"
                                 >
                                     <Image
@@ -75,7 +76,7 @@ const Sidebar = async ({ children }: Readonly<{ children: React.ReactNode }>) =>
                                     />
                                     <span className="sr-only">Your profile</span>
                                     {user.email}
-                                </a>
+                                </Link>
                             </li>
                         </ul>
                     </nav>

@@ -3,6 +3,7 @@ import { Fragment, useState } from "react"
 import Image from "next/image"
 import { Dialog, Transition } from "@headlessui/react"
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline"
+import Link from "next/link"
 
 const MobileSidebar = ({ children }: Readonly<{ children: React.ReactNode }>) => {
     const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -76,7 +77,7 @@ const MobileSidebar = ({ children }: Readonly<{ children: React.ReactNode }>) =>
                 <div className="flex-1 text-sm font-semibold leading-6 text-gray-900">
                     Dashboard
                 </div>
-                <a href="#">
+                <Link href="/profile">
                     <span className="sr-only">Your profile</span>
                     <Image
                         className="h-8 w-8 rounded-full bg-gray-50"
@@ -85,7 +86,7 @@ const MobileSidebar = ({ children }: Readonly<{ children: React.ReactNode }>) =>
                         width={649}
                         height={649}
                     />
-                </a>
+                </Link>
             </div>
         </>
     )
