@@ -1,11 +1,9 @@
-import { createClient } from "@/utils/supabase/server"
+import { getCurrentUser } from "@/server/handlers/users"
 
 export default async function ProfilePage() {
-    const supabase = createClient()
-
     const {
         data: { user },
-    } = await supabase.auth.getUser()
+    } = await getCurrentUser()
 
     const email = user?.email
 
