@@ -1,3 +1,5 @@
+import { signOut } from "@/server/handlers/auth"
+import { getCurrentUser } from "@/server/handlers/users"
 import { createClient } from "@/utils/supabase/server"
 import Link from "next/link"
 import { redirect } from "next/navigation"
@@ -7,15 +9,7 @@ export default async function AuthButton() {
 
     const {
         data: { user },
-    } = await supabase.auth.getUser()
-
-    const signOut = async () => {
-        "use server"
-
-        const supabase = createClient()
-        await supabase.auth.signOut()
-        return redirect("/login")
-    }
+    } = await getCurrentUser()
 
     return user ? (
         <div className="flex items-center gap-4">

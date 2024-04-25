@@ -1,18 +1,16 @@
 import Image from "next/image"
-import { createClient } from "@/utils/supabase/server"
 import { redirect } from "next/navigation"
 
 import MobileSidebar from "./MobileSidebar"
 import NavButtons from "./NavButtons"
 import AuthButton from "./AuthButton"
 import Link from "next/link"
+import { getCurrentUser } from "@/server/handlers/users"
 
 const Sidebar = async ({ children }: Readonly<{ children: React.ReactNode }>) => {
-    const supabase = createClient()
-
     const {
         data: { user },
-    } = await supabase.auth.getUser()
+    } = await getCurrentUser()
 
     if (!user) {
         return redirect("/login")

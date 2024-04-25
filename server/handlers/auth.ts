@@ -4,10 +4,11 @@ import { headers } from "next/headers"
 import { createClient } from "../../utils/supabase/server"
 import { redirect } from "next/navigation"
 
+const supabase = createClient()
+
 export const signIn = async (formData: FormData) => {
     const email = formData.get("email") as string
     const password = formData.get("password") as string
-    const supabase = createClient()
 
     const { error } = await supabase.auth.signInWithPassword({
         email,
@@ -25,7 +26,6 @@ export const signUp = async (formData: FormData) => {
     const origin = headers().get("origin")
     const email = formData.get("email") as string
     const password = formData.get("password") as string
-    const supabase = createClient()
 
     const { error } = await supabase.auth.signUp({
         email,
@@ -40,4 +40,9 @@ export const signUp = async (formData: FormData) => {
     }
 
     return redirect("/login?message=Check email to continue sign in process")
+}
+
+export const signOut = async () => {
+    await supabase.auth.signOut()
+    return redirect("/login")
 }
