@@ -7,26 +7,26 @@ import { PostgrestSingleResponse } from "@supabase/supabase-js"
 const supabase = createClient()
 
 export const getConversations = async (): Promise<PostgrestSingleResponse<Conversation[]>> => {
-    return await supabase.from("conversations").select("*")
+    return await supabase.from("Conversations").select("*")
 }
 
 export const getConversationsByCustomerId = async (
     userId: string,
 ): Promise<PostgrestSingleResponse<Conversation[]>> => {
-    return await supabase.from("conversations").select("*").eq("customer_id", userId)
+    return await supabase.from("Conversations").select("*").eq("customer_id", userId)
 }
 
 export const getConversationsBySupportId = async (
     userId: string,
 ): Promise<PostgrestSingleResponse<Conversation[]>> => {
-    return await supabase.from("conversations").select("*").eq("support_id", userId)
+    return await supabase.from("Conversations").select("*").eq("support_id", userId)
 }
 
 export const getLastActiveConversationByCustomerId = async (
     userId: string,
 ): Promise<PostgrestSingleResponse<Conversation[]>> => {
     return await supabase
-        .from("conversations")
+        .from("Conversations")
         .select("*")
         .eq("customer_id", userId)
         .order("created_at", { ascending: false })
@@ -37,7 +37,7 @@ export const getLastActiveConversationBySupportId = async (
     userId: string,
 ): Promise<PostgrestSingleResponse<Conversation[]>> => {
     return await supabase
-        .from("conversations")
+        .from("Conversations")
         .select("*")
         .eq("support_id", userId)
         .order("created_at", { ascending: false })
@@ -47,22 +47,22 @@ export const getLastActiveConversationBySupportId = async (
 export const getConversationById = async (
     id: string,
 ): Promise<PostgrestSingleResponse<Conversation[]>> => {
-    return await supabase.from("conversations").select("*").eq("id", id)
+    return await supabase.from("Conversations").select("*").eq("id", id).limit(1)
 }
 
 export const createConversation = async (
     conversation: Conversation,
 ): Promise<PostgrestSingleResponse<Conversation[]>> => {
-    return await supabase.from("conversations").insert([conversation]).select()
+    return await supabase.from("Conversations").insert([conversation]).select()
 }
 
 export const updateConversation = async (
     id: string,
     conversation: Partial<Conversation>,
 ): Promise<PostgrestSingleResponse<Conversation[]>> => {
-    return await supabase.from("conversations").update(conversation).eq("id", id).select()
+    return await supabase.from("Conversations").update(conversation).eq("id", id).select()
 }
 
 export const deleteConversation = async (id: string): Promise<void> => {
-    await supabase.from("conversations").delete().eq("id", id)
+    await supabase.from("Conversations").delete().eq("id", id)
 }
