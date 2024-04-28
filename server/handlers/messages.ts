@@ -10,5 +10,9 @@ const supabase = createClient()
 export const getConversationMessages = async (
     conversationId: string,
 ): Promise<PostgrestSingleResponse<Message[]>> => {
-    return await supabase.from("Messages").select("*").eq("conversation_id", conversationId)
+    return await supabase
+        .from("Messages")
+        .select("*")
+        .eq("conversation_id", conversationId)
+        .order("created_at", { ascending: true })
 }
