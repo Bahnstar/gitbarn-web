@@ -49,9 +49,9 @@ const ProductsPage = () => {
                         Add Product
                     </button>
                 </div>
-                <div className="flex w-full flex-row flex-wrap gap-10">
-                    {[...products, ...products].map((product) => (
-                        <div className="hover:transition-ease-in-out card w-96 bg-base-100 shadow-lg duration-200 hover:scale-105 hover:shadow-xl">
+                <div className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 xl:gap-x-8 2xl:grid-cols-4">
+                    {[...products, ...products.slice(0, 1)].map((product) => (
+                        <div className="aspect-h-7 aspect-w-10 group block w-full overflow-hidden rounded-lg bg-base-100 shadow-lg duration-200 hover:scale-105 hover:shadow-xl">
                             <figure>
                                 <Image
                                     src={product.image}
