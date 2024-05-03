@@ -3,6 +3,6 @@ export type Conversation = {
     title?: string
     customer_id?: string
     support_id?: string
-    isActive?: boolean
+    is_active?: boolean
     readonly createdAt?: Date
 }
