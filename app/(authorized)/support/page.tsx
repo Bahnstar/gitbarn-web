@@ -16,6 +16,7 @@ export default async function SupportPage() {
     const conversation = data?.[0]
 
     const startConversation = async () => {
+        "use server"
         const conversation: Conversation = {
             title: "New Support Chat",
             customer_id: userId,
