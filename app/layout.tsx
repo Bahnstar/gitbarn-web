@@ -1,5 +1,8 @@
 import { GeistSans } from "geist/font/sans"
 import { Toaster } from "sonner"
+import { redirect } from "next/navigation"
+import { getCurrentUser } from "@/server/handlers/users"
+
 import "./globals.css"
 import Footer from "@/components/Footer"
 
@@ -9,11 +12,11 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata = {
     metadataBase: new URL(defaultUrl),
-    title: "Next.js and Supabase Starter Kit",
-    description: "The fastest way to build apps with Next.js and Supabase",
+    title: "GitBarn",
+    description: "Providing for all your GitBarn needs!",
 }
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
         <html lang="en" className={GeistSans.className}>
             <body>
