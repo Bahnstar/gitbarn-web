@@ -1,5 +1,5 @@
 import { SubmitButton } from "./submit-button"
-import { signIn, signUp } from "../../server/handlers/auth"
+import { login, signup } from "../../server/handlers/auth"
 import Toaster from "@/components/Toaster"
 
 export default function Login({ searchParams }: Readonly<{ searchParams: { message: string } }>) {
@@ -74,14 +74,14 @@ export default function Login({ searchParams }: Readonly<{ searchParams: { messa
 
                 <div className="flex flex-col gap-2">
                     <SubmitButton
-                        formAction={signIn}
+                        formAction={login}
                         className="flex w-full justify-center rounded-md bg-green-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white hover:bg-green-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-700"
                         pendingText="Signing in..."
                     >
                         Sign in
                     </SubmitButton>
                     <SubmitButton
-                        formAction={signUp}
+                        formAction={signup}
                         className="border-1 flex w-full justify-center rounded-md border border-green-700 px-3 py-1.5 text-sm font-semibold leading-6 text-green-700 hover:bg-green-600 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-700"
                         pendingText="Signing up..."
                     >

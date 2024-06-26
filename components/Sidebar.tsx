@@ -5,6 +5,7 @@ import MobileSidebar from "./MobileSidebar"
 import NavButtons from "./NavButtons"
 import AuthButton from "./AuthButton"
 import Link from "next/link"
+import { logout } from "@/server/handlers/auth"
 import { getCurrentUser } from "@/server/handlers/users"
 
 const Sidebar = async ({ children }: Readonly<{ children: React.ReactNode }>) => {
@@ -75,6 +76,13 @@ const Sidebar = async ({ children }: Readonly<{ children: React.ReactNode }>) =>
                                     <span className="sr-only">Your profile</span>
                                     {user.email}
                                 </Link>
+                            </li>
+                            <li>
+                                <form action={logout}>
+                                    <button className="rounded-md bg-btn-background px-4 py-2 no-underline hover:bg-btn-background-hover">
+                                        Logout
+                                    </button>
+                                </form>
                             </li>
                         </ul>
                     </nav>

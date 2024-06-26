@@ -2,8 +2,8 @@
 
 import { createClient } from "@/utils/supabase/server"
 
-const supabase = createClient()
-
 export const getCurrentUser = async () => {
+    const supabase = createClient()
+    
     return await supabase.auth.getUser()
 }
