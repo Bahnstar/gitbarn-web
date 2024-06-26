@@ -74,14 +74,12 @@ const MobileSidebar = ({ children }: Readonly<{ children: React.ReactNode }>) =>
                     <span className="sr-only">Open sidebar</span>
                     <Bars3Icon className="h-6 w-6" aria-hidden="true" />
                 </button>
-                <div className="flex-1 text-sm font-semibold leading-6 text-gray-900">
-                    Dashboard
-                </div>
+                <div className="flex-1 text-sm font-semibold leading-6 text-gray-900">GitBarn</div>
                 <Link href="/profile">
                     <span className="sr-only">Your profile</span>
                     <Image
                         className="h-8 w-8 rounded-full bg-gray-50"
-                        src="https://media.licdn.com/dms/image/C4E03AQEaaSLgp3H6VA/profile-displayphoto-shrink_800_800/0/1662947150082?e=1718841600&v=beta&t=4lXvmUxTtmRg4iVDL61qfIeuPnMtF0hkjUFGOfRTpdY"
+                        src="https://media.licdn.com/dms/image/C4E03AQEaaSLgp3H6VA/profile-displayphoto-shrink_800_800/0/1662947150082?e=1724889600&v=beta&t=QNqztJneRwSArik9KqPKyu-Z2YJyAzu8omvrA9KRq8I"
                         alt=""
                         width={649}
                         height={649}

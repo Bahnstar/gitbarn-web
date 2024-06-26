@@ -48,7 +48,7 @@ export default async function SupportPage() {
                         If you have any questions or need assistance, our support team is here to
                         help.
                     </p>
-                    <form action={startConversation} method="post">
+                    <form action={startConversation}>
                         <button className="btn bg-green-600 text-white hover:bg-green-700">
                             Chat with a Support Agent
                         </button>
@@ -71,7 +71,7 @@ export default async function SupportPage() {
                         help.
                     </p>
 
-                    <form action={continueConversation} method="post">
+                    <form action={continueConversation}>
                         <button className="btn bg-green-600 text-white hover:bg-green-700">
                             Enter Chat
                         </button>
