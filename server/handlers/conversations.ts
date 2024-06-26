@@ -52,8 +52,8 @@ export const getConversationById = async (
 
 export const createConversation = async (
     conversation: Conversation,
-): Promise<PostgrestSingleResponse<Conversation[]>> => {
-    return await supabase.from("Conversations").insert([conversation]).select()
+): Promise<PostgrestSingleResponse<Conversation>> => {
+    return await supabase.from("Conversations").insert([conversation]).select().limit(1).single()
 }
 
 export const updateConversation = async (
