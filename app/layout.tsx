@@ -1,7 +1,5 @@
 import { GeistSans } from "geist/font/sans"
 import { Toaster } from "sonner"
-import { redirect } from "next/navigation"
-import { getCurrentUser } from "@/server/handlers/users"
 
 import "./globals.css"
 import Footer from "@/components/Footer"
