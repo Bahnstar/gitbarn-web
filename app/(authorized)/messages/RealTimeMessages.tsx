@@ -11,9 +11,9 @@ type Props = {
     userId?: string
 }
 
-const supabase = createClient()
-
 const RealTimeMessages = (props: Props) => {
+    const supabase = createClient()
+
     const [messages, setMessages] = useState<Message[]>(props.messages)
     const [message, setMessage] = useState<string>("")
 

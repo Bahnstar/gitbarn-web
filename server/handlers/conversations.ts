@@ -46,8 +46,8 @@ export const getLastActiveConversationBySupportId = async (
 
 export const getConversationById = async (
     id: string,
-): Promise<PostgrestSingleResponse<Conversation[]>> => {
-    return await supabase.from("Conversations").select("*").eq("id", id).limit(1)
+): Promise<PostgrestSingleResponse<Conversation>> => {
+    return await supabase.from("Conversations").select("*").eq("id", id).limit(1).single()
 }
 
 export const createConversation = async (
