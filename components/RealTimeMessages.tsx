@@ -45,7 +45,7 @@ const RealTimeMessages = (props: Props) => {
                 },
                 (payload) => {
                     setMessages((prev) => [...prev, payload.new as Message])
-                    chatboxRef.current?.scrollIntoView(false)
+                    chatboxRef.current?.scrollIntoView({ behavior: "smooth", block: "end" })
                 },
             )
             .on(
@@ -84,47 +84,51 @@ const RealTimeMessages = (props: Props) => {
     }, [supabase, messages, setMessages])
 
     return (
-        <div className="flex flex-col gap-y-4">
-            <h1 className="text-center text-2xl md:text-left">{props.conversation.title}</h1>
-            <div
-                className="overflow-aut flex min-h-[90vh] flex-1 scroll-mb-20 flex-col-reverse"
-                ref={chatboxRef}
-            >
-                {messages?.map((message) => (
-                    <div
-                        key={message.id}
-                        className={`chat ${message.user_id === props.userId ? "chat-end" : "chat-start"}`}
-                    >
-                        <div className="chat-header">
-                            {message.user_id === props.userId ? "You" : "Support Agent"}
-                            <time className="text-xs opacity-50">
-                                {"  " + message.created_at?.toString().slice(0, 10)}
-                            </time>
-                        </div>
-                        <div
-                            className={`chat-bubble ${message.user_id === props.userId ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-800"}`}
-                        >
-                            {message.text}
-                        </div>
-                        <div className="chat-footer opacity-50">Delivered</div>
+        <div className="flex h-full flex-1 flex-col gap-y-4">
+            <h1 className="sticky top-0 z-30 bg-gray-100 py-5 text-center text-2xl md:text-left">
+                {props.conversation.title}
+            </h1>
+            <div className="flex flex-1 flex-col">
+                <div className="flex flex-1 flex-col-reverse">
+                    <div>
+                        {messages?.map((message) => (
+                            <div
+                                key={message.id}
+                                className={`chat ${message.user_id === props.userId ? "chat-end" : "chat-start"}`}
+                            >
+                                <div className="chat-header">
+                                    {message.user_id === props.userId ? "You" : "Support Agent"}
+                                    <time className="text-xs opacity-50">
+                                        {"  " + message.created_at?.toString().slice(0, 10)}
+                                    </time>
+                                </div>
+                                <div
+                                    className={`chat-bubble ${message.user_id === props.userId ? "bg-green-600 text-white" : "bg-gray-200 text-gray-800"}`}
+                                >
+                                    {message.text}
+                                </div>
+                                <div className="chat-footer opacity-50">Delivered</div>
+                            </div>
+                        ))}
                     </div>
-                ))}
-            </div>
-            <div className="sticky bottom-5 mx-auto flex w-full flex-row items-center justify-center px-4 md:px-8">
-                <form action={handleSubmit} className="w-full">
-                    <label className="input input-bordered flex items-center gap-2">
-                        <PaperClipIcon className="h-6" />
-                        <input
-                            value={message}
-                            onChange={(e) => setMessage(e.target.value)}
-                            className="grow"
-                            placeholder="Enter a message"
-                        />
-                        <button type="submit">
-                            <PaperAirplaneIcon className="h-6" />
-                        </button>
-                    </label>
-                </form>
+                </div>
+                <div className="sticky bottom-0 mx-auto flex w-full flex-row items-center justify-center rounded-lg bg-gray-100 pb-3">
+                    <form action={handleSubmit} className="w-full">
+                        <label className="input input-bordered flex items-center gap-2">
+                            <PaperClipIcon className="h-6" />
+                            <input
+                                value={message}
+                                onChange={(e) => setMessage(e.target.value)}
+                                className="grow"
+                                placeholder="Enter a message"
+                            />
+                            <button type="submit">
+                                <PaperAirplaneIcon className="h-6" />
+                            </button>
+                        </label>
+                    </form>
+                </div>
+                <div ref={chatboxRef}></div>
             </div>
         </div>
     )

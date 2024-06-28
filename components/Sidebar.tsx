@@ -34,7 +34,7 @@ const Sidebar = async ({ children }: Readonly<{ children: React.ReactNode }>) =>
             </div>
 
             <main className="flex flex-1 flex-col py-10 lg:pl-72">
-                <div className="flex-1 px-4 sm:px-6 lg:px-8">{children}</div>
+                <div className="flex flex-1 flex-col px-4 sm:px-6 lg:px-8">{children}</div>
             </main>
         </div>
     )
