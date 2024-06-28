@@ -20,7 +20,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
             <body>
                 <main className="min-w-screen flex min-h-screen flex-col bg-gray-100">
                     <Toaster />
-                    <div className="flex-1">{children}</div>
+                    {children}
                     <Footer />
                 </main>
             </body>

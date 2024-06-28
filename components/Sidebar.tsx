@@ -3,7 +3,6 @@ import { redirect } from "next/navigation"
 
 import MobileSidebar from "./MobileSidebar"
 import NavButtons from "./NavButtons"
-import AuthButton from "./AuthButton"
 import Link from "next/link"
 import { logout } from "@/server/handlers/auth"
 import { getCurrentUser } from "@/server/handlers/users"
@@ -34,8 +33,8 @@ const Sidebar = async ({ children }: Readonly<{ children: React.ReactNode }>) =>
                 <SidebarContent user={user} />
             </div>
 
-            <main className="py-10 lg:pl-72">
-                <div className="px-4 sm:px-6 lg:px-8">{children}</div>
+            <main className="flex flex-1 flex-col py-10 lg:pl-72">
+                <div className="flex-1 px-4 sm:px-6 lg:px-8">{children}</div>
             </main>
         </div>
     )

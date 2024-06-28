@@ -4,5 +4,5 @@ export type Conversation = {
     customer_id?: string
     support_id?: string
     is_active?: boolean
-    readonly createdAt?: Date
+    readonly created_at?: string
 }

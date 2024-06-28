@@ -3,7 +3,7 @@ import { Conversation } from "@/types/conversation"
 import { Message } from "@/types/message"
 import { createClient } from "@/utils/supabase/client"
 import { PaperAirplaneIcon, PaperClipIcon } from "@heroicons/react/24/outline"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 
 type Props = {
     messages: Message[]
@@ -16,6 +16,7 @@ const RealTimeMessages = (props: Props) => {
 
     const [messages, setMessages] = useState<Message[]>(props.messages)
     const [message, setMessage] = useState<string>("")
+    const chatboxRef = useRef<HTMLDivElement | null>(null)
 
     const handleSubmit = async () => {
         if (!message) return
@@ -27,6 +28,9 @@ const RealTimeMessages = (props: Props) => {
         if (error) console.error(error)
         setMessage("")
     }
+
+    // Force scroll to bottom
+    useEffect(() => chatboxRef.current?.scrollIntoView(false), [])
 
     useEffect(() => {
         const channel = supabase
@@ -41,6 +45,7 @@ const RealTimeMessages = (props: Props) => {
                 },
                 (payload) => {
                     setMessages((prev) => [...prev, payload.new as Message])
+                    chatboxRef.current?.scrollIntoView(false)
                 },
             )
             .on(
@@ -81,40 +86,45 @@ const RealTimeMessages = (props: Props) => {
     return (
         <div className="flex flex-col gap-y-4">
             <h1 className="text-center text-2xl md:text-left">{props.conversation.title}</h1>
-            <div className="flex h-[65vh] flex-col-reverse overflow-auto">
-                <div>
-                    {messages?.map((message) => (
-                        <div
-                            key={message.id}
-                            className={`chat ${message.user_id === props.userId ? "chat-end" : "chat-start"}`}
-                        >
-                            <div className="chat-header">
-                                {message.user_id === props.userId ? "You" : "Support Agent"}
-                                <time className="text-xs opacity-50">
-                                    {"  " + message.created_at?.toString().slice(0, 10)}
-                                </time>
-                            </div>
-                            <div
-                                className={`chat-bubble ${message.user_id === props.userId ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-800"}`}
-                            >
-                                {message.text}
-                            </div>
-                            <div className="chat-footer opacity-50">Delivered</div>
+            <div
+                className="overflow-aut flex min-h-[90vh] flex-1 scroll-mb-20 flex-col-reverse"
+                ref={chatboxRef}
+            >
+                {messages?.map((message) => (
+                    <div
+                        key={message.id}
+                        className={`chat ${message.user_id === props.userId ? "chat-end" : "chat-start"}`}
+                    >
+                        <div className="chat-header">
+                            {message.user_id === props.userId ? "You" : "Support Agent"}
+                            <time className="text-xs opacity-50">
+                                {"  " + message.created_at?.toString().slice(0, 10)}
+                            </time>
                         </div>
-                    ))}
-                </div>
+                        <div
+                            className={`chat-bubble ${message.user_id === props.userId ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-800"}`}
+                        >
+                            {message.text}
+                        </div>
+                        <div className="chat-footer opacity-50">Delivered</div>
+                    </div>
+                ))}
             </div>
-            <div className="sticky bottom-0 mx-auto flex w-full flex-row items-center justify-center px-4 md:px-8">
-                <label className="input input-bordered flex w-full items-center gap-2">
-                    <PaperClipIcon className="h-6" />
-                    <input
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        className="grow"
-                        placeholder="Enter a message"
-                    />
-                    <PaperAirplaneIcon onClick={handleSubmit} className="h-6" />
-                </label>
+            <div className="sticky bottom-5 mx-auto flex w-full flex-row items-center justify-center px-4 md:px-8">
+                <form action={handleSubmit} className="w-full">
+                    <label className="input input-bordered flex items-center gap-2">
+                        <PaperClipIcon className="h-6" />
+                        <input
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            className="grow"
+                            placeholder="Enter a message"
+                        />
+                        <button type="submit">
+                            <PaperAirplaneIcon className="h-6" />
+                        </button>
+                    </label>
+                </form>
             </div>
         </div>
     )

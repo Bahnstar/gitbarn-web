@@ -1,8 +1,9 @@
 import { getConversationById } from "@/server/handlers/conversations"
 import { getConversationMessages } from "@/server/handlers/messages"
 import { getCurrentUser } from "@/server/handlers/users"
-import RealTimeMessages from "../../messages/RealTimeMessages"
+import RealTimeMessages from "../../../../components/RealTimeMessages"
 import { redirect } from "next/navigation"
+import Toaster from "@/components/Toaster"
 
 const SupportChatPage = async ({ searchParams }: { searchParams: { id: string } }) => {
     const {
@@ -14,17 +15,34 @@ const SupportChatPage = async ({ searchParams }: { searchParams: { id: string } 
     }
 
     const id = searchParams.id
+    console.log(id)
     const { data: conversation, error: convError } = await getConversationById(id)
 
-    if (convError) return <div>ERROR</div>
-
-    if (conversation.customer_id !== user?.id) {
-        redirect("/support")
+    if (convError) {
+        console.log(convError)
+        return (
+            <Toaster
+                message="An error occured while accessing this chat. Please try again later."
+                redirect="/support"
+            />
+        )
     }
+
+    // if (conversation.customer_id !== user?.id) {
+    //     redirect("/support")
+    // }
 
     const { data: messages, error: messError } = await getConversationMessages(id)
 
-    if (messError) return <div>ERROR</div>
+    if (messError) {
+        console.log(messError)
+        return (
+            <Toaster
+                message="An error occured while accessing this chat. Please try again later."
+                redirect="/support"
+            />
+        )
+    }
 
     return <RealTimeMessages messages={messages} userId={user?.id} conversation={conversation} />
 }

@@ -3,6 +3,7 @@ import { createConversation, getConversationsByCustomerId } from "@/server/handl
 import { redirect } from "next/navigation"
 import { Conversation } from "@/types/conversation"
 import Link from "next/link"
+import dayjs from "dayjs"
 
 const SupportPage = async () => {
     const {
@@ -21,9 +22,8 @@ const SupportPage = async () => {
         }
 
         const { data, error } = await createConversation(conversation)
-        console.log(data)
         const newConversationId = data?.id
-        redirect(`/support/chat?=${newConversationId}`)
+        redirect(`/support/chat?id=${newConversationId}`)
     }
 
     return (
@@ -45,7 +45,7 @@ const SupportPage = async () => {
                                     clipRule="evenodd"
                                 />
                             </svg>
-                            <input type="text" className="grow" placeholder="Search Orders" />
+                            <input type="text" className="grow" placeholder="Search Chats" />
                         </label>
                     </div>
                     <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
@@ -73,7 +73,7 @@ const SupportPage = async () => {
                                                 scope="col"
                                                 className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                                             >
-                                                Date
+                                                Created
                                             </th>
                                             <th
                                                 scope="col"
@@ -96,10 +96,12 @@ const SupportPage = async () => {
                                                     {row.title}
                                                 </td>
                                                 <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                    {row.createdAt?.toString()}
+                                                    {dayjs(row.created_at ?? "").format(
+                                                        "MMMM D, YYYY [at] h:mm A",
+                                                    )}
                                                 </td>
                                                 <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                    {row.is_active}
+                                                    {row.is_active ? "Open" : "Closed"}
                                                 </td>
                                                 <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                                     <Link
