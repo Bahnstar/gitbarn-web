@@ -4,6 +4,7 @@ import { redirect } from "next/navigation"
 import { Conversation } from "@/types/conversation"
 import Link from "next/link"
 import dayjs from "dayjs"
+import { formatDate } from "@/utils/utils"
 
 const SupportPage = async () => {
     const {
@@ -96,9 +97,9 @@ const SupportPage = async () => {
                                                     {row.title}
                                                 </td>
                                                 <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                    {dayjs(row.created_at ?? "").format(
-                                                        "MMMM D, YYYY [at] h:mm A",
-                                                    )}
+                                                    {row.created_at
+                                                        ? formatDate(row.created_at)
+                                                        : ""}
                                                 </td>
                                                 <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                     {row.is_active ? "Open" : "Closed"}

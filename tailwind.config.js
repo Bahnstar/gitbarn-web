@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     content: ["./app/**/*.{js,ts,jsx,tsx,mdx}", "./components/**/*.{js,ts,jsx,tsx,mdx}"],
-    darkMode: 'selector',
+    darkMode: "selector",
     theme: {
         extend: {
             colors: {
@@ -15,7 +15,8 @@ module.exports = {
         },
     },
     daisyui: {
-        themes: ['light'],
+        themes: ["light"],
+        logs: false,
     },
     plugins: [require("daisyui")],
 }
