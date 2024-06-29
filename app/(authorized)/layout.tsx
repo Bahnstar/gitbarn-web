@@ -4,15 +4,15 @@ import Sidebar from "@/components/Sidebar"
 import { getCurrentUser } from "@/server/handlers/users"
 
 export default async function ProtectedLayout({
-    children,
+  children,
 }: Readonly<{ children: React.ReactNode }>) {
-    const {
-        data: { user },
-    } = await getCurrentUser()
+  const {
+    data: { user },
+  } = await getCurrentUser()
 
-    if (!user) {
-        return redirect("/login")
-    }
+  if (!user) {
+    return redirect("/login")
+  }
 
-    return <Sidebar>{children}</Sidebar>
+  return <Sidebar>{children}</Sidebar>
 }

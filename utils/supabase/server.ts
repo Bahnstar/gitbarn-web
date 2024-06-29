@@ -1,5 +1,5 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
-import { cookies } from 'next/headers'
+import { createServerClient, type CookieOptions } from "@supabase/ssr"
+import { cookies } from "next/headers"
 
 export function createClient() {
   const cookieStore = cookies()
@@ -16,6 +16,6 @@ export function createClient() {
           cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options))
         },
       },
-    }
+    },
   )
 }

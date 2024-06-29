@@ -6,45 +6,45 @@ import { redirect } from "next/navigation"
 import Toaster from "@/components/Toaster"
 
 const SupportChatPage = async ({ searchParams }: { searchParams: { id: string } }) => {
-    const {
-        data: { user },
-    } = await getCurrentUser()
+  const {
+    data: { user },
+  } = await getCurrentUser()
 
-    if (!user) {
-        return <div>Error</div>
-    }
+  if (!user) {
+    return <div>Error</div>
+  }
 
-    const id = searchParams.id
-    console.log(id)
-    const { data: conversation, error: convError } = await getConversationById(id)
+  const id = searchParams.id
+  console.log(id)
+  const { data: conversation, error: convError } = await getConversationById(id)
 
-    if (convError) {
-        console.log(convError)
-        return (
-            <Toaster
-                message="An error occured while accessing this chat. Please try again later."
-                redirect="/support"
-            />
-        )
-    }
+  if (convError) {
+    console.log(convError)
+    return (
+      <Toaster
+        message="An error occured while accessing this chat. Please try again later."
+        redirect="/support"
+      />
+    )
+  }
 
-    // if (conversation.customer_id !== user?.id) {
-    //     redirect("/support")
-    // }
+  // if (conversation.customer_id !== user?.id) {
+  //     redirect("/support")
+  // }
 
-    const { data: messages, error: messError } = await getConversationMessages(id)
+  const { data: messages, error: messError } = await getConversationMessages(id)
 
-    if (messError) {
-        console.log(messError)
-        return (
-            <Toaster
-                message="An error occured while accessing this chat. Please try again later."
-                redirect="/support"
-            />
-        )
-    }
+  if (messError) {
+    console.log(messError)
+    return (
+      <Toaster
+        message="An error occured while accessing this chat. Please try again later."
+        redirect="/support"
+      />
+    )
+  }
 
-    return <RealTimeMessages messages={messages} userId={user?.id} conversation={conversation} />
+  return <RealTimeMessages messages={messages} userId={user?.id} conversation={conversation} />
 }
 
 export default SupportChatPage

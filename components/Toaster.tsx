@@ -3,14 +3,14 @@ import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 
 const Toaster = ({ message, redirect }: Readonly<{ message: string; redirect?: string }>) => {
-    toast.error(message)
+  toast.error(message)
 
-    if (redirect) {
-        const router = useRouter()
-        router.push(redirect)
-    }
+  if (redirect) {
+    const router = useRouter()
+    router.push(redirect)
+  }
 
-    return null
+  return null
 }
 
 export default Toaster
