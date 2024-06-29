@@ -24,24 +24,26 @@ export const getConversationsBySupportId = async (
 
 export const getLastActiveConversationByCustomerId = async (
   userId: string,
-): Promise<PostgrestSingleResponse<Conversation[]>> => {
+): Promise<PostgrestSingleResponse<Conversation>> => {
   return await supabase
     .from("Conversations")
     .select("*")
     .eq("customer_id", userId)
     .order("created_at", { ascending: false })
     .limit(1)
+    .single()
 }
 
 export const getLastActiveConversationBySupportId = async (
   userId: string,
-): Promise<PostgrestSingleResponse<Conversation[]>> => {
+): Promise<PostgrestSingleResponse<Conversation>> => {
   return await supabase
     .from("Conversations")
     .select("*")
     .eq("support_id", userId)
     .order("created_at", { ascending: false })
     .limit(1)
+    .single()
 }
 
 export const getConversationById = async (
@@ -59,8 +61,14 @@ export const createConversation = async (
 export const updateConversation = async (
   id: string,
   conversation: Partial<Conversation>,
-): Promise<PostgrestSingleResponse<Conversation[]>> => {
-  return await supabase.from("Conversations").update(conversation).eq("id", id).select()
+): Promise<PostgrestSingleResponse<Conversation>> => {
+  return await supabase
+    .from("Conversations")
+    .update(conversation)
+    .eq("id", id)
+    .select()
+    .limit(1)
+    .single()
 }
 
 export const deleteConversation = async (id: string): Promise<void> => {
