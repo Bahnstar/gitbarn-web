@@ -1,7 +1,6 @@
 "use server"
 
 import { createClient } from "@/utils/supabase/server"
-import { getCurrentUser } from "./users"
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
 import { Message } from "@/types/message"
 
