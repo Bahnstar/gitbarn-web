@@ -3,7 +3,6 @@ import { createConversation, getConversationsByCustomerId } from "@/server/handl
 import { redirect } from "next/navigation"
 import { Conversation } from "@/types/conversation"
 import Link from "next/link"
-import dayjs from "dayjs"
 import { formatDate } from "@/utils/utils"
 
 const SupportPage = async () => {
