@@ -4,7 +4,7 @@ import Toaster from "@/components/Toaster"
 
 export default function Login({ searchParams }: Readonly<{ searchParams: { message: string } }>) {
   return (
-    <div className="mx-auto mt-[30%] max-w-sm space-y-10 px-4 md:mt-[10%] md:px-0">
+    <div className="mx-auto mt-[30%] max-w-sm flex-1 space-y-10 px-4 md:mt-[10%] md:px-0">
       {searchParams?.message && <Toaster message={searchParams.message} />}
       <div>
         <img
