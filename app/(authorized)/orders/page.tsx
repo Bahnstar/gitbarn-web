@@ -1,3 +1,5 @@
+import { testTiger } from "@/server/handlers/tiger"
+
 export default async function DashboardPage() {
   const testObj = [
     {
@@ -37,6 +39,14 @@ export default async function DashboardPage() {
   return (
     <div className="flex w-full flex-1 flex-col items-center gap-20">
       <h1 className="self-start text-4xl font-semibold leading-6 text-gray-900">Your Orders</h1>
+      <form action={testTiger}>
+        <button
+          type="submit"
+          className="block rounded-md bg-green-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        >
+          Get Transactions
+        </button>
+      </form>
       <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
