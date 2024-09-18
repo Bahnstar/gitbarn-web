@@ -7,6 +7,7 @@ import MarqueeDemo from "@/components/Marquee"
 import HeroVideoDialog from "@/components/magicui/hero-video-dialog"
 
 export default async function Index() {
+  const serviceStyle = "bg-gray-50 p-2 rounded-md shadow-sm text-center"
   const swiperData: SwiperData[] = [
     {
       title: "Online Orders",
@@ -75,8 +76,8 @@ export default async function Index() {
         </section>
         <section className="m-auto w-3/5">
           <BlurFade delay={1}>
-            <div className="flex flex-row items-center gap-12 w-full ">
-              <div className="flex-1 flex flex-col gap-8">
+            <div className="flex flex-row items-center gap-12 w-full">
+              <div className="flex-1 flex flex-col gap-4">
                 <h2 className="text-4xl font-semibold">Git Barn Manure Removal</h2>
                 <p className="flex-1 text-2xl">
                   Serving Palm Beach County, we provide eco-friendly manure removal services
@@ -85,13 +86,13 @@ export default async function Index() {
                   results—all with a focus on efficiency and customer satisfaction.
                 </p>
                 <div className="flex flex-col gap-2 text-lg">
-                  <p>We Service:</p>
-                  <ul>
-                    <li>Residential Properties</li>
-                    <li>Farms with Residential Properties</li>
-                    <li>Commercial Farms</li>
-                    <li>Commercial Properties</li>
-                  </ul>
+                  <p className="text-2xl font-medium m-auto">We Service:</p>
+                  <div className="grid grid-cols-2 gap-2 text-lg">
+                    <p className={serviceStyle}>Residential Properties</p>
+                    <p className={serviceStyle}>Farms with Residential Properties</p>
+                    <p className={serviceStyle}>Commercial Farms</p>
+                    <p className={serviceStyle}>Commercial Properties</p>
+                  </div>
                 </div>
               </div>
               <div className="flex-1 relative">
@@ -107,10 +108,15 @@ export default async function Index() {
           </BlurFade>
         </section>
         <section className="flex flex-col items-center gap-10">
-          <div className="flex flex-row justify-center items-center gap-8 w-3/6 h-full m-auto">
+          <div className="flex flex-row justify-center items-center gap-8 w-3/6 m-auto">
             <Iphone15Pro className="h-[50vh]" src={"https://i.ibb.co/kGW15k6/photo-2024-09-12-17-10-14.jpg"} />
-            <div className="flex-1 flex flex-col items-center gap-8">
+            <div className="flex-1 flex flex-col items-center h-full gap-8">
               <h2 className="text-4xl font-semibold">Git Barn Software Portal</h2>
+              <p className="text-xl">We created a custom software portal for our customers to easily receive
+                support, view orders, and check documents related to billing. The portal is easy to use and provides a seamless
+                experience for our customers. You can access the portal by clicking the
+                Login button on the top menu.
+              </p>
               <WordRotate
                 className="text-4xl font-bold text-black dark:text-white"
                 words={["Online Orders", "24/7 Support", "Document Viewing"]}
