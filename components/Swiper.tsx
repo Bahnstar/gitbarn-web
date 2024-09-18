@@ -18,21 +18,19 @@ export type SwiperData = {
 
 export default function CarouselPlugin(props: Readonly<{ data: SwiperData[] }>) {
   const plugin = React.useRef(
-    Autoplay({ delay: 5000, stopOnInteraction: true })
+    Autoplay({ delay: 5000, stopOnInteraction: false })
   )
 
   return (
     <Carousel
       plugins={[plugin.current]}
       className="w-5/6 h-full"
-      onMouseEnter={plugin.current.stop}
-      onMouseLeave={plugin.current.reset}
     >
       <CarouselContent className="h-[50vh]">
         {props.data.map((slide, index) => (
           <CarouselItem key={index} className="h-full">
             <div className="p-1 w-full h-full">
-              <Card className="flex flex-col items-center justify-between rounded-md shadow-md p-4 h-full">
+              <Card className="flex flex-col items-center bg-gray-50 justify-between rounded-md shadow-md p-4 h-full">
                 <div className="w-full h-full overflow-hidden">
                   <img className="w-full h-full object-cover rounded-md shadow-sm" src={slide.image} alt={slide.title} />
                 </div>
@@ -44,8 +42,8 @@ export default function CarouselPlugin(props: Readonly<{ data: SwiperData[] }>) 
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
+      <CarouselPrevious className="hover:bg-green-400" />
+      <CarouselNext className="hover:bg-green-400" />
     </Carousel>
   )
 }
