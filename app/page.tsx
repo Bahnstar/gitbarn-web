@@ -39,7 +39,7 @@ export default async function Index() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <main className="flex flex-col gap-28">
+      <main className="flex flex-col gap-16 md:gap-28">
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <div className="container flex h-14 items-center">
             <div className="mx-6 flex items-center gap-2">
@@ -82,27 +82,29 @@ export default async function Index() {
         <section className="m-auto flex w-3/5 flex-col items-center justify-center">
           <div className="flex flex-col items-center gap-4">
             <BlurFade delay={0.5}>
-              <h1 className="text-6xl font-bold">Welcome to Git Barn</h1>
+              <h1 className="text-center text-4xl font-bold md:text-6xl">Welcome to Git Barn</h1>
             </BlurFade>
             <BlurFade delay={1.0}>
-              <h2 className="text-4xl">
+              <h2 className="text-center text-2xl md:text-4xl">
                 The <span className="font-semibold text-green-400">#1</span> horse manure solution
                 in South Florida
               </h2>
             </BlurFade>
           </div>
         </section>
-        <section className="m-auto h-[50vh] w-4/6">
+        <section className="m-auto h-[50vh] w-full md:w-4/6">
           <BlurFade delay={1.5} className="flex h-full flex-col items-center">
             <Swiper data={swiperData} />
           </BlurFade>
         </section>
-        <section className="m-auto w-3/5">
+        <section className="m-auto w-full px-4 md:w-3/5 md:px-0">
           <BlurFade delay={2}>
-            <div className="flex w-full flex-row items-center gap-12">
+            <div className="flex w-full flex-col items-center gap-12 md:flex-row">
               <div className="flex flex-1 flex-col gap-4">
-                <h2 className="text-4xl font-semibold">Git Barn Manure Removal</h2>
-                <p className="flex-1 text-2xl">
+                <h2 className="text-center text-3xl font-semibold md:text-4xl">
+                  Git Barn Manure Removal
+                </h2>
+                <p className="flex-1 text-center text-lg md:text-2xl">
                   Serving Palm Beach County, we provide eco-friendly manure removal services along
                   with premium yellow pine wood shavings for stalls. Our professional team is
                   committed to delivering exceptional service, quality products, and reliable
@@ -110,7 +112,7 @@ export default async function Index() {
                 </p>
                 <div className="flex flex-col gap-2 text-lg">
                   <p className="m-auto text-2xl font-medium">We Service:</p>
-                  <div className="grid grid-cols-2 gap-2 text-lg">
+                  <div className="grid h-full grid-cols-2 items-center justify-items-center gap-2 text-lg">
                     <p className={serviceStyle}>Residential Properties</p>
                     <p className={serviceStyle}>Farms with Residential Properties</p>
                     <p className={serviceStyle}>Commercial Farms</p>
@@ -131,21 +133,23 @@ export default async function Index() {
           </BlurFade>
         </section>
         <section className="flex flex-col items-center gap-10">
-          <div className="m-auto flex w-3/6 flex-row items-center justify-center gap-8">
+          <div className="m-auto flex w-full flex-col-reverse items-center justify-center gap-8 px-4 md:w-3/6 md:flex-row md:px-0">
             <Iphone15Pro
               className="h-[50vh]"
               src={"https://i.ibb.co/kGW15k6/photo-2024-09-12-17-10-14.jpg"}
             />
             <div className="flex h-full flex-1 flex-col items-center gap-8">
-              <h2 className="text-4xl font-semibold">Git Barn Software Portal</h2>
-              <p className="text-xl">
+              <h2 className="text-center text-3xl font-semibold md:text-4xl">
+                Git Barn Software Portal
+              </h2>
+              <p className="text-center text-lg md:text-xl">
                 We created a custom software portal for our customers to easily receive support,
                 view orders, and check documents related to billing. The portal is easy to use and
                 provides a seamless experience for our customers. You can access the portal by
                 clicking the Login button on the top menu.
               </p>
               <WordRotate
-                className="text-4xl font-bold text-black dark:text-white"
+                className="text-center text-3xl font-bold text-black md:text-4xl dark:text-white"
                 words={["Online Orders", "24/7 Support", "Document Viewing"]}
               />
               <p className="text-2xl">via our Git Barn online portal</p>
@@ -153,7 +157,7 @@ export default async function Index() {
           </div>
         </section>
         <section className="flex flex-col items-center gap-10">
-          <h2 className="text-4xl font-semibold">Testimonials</h2>
+          <h2 className="text center text-3xl font-semibold md:text-4xl">Testimonials</h2>
           <MarqueeDemo />
         </section>
       </main>

@@ -17,33 +17,32 @@ export type SwiperData = {
 }
 
 export default function CarouselPlugin(props: Readonly<{ data: SwiperData[] }>) {
-  const plugin = React.useRef(
-    Autoplay({ delay: 5000, stopOnInteraction: false })
-  )
+  const plugin = React.useRef(Autoplay({ delay: 5000, stopOnInteraction: false }))
 
   return (
-    <Carousel
-      plugins={[plugin.current]}
-      className="w-5/6 h-full"
-    >
+    <Carousel plugins={[plugin.current]} className="h-full w-5/6">
       <CarouselContent className="h-[50vh]">
         {props.data.map((slide, index) => (
           <CarouselItem key={index} className="h-full">
-            <div className="p-1 w-full h-full">
-              <Card className="flex flex-col items-center bg-gray-50 justify-between rounded-md shadow-md p-4 h-full">
-                <div className="w-full h-full overflow-hidden">
-                  <img className="w-full h-full object-cover rounded-md shadow-sm" src={slide.image} alt={slide.title} />
+            <div className="h-full w-full md:p-1">
+              <Card className="flex h-full flex-col items-center justify-between rounded-md bg-gray-50 p-4 shadow-md">
+                <div className="h-full w-full overflow-hidden">
+                  <img
+                    className="h-full w-full rounded-md object-cover shadow-sm"
+                    src={slide.image}
+                    alt={slide.title}
+                  />
                 </div>
-                <CardContent className="flex items-center justify-center p-2 h-1/4">
-                  <span className="text-2xl">{slide.description}</span>
+                <CardContent className="flex h-1/4 items-center justify-center p-2">
+                  <span className="text-md text-center md:text-2xl">{slide.description}</span>
                 </CardContent>
               </Card>
             </div>
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious className="hover:bg-green-400" />
-      <CarouselNext className="hover:bg-green-400" />
+      <CarouselPrevious className="hidden hover:bg-green-400 md:block" />
+      <CarouselNext className="hidden hover:bg-green-400 md:block" />
     </Carousel>
   )
 }
