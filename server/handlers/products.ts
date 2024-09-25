@@ -31,9 +31,9 @@ export const createProduct = async (
 export const updateProduct = async (
   id: string,
   product: Partial<Product>,
-): Promise<PostgrestSingleResponse<Product[]>> => {
+): Promise<PostgrestSingleResponse<Product>> => {
   const supabase = createClient()
-  return await supabase.from("Products").update(product).eq("id", id).select()
+  return await supabase.from("Products").update(product).eq("id", id).select().single()
 }
 
 export const deleteProduct = async (id: string): Promise<void> => {

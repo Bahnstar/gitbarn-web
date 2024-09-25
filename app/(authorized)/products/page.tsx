@@ -48,7 +48,7 @@ const ProductsPage = async () => {
             >
               <figure>
                 <Image
-                  src={`${process.env.NEXT_PUBLIC_SUPABASE_BUCKET}${product.id}`}
+                  src={`${process.env.NEXT_PUBLIC_SUPABASE_BUCKET}${product.id}?v=${product.image}`}
                   alt={product.title}
                   width={800}
                   height={600}

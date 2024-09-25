@@ -1,57 +1,22 @@
-import { Check } from "lucide-react"
+import { getProductsById } from "@/server/handlers/products"
+import { processProduct } from "@/server/utils"
 
-const ProductPage = ({ params }: { params: { productId: string } }) => {
-  const { productId } = params
+import ProductForm from "@/components/ProductForm"
 
-  const product = {
-    name: "Some product",
-    price: "a million bux",
-    description: "This is a description",
-    imageAlt: "Hmmm",
-    imageSrc: "",
-  }
+const EditProductPage = async ({ params }: { params: { productId: string } }) => {
+  const { data: products, error } = await getProductsById(params.productId)
 
   return (
-    <div>
-      <div>
-        <div className="mt-4">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            {product.name} ({productId})
-          </h1>
-        </div>
+    <div className="flex w-full flex-1 flex-col items-center gap-20">
+      <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">
+        Edit Product
+      </h1>
 
-        <section aria-labelledby="information-heading" className="mt-4">
-          <h2 id="information-heading" className="sr-only">
-            Product information
-          </h2>
-
-          <div className="flex items-center">
-            <p className="text-lg text-gray-900 sm:text-xl">{product.price}</p>
-
-            <div className="mt-4 space-y-6">
-              <p className="text-base text-gray-500">{product.description}</p>
-            </div>
-
-            <div className="mt-6 flex items-center">
-              <Check aria-hidden="true" className="h-5 w-5 flex-shrink-0 text-green-500" />
-              <p className="ml-2 text-sm text-gray-500">In stock and ready to ship</p>
-            </div>
-          </div>
-        </section>
-      </div>
-
-      {/* Product image */}
-      <div className="mt-10 lg:col-start-2 lg:row-span-2 lg:mt-0 lg:self-center">
-        <div className="aspect-h-1 aspect-w-1 overflow-hidden rounded-lg">
-          <img
-            alt={product.imageAlt}
-            src={product.imageSrc}
-            className="h-full w-full object-cover object-center"
-          />
-        </div>
+      <div className="w-full max-w-5xl rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
+        <ProductForm action={processProduct} product={products?.[0]} />
       </div>
     </div>
   )
 }
 
-export default ProductPage
+export default EditProductPage
