@@ -1,8 +1,20 @@
 import { SubmitButton } from "./submit-button"
 import { login, signup } from "../../server/handlers/auth"
+import { getCurrentUser } from "@/server/handlers/users"
+import { redirect } from "next/navigation"
 import Toaster from "@/components/Toaster"
 
-export default function Login({ searchParams }: Readonly<{ searchParams: { message: string } }>) {
+export default async function Login({
+  searchParams,
+}: Readonly<{ searchParams: { message: string } }>) {
+  const {
+    data: { user },
+  } = await getCurrentUser()
+
+  if (user) {
+    redirect("/dashboard")
+  }
+
   return (
     <div className="mx-auto mt-[30%] max-w-sm flex-1 space-y-10 px-4 md:mt-[10%] md:px-0">
       {searchParams?.message && <Toaster message={searchParams.message} />}

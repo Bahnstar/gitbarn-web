@@ -1,7 +1,8 @@
 import { Product } from "@/types/product"
+import { getProducts } from "@/server/handlers/products"
 import Link from "next/link"
 
-const ManageProductsPage = () => {
+const ManageProductsPage = async () => {
   const people = [
     {
       name: "Lindsay Walton",
@@ -11,6 +12,9 @@ const ManageProductsPage = () => {
     },
     // More people...
   ]
+
+  const { data, error } = await getProducts()
+  console.log(data)
 
   const products: Product[] = [
     {
