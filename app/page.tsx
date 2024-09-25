@@ -81,10 +81,10 @@ export default async function Index() {
         </header>
         <section className="m-auto flex w-3/5 flex-col items-center justify-center">
           <div className="flex flex-col items-center gap-4">
-            <BlurFade delay={0.25}>
+            <BlurFade delay={0.5}>
               <h1 className="text-6xl font-bold">Welcome to Git Barn</h1>
             </BlurFade>
-            <BlurFade delay={0.5}>
+            <BlurFade delay={1.0}>
               <h2 className="text-4xl">
                 The <span className="font-semibold text-green-400">#1</span> horse manure solution
                 in South Florida
@@ -93,12 +93,12 @@ export default async function Index() {
           </div>
         </section>
         <section className="m-auto h-[50vh] w-4/6">
-          <BlurFade delay={0.75} className="flex h-full flex-col items-center">
+          <BlurFade delay={1.5} className="flex h-full flex-col items-center">
             <Swiper data={swiperData} />
           </BlurFade>
         </section>
         <section className="m-auto w-3/5">
-          <BlurFade delay={1}>
+          <BlurFade delay={2}>
             <div className="flex w-full flex-row items-center gap-12">
               <div className="flex flex-1 flex-col gap-4">
                 <h2 className="text-4xl font-semibold">Git Barn Manure Removal</h2>
