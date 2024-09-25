@@ -17,7 +17,7 @@ const ManageProductsPage = async () => {
           <Link
             type="button"
             href="/products/add"
-            className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className="block rounded-md bg-green-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
           >
             Add product
           </Link>
@@ -60,7 +60,7 @@ const ManageProductsPage = async () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {products.map((product) => (
+                  {products?.map((product) => (
                     <tr key={product.id}>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                         {product.title}
@@ -77,7 +77,7 @@ const ManageProductsPage = async () => {
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                         <Link
                           href={`/products/manage/${product.id}`}
-                          className="text-indigo-600 hover:text-indigo-900"
+                          className="text-green-600 hover:text-green-900"
                         >
                           Edit<span className="sr-only">, {product.title}</span>
                         </Link>

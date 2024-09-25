@@ -1,25 +1,16 @@
 import Image from "next/image"
 import Link from "next/link"
+import { getProducts } from "@/server/handlers/products"
 
-const ProductsPage = () => {
-  const products = [
-    {
-      title: "Nike Air Max 97",
-      description: "If a dog chews shoes whose shoes does he choose?",
-      image: "https://picsum.photos/800/600",
-    },
-    {
-      title: "Stylish Art Deco",
-      description: "The art deco style is a style of art that originated in the 1920s.",
-      image: "https://picsum.photos/700/600",
-    },
-    {
-      title: "Non-slip Slip-On",
-      description:
-        "The non-slip slip-on is a type of slip-on shoe that is designed to be worn on uneven surfaces.",
-      image: "https://picsum.photos/600/600",
-    },
-  ]
+const ProductsPage = async () => {
+  const { data: products, error } = await getProducts()
+
+  if (error)
+    return (
+      <h1 className="self-start text-4xl font-semibold leading-6 text-gray-900">
+        An error occured while retrieving products
+      </h1>
+    )
 
   return (
     <div className="flex w-full flex-1 flex-col items-center gap-20">
@@ -50,14 +41,14 @@ const ProductsPage = () => {
           </Link>
         </div>
         <div className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 xl:gap-x-8 2xl:grid-cols-4">
-          {[...products, ...products.slice(0, 1)].map((product, index) => (
+          {products?.map((product, index) => (
             <div
               key={`${product.title}_${index}`}
               className="aspect-h-7 aspect-w-10 group block w-full overflow-hidden rounded-lg bg-base-100 shadow-lg duration-200 hover:scale-105 hover:shadow-xl"
             >
               <figure>
                 <Image
-                  src={product.image}
+                  src={`${process.env.NEXT_PUBLIC_SUPABASE_BUCKET}${product.id}`}
                   alt={product.title}
                   width={800}
                   height={600}
