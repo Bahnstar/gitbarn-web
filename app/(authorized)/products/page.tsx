@@ -1,4 +1,5 @@
 import Image from "next/image"
+import Link from "next/link"
 
 const ProductsPage = () => {
   const products = [
@@ -40,9 +41,13 @@ const ProductsPage = () => {
             </svg>
             <input type="text" className="grow" placeholder="Search Products" />
           </label>
-          <button type="button" className="btn bg-green-600 text-white hover:bg-green-700">
-            Add Product
-          </button>
+          <Link
+            href="/products/manage"
+            type="button"
+            className="btn bg-green-600 text-white hover:bg-green-700"
+          >
+            Manage Products
+          </Link>
         </div>
         <div className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 xl:gap-x-8 2xl:grid-cols-4">
           {[...products, ...products.slice(0, 1)].map((product, index) => (

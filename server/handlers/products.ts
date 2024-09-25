@@ -23,9 +23,9 @@ export const getProductsByTitle = async (
 
 export const createProduct = async (
   product: Product,
-): Promise<PostgrestSingleResponse<Product[]>> => {
+): Promise<PostgrestSingleResponse<Product>> => {
   const supabase = createClient()
-  return await supabase.from("Products").insert([product]).select()
+  return await supabase.from("Products").insert([product]).select().limit(1).single()
 }
 
 export const updateProduct = async (
