@@ -2,11 +2,13 @@
 import { createClient } from "@/utils/supabase/server"
 import { createProduct } from "./handlers/products"
 import { Product } from "@/types/product"
+import { redirect } from "next/navigation"
+import { revalidatePath } from "next/cache"
 
 const submitNewProduct = async (
   prevState: any,
   formData: FormData,
-): Promise<{ message: string }> => {
+): Promise<{ message: string; status?: string }> => {
   const supabase = createClient()
 
   const product: Product = {
@@ -34,7 +36,8 @@ const submitNewProduct = async (
     if (imageError) return { message: "There was an error uploading the provided image" }
   }
 
-  return { message: "Product successfully created" }
+  revalidatePath("/")
+  return { message: "Product successfully created", status: "success" }
 }
 
 export { submitNewProduct }

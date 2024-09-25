@@ -1,6 +1,7 @@
 "use client"
 import { useState } from "react"
 import { useFormState, useFormStatus } from "react-dom"
+import { redirect } from "next/navigation"
 import { submitNewProduct } from "@/server/utils"
 
 import Toaster from "@/components/Toaster"
@@ -8,6 +9,7 @@ import ImageUpload from "@/components/ImageUpload"
 
 const initialState = {
   message: "",
+  status: "",
 }
 
 const SubmitButton = () => {
@@ -41,7 +43,8 @@ const AddProductPage = () => {
 
   return (
     <div className="flex w-full flex-1 flex-col items-center gap-20">
-      {state && <Toaster message={state.message} />}
+      {state.status !== "" && <Toaster message={state.message} />}
+      {state.status === "success" && redirect("/products/manage")}
       <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">
         Create Product
       </h1>
@@ -84,7 +87,7 @@ const AddProductPage = () => {
                       name="description"
                       rows={6}
                       required
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
                       defaultValue={""}
                     />
                   </div>

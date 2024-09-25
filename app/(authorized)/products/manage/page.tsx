@@ -3,29 +3,7 @@ import { getProducts } from "@/server/handlers/products"
 import Link from "next/link"
 
 const ManageProductsPage = async () => {
-  const people = [
-    {
-      name: "Lindsay Walton",
-      title: "Front-end Developer",
-      email: "lindsay.walton@example.com",
-      role: "Member",
-    },
-    // More people...
-  ]
-
-  const { data, error } = await getProducts()
-  console.log(data)
-
-  const products: Product[] = [
-    {
-      id: "0",
-      title: "Product 1",
-      description: "A description of the product",
-      amount: "$0",
-      image: "",
-      status: "Public",
-    },
-  ]
+  const { data: products, error } = await getProducts()
 
   return (
     <div className="px-4 sm:px-6 lg:px-8">
