@@ -1,16 +1,53 @@
+"use client"
 import Image from "next/image"
 import Link from "next/link"
 import { getProducts } from "@/server/handlers/products"
+import { ShoppingCartIcon } from "lucide-react"
+import { useEffect, useState } from "react"
+import { Product } from "@/types/product"
+import { createCart } from "@/server/handlers/carts"
+import { Cart } from "@/types/cart"
+import { getCurrentUser } from "@/server/handlers/users"
 
-const ProductsPage = async () => {
-  const { data: products, error } = await getProducts()
+const ProductsPage = () => {
+  const [products, setProducts] = useState<Product[]>([])
+  useEffect(() => {
+    getPublicProducts()
+  }, [])
 
-  if (error)
-    return (
-      <h1 className="self-start text-4xl font-semibold leading-6 text-gray-900">
-        An error occured while retrieving products
-      </h1>
-    )
+  const getPublicProducts = async () => {
+    const { data: products, error } = await getProducts()
+    if (error) {
+      console.log(error)
+      return
+    }
+    setProducts(products!)
+  }
+
+  const addToCart = async (product: Product) => {
+    const {
+      data: { user },
+    } = await getCurrentUser()
+
+    const cartItem: Cart = {
+      user_id: user!.id,
+      product_id: product.id!,
+      quantity: 1,
+    }
+    const { data, error } = await createCart(cartItem)
+    if (error) {
+      console.log(error)
+      return
+    }
+    console.log(data)
+  }
+
+  // if (error)
+  //   return (
+  //     <h1 className="self-start text-4xl font-semibold leading-6 text-gray-900">
+  //       An error occured while retrieving products
+  //     </h1>
+  //   )
 
   return (
     <div className="flex w-full flex-1 flex-col items-center gap-20">
@@ -44,7 +81,7 @@ const ProductsPage = async () => {
           {products?.map((product, index) => (
             <div
               key={`${product.title}_${index}`}
-              className="aspect-h-7 aspect-w-10 group block w-full overflow-hidden rounded-lg bg-base-100 shadow-lg duration-200 hover:scale-105 hover:shadow-xl"
+              className="aspect-h-7 aspect-w-10 group block w-full overflow-hidden rounded-md bg-base-100 shadow-sm"
             >
               <figure>
                 <Image
@@ -59,7 +96,11 @@ const ProductsPage = async () => {
                 <h2 className="card-title">{product.title}</h2>
                 <p className="line-clamp-2">{product.description}</p>
                 <div className="card-actions justify-end">
-                  <button className="btn bg-green-600 text-white hover:bg-green-700">
+                  <button
+                    onClick={() => addToCart(product)}
+                    className="btn flex items-center bg-green-600 text-white hover:bg-green-700"
+                  >
+                    <ShoppingCartIcon className="h-5 w-5" />
                     Add to Cart
                   </button>
                 </div>

@@ -10,6 +10,11 @@ export const getCarts = async (): Promise<PostgrestSingleResponse<Cart[]>> => {
   return await supabase.from("Carts").select("*")
 }
 
+export const getCartsWithProducts = async (): Promise<PostgrestSingleResponse<Cart[]>> => {
+  const supabase = createClient()
+  return await supabase.from("Carts").select("*, Products(*)")
+}
+
 export const getCartsById = async (id: string): Promise<PostgrestSingleResponse<Cart[]>> => {
   const supabase = createClient()
   return await supabase.from("Carts").select("*").eq("id", id)

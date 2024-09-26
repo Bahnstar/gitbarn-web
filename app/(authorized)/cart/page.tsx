@@ -1,14 +1,36 @@
 import Image from "next/image"
-import { getProducts } from "@/server/handlers/products"
-import { CheckIcon, ClockIcon, QuestionMarkCircleIcon, XMarkIcon } from "@heroicons/react/20/solid"
+import { QuestionMarkCircleIcon, XMarkIcon } from "@heroicons/react/20/solid"
+import { deleteCart, getCartsWithProducts } from "@/server/handlers/carts"
+import Toaster from "@/components/Toaster"
+import { revalidatePath } from "next/cache"
+import Form from "@/components/Form"
 
 export default async function CartPage() {
-  const { data: products, error } = await getProducts()
+  const { data: carts, error } = await getCartsWithProducts()
+  if (error) {
+    return <Toaster message={error.message} redirect="/cart" />
+  }
+  let products = carts!.map((cart) => {
+    return {
+      ...cart.Products,
+      cartId: cart.id,
+      quantity: cart.quantity,
+    }
+  })
 
   let total = 0
-  products!.forEach((product) => {
-    total += Number(product.amount)
-  })
+  if (products) {
+    products!.forEach((product) => {
+      total += Number(product.amount) * product.quantity
+    })
+  }
+
+  const handleRemoveFromCart = async (prevState: any, formData: FormData) => {
+    "use server"
+    const id = formData.get("id") as string
+    await deleteCart(id)
+    revalidatePath("/cart")
+  }
 
   return (
     <div className="space-y-20">
@@ -26,7 +48,7 @@ export default async function CartPage() {
                   <div className="flex-shrink-0">
                     <Image
                       src={`${process.env.NEXT_PUBLIC_SUPABASE_BUCKET}${product.id}?v=${product.image}`}
-                      alt={product.title}
+                      alt={product.title!}
                       width={800}
                       height={600}
                       className="h-24 w-24 rounded-md object-cover object-center sm:h-48 sm:w-48"
@@ -52,7 +74,7 @@ export default async function CartPage() {
 
                       <div className="mt-4 sm:mt-0 sm:pr-9">
                         <label htmlFor={`quantity-${productIdx}`} className="sr-only">
-                          Quantity, {product.title}
+                          Quantity, {product.quantity}
                         </label>
                         <select
                           id={`quantity-${productIdx}`}
@@ -69,15 +91,16 @@ export default async function CartPage() {
                           <option value={8}>8</option>
                         </select>
 
-                        <div className="absolute right-0 top-0">
+                        <Form action={handleRemoveFromCart} className="absolute right-0 top-0">
+                          <input type="hidden" name="id" defaultValue={product.cartId} />
                           <button
-                            type="button"
+                            type="submit"
                             className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500"
                           >
                             <span className="sr-only">Remove</span>
                             <XMarkIcon aria-hidden="true" className="h-5 w-5" />
                           </button>
-                        </div>
+                        </Form>
                       </div>
                     </div>
                   </div>
