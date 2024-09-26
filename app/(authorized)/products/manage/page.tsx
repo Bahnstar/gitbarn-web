@@ -3,7 +3,8 @@ import { getProducts } from "@/server/handlers/products"
 import Link from "next/link"
 
 const ManageProductsPage = async () => {
-  const { data: products, error } = await getProducts()
+  // "true" gets all products regardless of status
+  const { data: products, error } = await getProducts(true)
 
   return (
     <div className="px-4 sm:px-6 lg:px-8">

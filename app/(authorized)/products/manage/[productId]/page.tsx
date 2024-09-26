@@ -1,5 +1,5 @@
 import { getProductsById } from "@/server/handlers/products"
-import { processProduct } from "@/server/utils"
+import { processProduct } from "@/utils/forms"
 
 import ProductForm from "@/components/ProductForm"
 

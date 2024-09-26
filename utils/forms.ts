@@ -1,6 +1,6 @@
 "use server"
 import { createClient } from "@/utils/supabase/server"
-import { createProduct, updateProduct } from "./handlers/products"
+import { createProduct, updateProduct } from "@/server/handlers/products"
 import { Product } from "@/types/product"
 import { revalidatePath } from "next/cache"
 

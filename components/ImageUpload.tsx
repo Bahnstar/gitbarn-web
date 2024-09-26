@@ -7,7 +7,7 @@ import { Image as ImageIcon } from "lucide-react"
 const ImageUpload = (props: { id?: string; version?: string }) => {
   const [image, setImage] = useState<File>()
   const [preview, setPreview] = useState<string>(
-    `${process.env.NEXT_PUBLIC_SUPABASE_BUCKET}${props.id}?v=${props.version}` ?? "",
+    props.id ? `${process.env.NEXT_PUBLIC_SUPABASE_BUCKET}${props.id}?v=${props.version}` : "",
   )
   const [isOver, setIsOver] = useState<boolean>(false)
 

@@ -4,9 +4,14 @@ import { Product } from "@/types/product"
 import { createClient } from "@/utils/supabase/server"
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
 
-export const getProducts = async (): Promise<PostgrestSingleResponse<Product[]>> => {
+export const getProducts = async (
+  showAll?: boolean,
+): Promise<PostgrestSingleResponse<Product[]>> => {
   const supabase = createClient()
-  return await supabase.from("Products").select("*")
+
+  if (showAll) return await supabase.from("Products").select("*")
+
+  return await supabase.from("Products").select("*").eq("status", "Public")
 }
 
 export const getProductsById = async (id: string): Promise<PostgrestSingleResponse<Product[]>> => {
