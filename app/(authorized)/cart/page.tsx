@@ -6,11 +6,11 @@ import { revalidatePath } from "next/cache"
 import Form from "@/components/Form"
 
 export default async function CartPage() {
-  const { data: carts, error } = await getCartsWithProducts()
+  const { data: cartItems, error } = await getCartsWithProducts()
   if (error) {
     return <Toaster message={error.message} redirect="/cart" />
   }
-  let products = carts!.map((cart) => {
+  let products = cartItems!.map((cart) => {
     return {
       ...cart.Products,
       cartId: cart.id,
@@ -25,7 +25,7 @@ export default async function CartPage() {
     })
   }
 
-  const handleRemoveFromCart = async (prevState: any, formData: FormData) => {
+  const handleRemoveFromCart = async (_prevState: any, formData: FormData) => {
     "use server"
     const id = formData.get("id") as string
     await deleteCart(id)
