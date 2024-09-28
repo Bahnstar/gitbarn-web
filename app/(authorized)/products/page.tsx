@@ -1,13 +1,16 @@
 "use client"
+import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { toast } from "sonner"
+
 import { getProducts } from "@/server/handlers/products"
-import { ShoppingCartIcon } from "lucide-react"
-import { useEffect, useState } from "react"
-import { Product } from "@/types/product"
 import { createCart } from "@/server/handlers/carts"
-import { Cart } from "@/types/cart"
 import { getCurrentUser } from "@/server/handlers/users"
+import { Product } from "@/types/product"
+import { Cart } from "@/types/cart"
+
+import { ShoppingCartIcon } from "lucide-react"
 
 const ProductsPage = () => {
   const [products, setProducts] = useState<Product[]>([])
@@ -40,6 +43,7 @@ const ProductsPage = () => {
       return
     }
     console.log(data)
+    toast.success(`${product.title} was successfully added to your cart`)
   }
 
   // if (error)
