@@ -9,11 +9,19 @@ import { createCart } from "@/server/handlers/carts"
 import { getCurrentUser } from "@/server/handlers/users"
 import { Product } from "@/types/product"
 import { Cart } from "@/types/cart"
+import { ShoppingCartIcon, LoaderCircle } from "lucide-react"
+import { revalidatePath } from "next/cache"
+import clientRevalidate from "@/utils/clientRevalidate"
 
-import { ShoppingCartIcon } from "lucide-react"
+type CartLoading = {
+  loading: boolean,
+  productTitle: string
+}
 
 const ProductsPage = () => {
   const [products, setProducts] = useState<Product[]>([])
+  const [addToCartLoading, setAddToCartLoading] = useState<CartLoading>({ loading: false, productTitle: "" })
+
   useEffect(() => {
     getPublicProducts()
   }, [])
@@ -37,21 +45,17 @@ const ProductsPage = () => {
       product_id: product.id!,
       quantity: 1,
     }
-    const { data, error } = await createCart(cartItem)
+
+    setAddToCartLoading({ loading: true, productTitle: product.title })
+    const { error } = await createCart(cartItem)
     if (error) {
       console.log(error)
       return
     }
-    console.log(data)
+    setAddToCartLoading({ loading: false, productTitle: "" })
+    clientRevalidate("/cart")
     toast.success(`${product.title} was successfully added to your cart`)
   }
-
-  // if (error)
-  //   return (
-  //     <h1 className="self-start text-4xl font-semibold leading-6 text-gray-900">
-  //       An error occured while retrieving products
-  //     </h1>
-  //   )
 
   return (
     <div className="flex w-full flex-1 flex-col items-center gap-20">
@@ -98,13 +102,17 @@ const ProductsPage = () => {
               </figure>
               <div className="card-body">
                 <h2 className="card-title">{product.title}</h2>
-                <p className="line-clamp-2">{product.description}</p>
+                <p className="line-clamp-1">{product.description}</p>
                 <div className="card-actions justify-end">
                   <button
                     onClick={() => addToCart(product)}
                     className="btn flex items-center bg-green-600 text-white hover:bg-green-700"
                   >
-                    <ShoppingCartIcon className="h-5 w-5" />
+                    {addToCartLoading.loading && addToCartLoading.productTitle === product.title ? (
+                      <LoaderCircle className="animate-spin" />
+                    ) : (
+                      <ShoppingCartIcon className="h-5 w-5" />
+                    )}
                     Add to Cart
                   </button>
                 </div>
