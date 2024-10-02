@@ -3,8 +3,8 @@ import { processProduct } from "@/utils/forms"
 
 import ProductForm from "@/components/ProductForm"
 
-const EditProductPage = async ({ params }: { params: { productId: string } }) => {
-  const { data: products, error } = await getProductsById(params.productId)
+const EditProductPage = async ({ params }: { params: { id: string } }) => {
+  const { data: products, error } = await getProductsById(params.id)
 
   return (
     <div className="flex w-full flex-1 flex-col items-center gap-20">
