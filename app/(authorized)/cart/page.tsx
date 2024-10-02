@@ -5,6 +5,7 @@ import Toaster from "@/components/Toaster"
 import { revalidatePath } from "next/cache"
 import Form from "@/components/Form"
 import Link from "next/link"
+import CartSelect from "@/components/CartSelect"
 
 export default async function CartPage() {
   const { data: cartItems, error } = await getCartsWithProducts()
@@ -90,24 +91,7 @@ export default async function CartPage() {
                         </div>
 
                         <div className="mt-4 sm:mt-0 sm:pr-9">
-                          <label htmlFor={`quantity-${productIdx}`} className="sr-only">
-                            Quantity, {product.quantity}
-                          </label>
-                          <select
-                            id={`quantity-${productIdx}`}
-                            name={`quantity-${productIdx}`}
-                            className="max-w-full rounded-md border border-gray-300  p-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 sm:text-sm"
-                          >
-                            <option value={1}>1</option>
-                            <option value={2}>2</option>
-                            <option value={3}>3</option>
-                            <option value={4}>4</option>
-                            <option value={5}>5</option>
-                            <option value={6}>6</option>
-                            <option value={7}>7</option>
-                            <option value={8}>8</option>
-                          </select>
-
+                          <CartSelect cartId={product.cartId!} productIdx={productIdx} quantity={product.quantity} />
                           <Form action={handleRemoveFromCart} className="absolute right-0 top-0">
                             <input type="hidden" name="id" defaultValue={product.cartId} />
                             <button
