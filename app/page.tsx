@@ -97,14 +97,14 @@ export default async function Index() {
             <Swiper data={swiperData} />
           </BlurFade>
         </section>
-        <section className="m-auto w-full px-4 md:w-3/5 md:px-0">
+        <section className="m-auto w-full md:w-4/5 md:px-0 2xl:w-3/5">
           <BlurFade delay={2}>
             <div className="flex w-full flex-col items-center gap-12 md:flex-row">
               <div className="flex flex-1 flex-col gap-4">
                 <h2 className="text-center text-3xl font-semibold md:text-4xl">
                   Git Barn Manure Removal
                 </h2>
-                <p className="flex-1 text-center text-lg md:text-2xl">
+                <p className="flex-1 text-center text-lg md:text-xl 2xl:text-2xl">
                   Serving Palm Beach County, we provide eco-friendly manure removal services along
                   with premium yellow pine wood shavings for stalls. Our professional team is
                   committed to delivering exceptional service, quality products, and reliable
@@ -133,7 +133,7 @@ export default async function Index() {
           </BlurFade>
         </section>
         <section className="flex flex-col items-center gap-10">
-          <div className="m-auto flex w-full flex-col-reverse items-center justify-center gap-8 px-4 md:w-3/6 md:flex-row md:px-0">
+          <div className="m-auto flex w-full flex-col-reverse items-center justify-center gap-8 px-4 md:w-4/6 md:flex-row md:px-0 2xl:w-3/6">
             <Iphone15Pro
               className="h-[50vh]"
               src={"https://i.ibb.co/kGW15k6/photo-2024-09-12-17-10-14.jpg"}
