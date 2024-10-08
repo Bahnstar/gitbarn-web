@@ -5,7 +5,7 @@ import Link from "next/link"
 import { toast } from "sonner"
 
 import { getProducts } from "@/server/handlers/products"
-import { createCart } from "@/server/handlers/carts"
+import { createCart, getCartsById, updateCart } from "@/server/handlers/carts"
 import { getCurrentUser } from "@/server/handlers/users"
 import { Product } from "@/types/product"
 import { Cart } from "@/types/cart"
@@ -14,13 +14,16 @@ import { revalidatePath } from "next/cache"
 import clientRevalidate from "@/utils/clientRevalidate"
 
 type CartLoading = {
-  loading: boolean,
+  loading: boolean
   productTitle: string
 }
 
 const ProductsPage = () => {
   const [products, setProducts] = useState<Product[]>([])
-  const [addToCartLoading, setAddToCartLoading] = useState<CartLoading>({ loading: false, productTitle: "" })
+  const [addToCartLoading, setAddToCartLoading] = useState<CartLoading>({
+    loading: false,
+    productTitle: "",
+  })
 
   useEffect(() => {
     getPublicProducts()
@@ -40,6 +43,8 @@ const ProductsPage = () => {
       data: { user },
     } = await getCurrentUser()
 
+    const { data: carts, error: cError } = await getCartsById(product.id!, true)
+
     const cartItem: Cart = {
       user_id: user!.id,
       product_id: product.id!,
@@ -47,11 +52,23 @@ const ProductsPage = () => {
     }
 
     setAddToCartLoading({ loading: true, productTitle: product.title })
-    const { error } = await createCart(cartItem)
+
+    let error: any
+    if (carts && carts?.length > 0) {
+      const { data, error: err } = await updateCart(carts[0].id!, {
+        quantity: carts[0].quantity + 1,
+      })
+      error = err
+    } else {
+      const { error: err } = await createCart(cartItem)
+      error = err
+    }
+
     if (error) {
-      console.log(error)
+      console.error(error)
       return
     }
+
     setAddToCartLoading({ loading: false, productTitle: "" })
     clientRevalidate("/cart")
     toast.success(`${product.title} was successfully added to your cart`)

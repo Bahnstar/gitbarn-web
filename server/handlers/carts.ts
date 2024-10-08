@@ -15,8 +15,12 @@ export const getCartsWithProducts = async (): Promise<PostgrestSingleResponse<Ca
   return await supabase.from("Carts").select("*, Products(*)")
 }
 
-export const getCartsById = async (id: string): Promise<PostgrestSingleResponse<Cart[]>> => {
+export const getCartsById = async (
+  id: string,
+  isProductId?: boolean,
+): Promise<PostgrestSingleResponse<Cart[]>> => {
   const supabase = createClient()
+  if (isProductId) return await supabase.from("Carts").select("*").eq("product_id", id)
   return await supabase.from("Carts").select("*").eq("id", id)
 }
 

@@ -34,6 +34,8 @@ export default async function CartPage() {
     revalidatePath("/cart")
   }
 
+  console.log(products)
+
   return (
     <div className="space-y-20">
       <h1 className="self-start text-4xl font-semibold leading-6 text-gray-900">Shopping Cart</h1>
@@ -91,7 +93,11 @@ export default async function CartPage() {
                         </div>
 
                         <div className="mt-4 sm:mt-0 sm:pr-9">
-                          <CartSelect cartId={product.cartId!} productIdx={productIdx} quantity={product.quantity} />
+                          <CartSelect
+                            cartId={product.cartId!}
+                            productIdx={productIdx}
+                            quantity={product.quantity}
+                          />
                           <Form action={handleRemoveFromCart} className="absolute right-0 top-0">
                             <input type="hidden" name="id" defaultValue={product.cartId} />
                             <button
