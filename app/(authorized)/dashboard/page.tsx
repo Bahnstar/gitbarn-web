@@ -1,3 +1,4 @@
+import { getRecentConversations } from "@/server/handlers/conversations"
 import { getRecentOrders } from "@/server/handlers/tiger"
 import { getCurrentUser } from "@/server/handlers/users"
 
@@ -6,7 +7,12 @@ export default async function DashboardPage() {
     data: { user },
   } = await getCurrentUser()
 
-  const recentOrders = await getRecentOrders()
+  const [recentOrders, { data: recentConversations }] = await Promise.all([
+    getRecentOrders(),
+    getRecentConversations(5),
+  ])
+
+  console.log(recentConversations)
 
   return (
     <div className="flex w-full flex-1 flex-col items-center gap-20">
@@ -61,37 +67,28 @@ export default async function DashboardPage() {
             <table className="table">
               <thead>
                 <tr>
-                  <th>Customer</th>
                   <th>Topic</th>
+                  <th>Status</th>
                   <th className="text-right">Time</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td className="font-medium">Olivia Martin</td>
-                  <td>Order Inquiry</td>
-                  <td className="text-right">5 min ago</td>
-                </tr>
-                <tr>
-                  <td className="font-medium">Ava Johnson</td>
-                  <td>Refund Request</td>
-                  <td className="text-right">15 min ago</td>
-                </tr>
-                <tr>
-                  <td className="font-medium">Michael Johnson</td>
-                  <td>Shipping Issue</td>
-                  <td className="text-right">30 min ago</td>
-                </tr>
-                <tr>
-                  <td className="font-medium">Lisa Anderson</td>
-                  <td>Product Feedback</td>
-                  <td className="text-right">45 min ago</td>
-                </tr>
-                <tr>
-                  <td className="font-medium">Samantha Green</td>
-                  <td>Account Question</td>
-                  <td className="text-right">1 hour ago</td>
-                </tr>
+                {recentConversations!.map((conversation) => {
+                  return (
+                    <tr key={conversation.id}>
+                      {/* <td>{conversation.users.email}</td> */}
+                      <td className="line-clamp-1 font-medium">{conversation.title}</td>
+                      <td>{conversation.is_active ? "Active" : "Inactive"}</td>
+                      <td className="text-right">
+                        {new Date(conversation.created_at!).toLocaleDateString("en-US", {
+                          month: "2-digit",
+                          day: "2-digit",
+                          year: "numeric",
+                        })}
+                      </td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>
