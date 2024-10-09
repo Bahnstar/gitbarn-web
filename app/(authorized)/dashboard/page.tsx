@@ -1,9 +1,12 @@
+import { getRecentOrders } from "@/server/handlers/tiger"
 import { getCurrentUser } from "@/server/handlers/users"
 
 export default async function DashboardPage() {
   const {
     data: { user },
   } = await getCurrentUser()
+
+  const recentOrders = await getRecentOrders()
 
   return (
     <div className="flex w-full flex-1 flex-col items-center gap-20">
@@ -22,37 +25,27 @@ export default async function DashboardPage() {
             <table className="table">
               <thead>
                 <tr>
-                  <th>Order</th>
+                  <th>Order Date</th>
                   <th>Customer</th>
                   <th className="text-right">Total</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td className="font-medium">#3210</td>
-                  <td>Olivia Martin</td>
-                  <td className="text-right">$42.25</td>
-                </tr>
-                <tr>
-                  <td className="font-medium">#3209</td>
-                  <td>Ava Johnson</td>
-                  <td className="text-right">$74.99</td>
-                </tr>
-                <tr>
-                  <td className="font-medium">#3204</td>
-                  <td>Michael Johnson</td>
-                  <td className="text-right">$64.75</td>
-                </tr>
-                <tr>
-                  <td className="font-medium">#3203</td>
-                  <td>Lisa Anderson</td>
-                  <td className="text-right">$34.50</td>
-                </tr>
-                <tr>
-                  <td className="font-medium">#3202</td>
-                  <td>Samantha Green</td>
-                  <td className="text-right">$89.99</td>
-                </tr>
+                {recentOrders.map((order) => {
+                  return (
+                    <tr key={order.transaction_id}>
+                      {/* TODO: Format date as MM-DD-YYYY */}
+                      <td>
+                        {order.actions[0].date.slice(4, 6)}-{order.actions[0].date.slice(6, 8)}-
+                        {order.actions[0].date.slice(0, 4)}
+                      </td>
+                      <td>
+                        {order.customer.first_name} {order.customer.last_name}
+                      </td>
+                      <td className="text-right">${order.actions[0].amount}</td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>
