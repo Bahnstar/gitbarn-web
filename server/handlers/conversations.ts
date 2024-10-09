@@ -9,6 +9,18 @@ export const getConversations = async (): Promise<PostgrestSingleResponse<Conver
   return await supabase.from("Conversations").select("*")
 }
 
+export const getRecentConversations = async (
+  n: number,
+): Promise<PostgrestSingleResponse<Conversation[]>> => {
+  const supabase = createClient()
+  // also get the user email
+  return await supabase
+    .from("Conversations")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(n)
+}
+
 export const getConversationsByCustomerId = async (
   userId: string,
 ): Promise<PostgrestSingleResponse<Conversation[]>> => {
