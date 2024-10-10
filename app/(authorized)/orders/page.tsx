@@ -12,12 +12,6 @@ export default async function DashboardPage() {
         <div className="sm:flex sm:items-center">
           <div className="mt-4 flex w-full justify-between gap-4 sm:mt-0">
             <OrdersSearch />
-            <button
-              type="button"
-              className="block rounded-md bg-green-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Add Order
-            </button>
           </div>
         </div>
       </div>
