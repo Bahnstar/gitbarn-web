@@ -4,6 +4,7 @@ import { redirect } from "next/navigation"
 import { Conversation } from "@/types/conversation"
 import Link from "next/link"
 import { formatDate } from "@/utils/utils"
+import NewConversationButton from "@/components/NewConversationButton"
 
 const SupportPage = async () => {
   const {
@@ -49,11 +50,7 @@ const SupportPage = async () => {
             </label>
           </div>
           <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-            <form action={startConversation}>
-              <button className="block rounded-md bg-green-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                New Conversation
-              </button>
-            </form>
+            <NewConversationButton userId={userId} />
           </div>
         </div>
         <div className="mt-8 flow-root">

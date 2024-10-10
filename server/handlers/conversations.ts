@@ -3,6 +3,7 @@
 import { Conversation } from "@/types/conversation"
 import { createClient } from "@/utils/supabase/server"
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
+import { sendNewChatEmail } from "./emails"
 
 export const getConversations = async (): Promise<PostgrestSingleResponse<Conversation[]>> => {
   const supabase = createClient()
@@ -25,7 +26,11 @@ export const getConversationsByCustomerId = async (
   userId: string,
 ): Promise<PostgrestSingleResponse<Conversation[]>> => {
   const supabase = createClient()
-  return await supabase.from("Conversations").select("*").eq("customer_id", userId)
+  return await supabase
+    .from("Conversations")
+    .select("*")
+    .eq("customer_id", userId)
+    .order("created_at", { ascending: false })
 }
 
 export const getConversationsBySupportId = async (
@@ -72,7 +77,19 @@ export const createConversation = async (
   conversation: Conversation,
 ): Promise<PostgrestSingleResponse<Conversation>> => {
   const supabase = createClient()
-  return await supabase.from("Conversations").insert([conversation]).select().limit(1).single()
+
+  const newConversation = await supabase
+    .from("Conversations")
+    .insert([conversation])
+    .select()
+    .limit(1)
+    .single()
+
+  if (process.env.ENVIRONMENT !== "development") {
+    // TODO: send to all users with support role
+    await sendNewChatEmail(newConversation.data.title, newConversation.data.id)
+  }
+  return newConversation
 }
 
 export const updateConversation = async (
