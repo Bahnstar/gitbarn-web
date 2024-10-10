@@ -15,7 +15,6 @@ const SupportChatPage = async ({ searchParams }: { searchParams: { id: string } 
   }
 
   const id = searchParams.id
-  console.log(id)
   const { data: conversation, error: convError } = await getConversationById(id)
 
   if (convError) {

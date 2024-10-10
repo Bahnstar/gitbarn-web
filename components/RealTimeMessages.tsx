@@ -16,6 +16,7 @@ const RealTimeMessages = (props: Props) => {
 
   const [messages, setMessages] = useState<Message[]>(props.messages)
   const [message, setMessage] = useState<string>("")
+  const [connectedUsers, setConnectedUsers] = useState<string[]>([])
   const chatboxRef = useRef<HTMLDivElement | null>(null)
 
   const handleSubmit = async () => {
@@ -35,6 +36,13 @@ const RealTimeMessages = (props: Props) => {
   useEffect(() => {
     const channel = supabase
       .channel("Messages")
+      .on("presence", { event: "sync" }, () => {
+        const newState = channel.presenceState()
+        const users = Object.values(newState)
+          .flat()
+          .map((user: any) => user.user_id)
+        setConnectedUsers(users)
+      })
       .on(
         "postgres_changes",
         {
@@ -76,7 +84,11 @@ const RealTimeMessages = (props: Props) => {
           setMessages((prev) => prev.filter((message) => message.id !== payload.old.id))
         },
       )
-      .subscribe()
+      .subscribe(async (status) => {
+        if (status === "SUBSCRIBED") {
+          await channel.track({ user_id: props.userId })
+        }
+      })
 
     return () => {
       supabase.removeChannel(channel)
@@ -88,6 +100,12 @@ const RealTimeMessages = (props: Props) => {
       <h1 className="sticky top-0 z-30 bg-gray-100 py-5 text-center text-2xl md:text-left">
         {props.conversation.title}
       </h1>
+      <p>
+        Connected Users:{" "}
+        {connectedUsers.map((user) => {
+          return <span key={user}>{user} </span>
+        })}
+      </p>
       <div className="flex flex-1 flex-col">
         <div className="flex flex-1 flex-col-reverse">
           <div>
