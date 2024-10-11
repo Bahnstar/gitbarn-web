@@ -13,7 +13,6 @@ export const getRecentOrders = async (): Promise<Transaction[]> => {
   const data = await fetchTransactions(params)
   const result = parseXMLResponse(data)
   const transformedTransactions = transformTransactions(result)
-
   return transformedTransactions
 }
 

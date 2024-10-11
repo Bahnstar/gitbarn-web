@@ -12,7 +12,7 @@ export default async function DashboardPage() {
     getRecentConversations(5),
   ])
 
-  console.log(recentConversations)
+  console.log(recentOrders, recentConversations)
 
   return (
     <div className="flex w-full flex-1 flex-col items-center gap-20">
@@ -37,7 +37,7 @@ export default async function DashboardPage() {
                 </tr>
               </thead>
               <tbody>
-                {recentOrders.map((order) => {
+                {recentOrders?.map((order) => {
                   return (
                     <tr key={order.transaction_id}>
                       {/* TODO: Format date as MM-DD-YYYY */}
@@ -73,7 +73,7 @@ export default async function DashboardPage() {
                 </tr>
               </thead>
               <tbody>
-                {recentConversations!.map((conversation) => {
+                {recentConversations?.map((conversation) => {
                   return (
                     <tr key={conversation.id}>
                       {/* <td>{conversation.users.email}</td> */}

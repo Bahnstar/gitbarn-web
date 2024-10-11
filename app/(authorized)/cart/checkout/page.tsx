@@ -1,7 +1,8 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState, useEffect, FormEvent } from "react"
 import Script from "next/script"
 import Link from "next/link"
+import { Tokenization } from "@/types/tigerTransaction"
 
 const CollectJSSection = () => {
   return (
@@ -13,22 +14,26 @@ const CollectJSSection = () => {
   )
 }
 
+declare var CollectJS: any
+
 const InlineCartPage = () => {
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [amount, setAmount] = useState("")
+
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [alertMessage, setAlertMessage] = useState("")
 
   useEffect(() => {
+    console.log(CollectJS)
     // Ensure this runs only on the client side
-    if (typeof window !== "undefined" && window.CollectJS) {
-      window.CollectJS.configure({
+    if (typeof window !== "undefined" && CollectJS) {
+      CollectJS.configure({
         variant: "inline",
-        styleSniffer: false,
-        callback: (token) => {
-          console.log(token)
-          finishSubmit(token)
+        styleSniffer: true,
+        callback: (response: Tokenization) => {
+          console.log("CALLBACK")
+          finishSubmit(response)
         },
         fields: {
           ccnumber: {
@@ -48,23 +53,21 @@ const InlineCartPage = () => {
     }
   }, [])
 
-  const finishSubmit = (response) => {
+  const finishSubmit = (response: Tokenization) => {
     const formData = {
       firstName,
       lastName,
       amount,
       token: response.token,
     }
-    console.log(formData)
     setIsSubmitting(false)
     setAlertMessage("The form was submitted. Check the console to see the output data.")
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
-    console.log(event)
     setIsSubmitting(true)
-    window.CollectJS.startPaymentRequest()
+    CollectJS.startPaymentRequest()
   }
 
   return (

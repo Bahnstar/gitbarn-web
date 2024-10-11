@@ -24,3 +24,51 @@ export interface Action {
   success: boolean
   response: string
 }
+
+export type Tokenization = {
+  initiatedBy?: string
+  token: string
+  tokenType: string
+  card: {
+    bin: string | null
+    exp: string | null
+    hash: string | null
+    number: string | null
+    type: string | null
+  }
+  check: {
+    aba: string | null
+    account: string | null
+    hash: string | null
+    name: string | null
+    transit: string | null
+  }
+  wallet: {
+    cardDetails: string | null
+    cardNetwork: string | null
+    email: string | null
+    billingInfo: {
+      address1: string | null
+      address2: string | null
+      city: string | null
+      country: string | null
+      firstName: string | null
+      lastName: string | null
+      phone: string | null
+      postalCode: string | null
+      state: string | null
+    }
+    shippingInfo: {
+      address1: string | null
+      address2: string | null
+      city: string | null
+      country: string | null
+      firstName: string | null
+      lastName: string | null
+      phone: string | null
+      postalCode: string | null
+      state: string | null
+      method: string | null
+    }
+  }
+}

@@ -24,6 +24,8 @@ export const transformTransactions = (result: any): Transaction[] => {
     ? result.nm_response.transaction
     : [result.nm_response.transaction]
 
+  if (transactions.length === 0 || transactions[0] === undefined) return []
+
   return transactions.map((trans: any) => ({
     transaction_id: trans.transaction_id,
     transaction_type: trans.transaction_type,
