@@ -25,7 +25,6 @@ const InlineCartPage = () => {
   const [alertMessage, setAlertMessage] = useState("")
 
   useEffect(() => {
-    console.log(CollectJS)
     // Ensure this runs only on the client side
     if (typeof window !== "undefined" && CollectJS) {
       CollectJS.configure({
@@ -74,7 +73,7 @@ const InlineCartPage = () => {
     <div>
       <Script
         src="https://secure.safewebservices.com/token/Collect.js"
-        data-tokenization-key="7T6M5Z-DPpE87-M2WhW3-4Nx72C"
+        data-tokenization-key={process.env.NEXT_PUBLIC_COLLECTJS_KEY}
         strategy="beforeInteractive"
       />
       {alertMessage && <div className="alert">{alertMessage}</div>}
