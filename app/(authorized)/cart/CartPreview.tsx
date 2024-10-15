@@ -66,9 +66,7 @@ const CartPreview = (props: {
         </div>
       </div>
 
-      <div className="border-t border-gray-200 px-8 py-6">
-        <SubmissionButton />
-      </div>
+      <div className="border-t border-gray-200 px-8 py-6">{SubmissionButton}</div>
     </div>
   )
 }
