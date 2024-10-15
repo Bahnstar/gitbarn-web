@@ -88,14 +88,14 @@ export const makeTransaction = async (order: OrderSubmission, token: string): Pr
     security_key: apiKey,
     merchant_defined_field_1: userData.user?.id || "",
   }
-  console.log(new URLSearchParams(finishedOrder).toString())
+  console.log(new URLSearchParams(finishedOrder as unknown as Record<string, string>).toString())
 
   const response = await fetch(endpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     },
-    body: new URLSearchParams(finishedOrder).toString(),
+    body: new URLSearchParams(finishedOrder as unknown as Record<string, string>).toString(),
   })
 
   return JSON.stringify(response)
