@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect, FormEvent } from "react"
+import Script from "next/script"
 import { LoaderCircle } from "lucide-react"
 
 import CartPreview from "./CartPreview"
@@ -84,6 +85,11 @@ const CartForm = (props: { user: User; cart: CartItem[]; total: Number }) => {
 
   return (
     <form onSubmit={handleSubmit} className="flex w-full max-w-7xl flex-col gap-6 md:flex-row">
+      <Script
+        src="https://secure.safewebservices.com/token/Collect.js"
+        data-tokenization-key={process.env.NEXT_PUBLIC_COLLECTJS_KEY}
+        strategy="beforeInteractive"
+      />
       <div className="h-fit flex-1 gap-y-6 lg:grid lg:grid-cols-2 lg:gap-x-6">
         <CartFields user={user!} />
       </div>

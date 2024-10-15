@@ -5,14 +5,46 @@ import { OrderSubmission } from "@/types/tigerTransaction"
 
 const BillingInfo = () => (
   <>
+    <div className="col-span-1">
+      <label htmlFor="first_name" className="block text-sm font-medium text-gray-700">
+        First name
+      </label>
+      <div className="mt-2">
+        <input
+          id="first_name"
+          name="first_name"
+          type="text"
+          defaultValue=""
+          required
+          className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6"
+        />
+      </div>
+    </div>
+
+    <div className="col-span-1">
+      <label htmlFor="last_name" className="block text-sm font-medium text-gray-700">
+        Last name
+      </label>
+      <div className="mt-2">
+        <input
+          id="last_name"
+          name="last_name"
+          type="text"
+          defaultValue=""
+          required
+          className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6"
+        />
+      </div>
+    </div>
+
     <div className="col-span-2">
-      <label htmlFor="billing_address" className="block text-sm font-medium text-gray-700">
+      <label htmlFor="address" className="block text-sm font-medium text-gray-700">
         Address
       </label>
       <div className="mt-2">
         <input
-          id="billing_address"
-          name="billing_address"
+          id="address"
+          name="address"
           type="text"
           defaultValue=""
           required
@@ -22,13 +54,13 @@ const BillingInfo = () => (
     </div>
 
     <div className="col-span-2">
-      <label htmlFor="billing_address2" className="block text-sm font-medium text-gray-700">
+      <label htmlFor="address2" className="block text-sm font-medium text-gray-700">
         Apartment, suite, etc.
       </label>
       <div className="mt-2">
         <input
-          id="billing_address2"
-          name="billing_address2"
+          id="address2"
+          name="address2"
           type="text"
           defaultValue=""
           className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6"
@@ -37,13 +69,13 @@ const BillingInfo = () => (
     </div>
 
     <div className="col-span-1">
-      <label htmlFor="billing_city" className="block text-sm font-medium text-gray-700">
+      <label htmlFor="city" className="block text-sm font-medium text-gray-700">
         City
       </label>
       <div className="mt-2">
         <input
-          id="billing_city"
-          name="billing_city"
+          id="city"
+          name="city"
           type="text"
           defaultValue=""
           required
@@ -53,13 +85,13 @@ const BillingInfo = () => (
     </div>
 
     <div className="col-span-1">
-      <label htmlFor="billing_state" className="block text-sm font-medium text-gray-700">
+      <label htmlFor="state" className="block text-sm font-medium text-gray-700">
         State / Province
       </label>
       <div className="mt-2">
         <input
-          id="billing_state"
-          name="billing_state"
+          id="state"
+          name="state"
           type="text"
           defaultValue=""
           required
@@ -69,13 +101,13 @@ const BillingInfo = () => (
     </div>
 
     <div className="col-span-1">
-      <label htmlFor="billing_zip" className="block text-sm font-medium text-gray-700">
+      <label htmlFor="zip" className="block text-sm font-medium text-gray-700">
         Postal Code
       </label>
       <div className="mt-2">
         <input
-          id="billing_zip"
-          name="billing_zip"
+          id="zip"
+          name="zip"
           type="text"
           pattern="[0-9]{5}"
           defaultValue=""
@@ -86,13 +118,13 @@ const BillingInfo = () => (
     </div>
 
     <div className="col-span-1">
-      <label htmlFor="billing_country" className="block text-sm font-medium text-gray-700">
+      <label htmlFor="country" className="block text-sm font-medium text-gray-700">
         Country
       </label>
       <div className="mt-2">
         <input
-          id="billing_country"
-          name="billing_country"
+          id="country"
+          name="country"
           type="text"
           defaultValue="United States"
           disabled

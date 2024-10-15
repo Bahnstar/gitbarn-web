@@ -1,5 +1,3 @@
-import Script from "next/script"
-
 import { getCurrentUser } from "@/server/handlers/users"
 import { getCartsWithProducts } from "@/server/handlers/carts"
 
@@ -29,12 +27,6 @@ const CartPage = async () => {
 
   return (
     <div className="flex w-full flex-1 flex-col items-center gap-20">
-      <Script
-        src="https://secure.safewebservices.com/token/Collect.js"
-        data-tokenization-key={process.env.NEXT_PUBLIC_COLLECTJS_KEY}
-        strategy="beforeInteractive"
-      />
-
       <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">Cart</h1>
 
       <CartForm user={user!} cart={cart!} total={total} />
