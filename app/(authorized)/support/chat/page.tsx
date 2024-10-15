@@ -18,7 +18,7 @@ const SupportChatPage = async ({ searchParams }: { searchParams: { id: string } 
   const { data: conversation, error: convError } = await getConversationById(id)
 
   if (convError) {
-    console.log(convError)
+    console.error(convError)
     return (
       <Toaster
         message="An error occured while accessing this chat. Please try again later."
@@ -34,7 +34,7 @@ const SupportChatPage = async ({ searchParams }: { searchParams: { id: string } 
   const { data: messages, error: messError } = await getConversationMessages(id)
 
   if (messError) {
-    console.log(messError)
+    console.error(messError)
     return (
       <Toaster
         message="An error occured while accessing this chat. Please try again later."
