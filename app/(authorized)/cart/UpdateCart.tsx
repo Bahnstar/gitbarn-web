@@ -28,7 +28,7 @@ export default function UpdateCart(props: Props) {
     clientRevalidate("/newcart")
   }
 
-  const handleRemove = async (e: MouseEvent, id: string) => {
+  const handleRemove = async (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
     e.preventDefault()
     const res = await deleteCart(id)
     clientRevalidate("/newcart")
