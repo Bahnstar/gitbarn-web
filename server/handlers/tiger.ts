@@ -68,7 +68,7 @@ export const makeTransaction = async (order: OrderSubmission, token: string): Pr
   const { data: userData } = await getCurrentUser()
 
   let append_billing_add = {}
-  if (order.same_addresses) {
+  if (order.same_billing_address) {
     append_billing_add = {
       address1: order.shipping_address1,
       address2: order.shipping_address2,

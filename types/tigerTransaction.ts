@@ -93,7 +93,7 @@ export interface OrderSubmission {
   shipping_state: string
   shipping_zip: string
   shipping_country: string
-  same_addresses?: boolean
+  same_billing_address?: boolean
   amount: Number
   merchant_defined_field_1: string
 }
