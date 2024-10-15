@@ -6,7 +6,9 @@ import {
   Transaction,
 } from "@/types/tigerTransaction"
 import { fetchTransactions, parseXMLResponse, transformTransactions } from "@/utils/tigerUtils"
+import { getCartWithTotal } from "./carts"
 import { getCurrentUser } from "@/server/handlers/users"
+import { revalidatePath } from "next/cache"
 
 export const getRecentOrders = async (): Promise<Transaction[]> => {
   const params = new URLSearchParams({
@@ -29,7 +31,7 @@ export const getCompletedTransactions = async (page: number): Promise<Transactio
     result_order: "reverse",
     result_limit: "10",
     page_number: page.toString(),
-    condition: "complete",
+    condition: "pendingsettlement,complete",
   })
 
   const data = await fetchTransactions(params)
@@ -66,6 +68,11 @@ export const makeTransaction = async (order: OrderSubmission, token: string): Pr
   const endpoint = process.env.TIGER_ENDPOINT!
 
   const { data: userData } = await getCurrentUser()
+  const cart = await getCartWithTotal()
+
+  if (cart.items.length === 0) {
+    return "The cart is empty"
+  }
 
   let append_billing_add = {}
   order.same_billing_address === "true" &&
@@ -87,8 +94,10 @@ export const makeTransaction = async (order: OrderSubmission, token: string): Pr
     payment_token: token,
     security_key: apiKey,
     merchant_defined_field_1: userData.user?.id || "",
+    amount: cart.total,
+    vat_tax_amount: cart.taxes.toString(),
+    vat_tax_rate: cart.taxRate.toString(),
   }
-  console.log(new URLSearchParams(finishedOrder as unknown as Record<string, string>).toString())
 
   const response = await fetch(endpoint, {
     method: "POST",
@@ -98,5 +107,6 @@ export const makeTransaction = async (order: OrderSubmission, token: string): Pr
     body: new URLSearchParams(finishedOrder as unknown as Record<string, string>).toString(),
   })
 
-  return JSON.stringify(response)
+  revalidatePath("/orders")
+  return response.statusText
 }

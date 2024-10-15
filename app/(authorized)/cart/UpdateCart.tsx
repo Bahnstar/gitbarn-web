@@ -28,7 +28,8 @@ export default function UpdateCart(props: Props) {
     clientRevalidate("/newcart")
   }
 
-  const handleRemove = async (id: string) => {
+  const handleRemove = async (e: MouseEvent, id: string) => {
+    e.preventDefault()
     const res = await deleteCart(id)
     clientRevalidate("/newcart")
   }
@@ -36,7 +37,7 @@ export default function UpdateCart(props: Props) {
   return (
     <>
       <button
-        onClick={() => handleRemove(props.cartId)}
+        onClick={(e) => handleRemove(e, props.cartId)}
         className="flex justify-end text-gray-400 hover:text-gray-500"
       >
         <span className="sr-only">Remove</span>

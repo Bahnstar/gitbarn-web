@@ -1,6 +1,7 @@
 "use server"
 
-import { Cart } from "@/types/cart"
+import { CartItem } from "@/app/(authorized)/cart/page"
+import { Cart, CartWithTotal } from "@/types/cart"
 import { createClient } from "@/utils/supabase/server"
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
 
@@ -45,4 +46,30 @@ export const updateCart = async (
 export const deleteCart = async (id: string): Promise<void> => {
   const supabase = createClient()
   await supabase.from("Carts").delete().eq("id", id)
+}
+
+export const getCartWithTotal = async (): Promise<CartWithTotal> => {
+  const { data, error } = await getCartsWithProducts()
+  if (error) throw Error("There was a problem retrieving cart items")
+
+  const cartItems: CartItem[] = data!.map((c) => ({
+    ...c.Products!,
+    cartId: c.id,
+    quantity: c.quantity,
+  }))
+
+  let subtotal = 0
+  cartItems && cartItems.forEach((item) => (subtotal += Number(item.amount) * item.quantity))
+
+  const taxRate = 0.06
+  const taxes = subtotal * 0.06
+  const total = subtotal + taxes
+
+  return {
+    items: cartItems,
+    subtotal: subtotal,
+    taxRate: taxRate,
+    taxes: taxes,
+    total: total,
+  }
 }

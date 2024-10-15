@@ -94,7 +94,7 @@ export interface OrderSubmission {
   shipping_zip: string
   shipping_country: string
   same_billing_address?: string
-  amount: Number
+  amount: number
   merchant_defined_field_1: string
 }
 
@@ -102,4 +102,6 @@ export interface FinishedSubmission extends OrderSubmission {
   type: string
   security_key: string
   payment_token: string
+  vat_tax_amount: string
+  vat_tax_rate: string
 }

@@ -133,6 +133,8 @@ const BillingInfo = () => (
         />
       </div>
     </div>
+
+    <hr className="col-span-2" />
   </>
 )
 
@@ -350,33 +352,6 @@ const CartFields = (props: { user: User }) => {
       </div>
 
       {!billingSame && <BillingInfo />}
-
-      <div className="col-span-2">
-        <label htmlFor="card-number" className="block text-sm font-medium text-gray-700">
-          Card number
-        </label>
-        <div className="mt-1">
-          <div id="ccnumber"></div>
-        </div>
-      </div>
-
-      <div className="col-span-1">
-        <label htmlFor="expiration-date" className="block text-sm font-medium text-gray-700">
-          Expiration date (MM/YY)
-        </label>
-        <div className="mt-1">
-          <div id="ccexp"></div>
-        </div>
-      </div>
-
-      <div>
-        <label htmlFor="cvc" className="block text-sm font-medium text-gray-700">
-          CVC
-        </label>
-        <div className="mt-1">
-          <div id="cvv"></div>
-        </div>
-      </div>
     </>
   )
 }

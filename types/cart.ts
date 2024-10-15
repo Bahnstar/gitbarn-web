@@ -8,3 +8,16 @@ export type Cart = {
   quantity: number
   readonly created_at?: string
 }
+
+export interface CartItem extends Product {
+  cartId?: string
+  quantity: number
+}
+
+export interface CartWithTotal {
+  items: CartItem[]
+  subtotal: number
+  taxes: number
+  taxRate: number
+  total: number
+}
