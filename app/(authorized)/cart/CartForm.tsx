@@ -61,7 +61,8 @@ const CartForm = (props: { user: User; cart: CartItem[]; total: Number }) => {
   }
 
   useEffect(() => {
-    CollectJS &&
+    window !== undefined &&
+      CollectJS &&
       CollectJS.configure({
         variant: "inline",
         styleSniffer: true,
