@@ -1,7 +1,6 @@
 "use server"
 
-import { CartItem } from "@/app/(authorized)/cart/page"
-import { Cart, CartWithTotal } from "@/types/cart"
+import { Cart, CartItem, CartWithTotal } from "@/types/cart"
 import { createClient } from "@/utils/supabase/server"
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
 
@@ -46,6 +45,11 @@ export const updateCart = async (
 export const deleteCart = async (id: string): Promise<void> => {
   const supabase = createClient()
   await supabase.from("Carts").delete().eq("id", id)
+}
+
+export const deleteAllCarts = async (user_id: string): Promise<void> => {
+  const supabase = createClient()
+  await supabase.from("Carts").delete().eq("user_id", user_id)
 }
 
 export const getCartWithTotal = async (): Promise<CartWithTotal> => {

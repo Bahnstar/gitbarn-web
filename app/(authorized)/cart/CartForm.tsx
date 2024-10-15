@@ -13,6 +13,7 @@ import { makeTransaction } from "@/server/handlers/tiger"
 
 import CartPreview from "./CartPreview"
 import CartFields from "./CartFields"
+import { deleteAllCarts } from "@/server/handlers/carts"
 
 declare var CollectJS: {
   configure: Function
@@ -78,6 +79,7 @@ const CartForm = (props: { user: User; cart: CartWithTotal }) => {
 
     if (response === "OK") {
       toast.success("Order successfully created")
+      deleteAllCarts(user.id)
       router.push("/orders")
     } else {
       toast.error(`An error occured: ${response}`)
