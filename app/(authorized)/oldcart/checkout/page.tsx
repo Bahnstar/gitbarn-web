@@ -3,6 +3,7 @@ import { useState, useEffect, FormEvent } from "react"
 import Script from "next/script"
 import Link from "next/link"
 import { Tokenization } from "@/types/tigerTransaction"
+import { makeTransaction } from "@/server/handlers/tiger"
 
 const CollectJSSection = () => {
   return (
@@ -14,7 +15,11 @@ const CollectJSSection = () => {
   )
 }
 
-declare var CollectJS: any
+// Declare "CollectJS" object so type checking knows this object exists
+declare var CollectJS: {
+  configure: Function
+  startPaymentRequest: Function
+}
 
 const InlineCartPage = () => {
   const [firstName, setFirstName] = useState("")
@@ -30,10 +35,7 @@ const InlineCartPage = () => {
       CollectJS.configure({
         variant: "inline",
         styleSniffer: true,
-        callback: (response: Tokenization) => {
-          console.log("CALLBACK")
-          finishSubmit(response)
-        },
+        callback: (response: Tokenization) => finishSubmit(response),
         fields: {
           ccnumber: {
             placeholder: "CC Number",
@@ -52,13 +54,15 @@ const InlineCartPage = () => {
     }
   }, [])
 
-  const finishSubmit = (response: Tokenization) => {
+  const finishSubmit = async (response: Tokenization) => {
     const formData = {
       firstName,
       lastName,
       amount,
       token: response.token,
     }
+
+    const transaction = await makeTransaction(formData)
     setIsSubmitting(false)
     setAlertMessage("The form was submitted. Check the console to see the output data.")
   }

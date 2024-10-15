@@ -2,6 +2,7 @@
 
 import { updateCart } from "@/server/handlers/carts"
 import { useState } from "react"
+import clientRevalidate from "@/utils/clientRevalidate"
 
 type Props = {
   cartId: string
@@ -16,13 +17,12 @@ export default function CartSelect(props: Props) {
     setQuantity(e.target.value)
 
     const { data, error } = await updateCart(props.cartId, {
-      quantity: e.target.value
+      quantity: e.target.value,
     })
     if (error) {
       console.log(error)
       return
     }
-    console.log(data)
   }
 
   return (

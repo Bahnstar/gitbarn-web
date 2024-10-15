@@ -1,68 +1,140 @@
+"use client"
 import Image from "next/image"
-import { QuestionMarkCircleIcon, XMarkIcon } from "@heroicons/react/20/solid"
-import { deleteCart, getCartsWithProducts } from "@/server/handlers/carts"
-import Toaster from "@/components/Toaster"
-import { revalidatePath } from "next/cache"
-import Form from "@/components/Form"
+import Script from "next/script"
 import Link from "next/link"
+import { useState, useEffect, FormEvent } from "react"
+import { toast } from "sonner"
+import { getCurrentUser } from "@/server/handlers/users"
+import { deleteCart, getCartsWithProducts, updateCart } from "@/server/handlers/carts"
+import { makeTransaction } from "@/server/handlers/tiger"
+import { TrashIcon } from "@heroicons/react/20/solid"
+
+import { Product } from "@/types/product"
+import { OrderSubmission, Tokenization } from "@/types/tigerTransaction"
+import CheckoutForm from "./form"
 import CartSelect from "@/components/CartSelect"
+import { LoaderCircle } from "lucide-react"
 
-export default async function CartPage() {
-  const { data: cartItems, error } = await getCartsWithProducts()
-  if (error) {
-    return <Toaster message={error.message} redirect="/cart" />
-  }
-  let products = cartItems!.map((cart) => {
-    return {
-      ...cart.Products,
-      cartId: cart.id,
-      quantity: cart.quantity,
-    }
-  })
+// Declare "CollectJS" object so type checking knows this object exists
+declare var CollectJS: {
+  configure: Function
+  startPaymentRequest: Function
+  orderData: OrderSubmission
+}
 
-  let total = 0
-  if (products) {
-    products!.forEach((product) => {
-      total += Number(product.amount) * product.quantity
+interface Cart extends Product {
+  cartId?: string
+  quantity?: string
+}
+
+const CartPage = () => {
+  const [products, setProducts] = useState<Cart[]>([])
+  const [total, setTotal] = useState(0)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [data, setData] = useState<OrderSubmission>({ email: "" } as OrderSubmission)
+
+  const getProducts = async () => {
+    const { data: cartItems, error } = await getCartsWithProducts()
+    const mappedProducts = cartItems!.map((cart) => {
+      return {
+        ...cart.Products,
+        cartId: cart.id,
+        quantity: cart.quantity,
+      }
     })
+
+    setProducts(mappedProducts as Cart[])
   }
 
-  const handleRemoveFromCart = async (_prevState: any, formData: FormData) => {
-    "use server"
-    const id = formData.get("id") as string
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault()
+    setIsSubmitting(true)
+    CollectJS.orderData = data
+    CollectJS.startPaymentRequest()
+  }
+
+  const getData = () => data
+
+  const finishSubmit = async (response: Tokenization) => {
+    console.log(CollectJS.orderData)
+    const transaction = await makeTransaction(CollectJS.orderData, response.token)
+    console.log("Transaction allegedly completed")
+    setIsSubmitting(false)
+  }
+
+  const handleRemoveFromCart = async (e: FormEvent, id: string) => {
+    e.preventDefault()
     await deleteCart(id)
-    revalidatePath("/cart")
+    await getProducts()
+    toast.success("Product successfully removed from cart")
   }
 
-  console.log(products)
+  const handleQuantityChange = (index: number, quantity: string) => {
+    let temp = [...products]
+    temp[index].quantity = quantity
+    setProducts(temp)
+  }
+
+  useEffect(() => {
+    getProducts()
+
+    if (typeof window !== "undefined" && CollectJS) {
+      CollectJS.configure({
+        variant: "inline",
+        styleSniffer: true,
+        callback: (response: Tokenization) => finishSubmit(response),
+        fields: {
+          ccnumber: {
+            placeholder: "CC Number",
+            selector: "#ccnumber",
+          },
+          ccexp: {
+            placeholder: "CC Expiration",
+            selector: "#ccexp",
+          },
+          cvv: {
+            placeholder: "CVV",
+            selector: "#cvv",
+          },
+        },
+      })
+    }
+  }, [])
+
+  useEffect(() => {
+    let sum = 0
+    products?.forEach((p: Cart) => (sum += Number(p.amount) * p.quantity!))
+    setTotal(sum)
+    setData({
+      ...data,
+      amount: sum,
+    })
+
+    if (CollectJS.orderData) CollectJS.orderData.amount = sum
+  }, [products])
+
+  useEffect(() => console.log(data), [data])
 
   return (
-    <div className="space-y-20">
-      <h1 className="self-start text-4xl font-semibold leading-6 text-gray-900">Shopping Cart</h1>
-      <div className="mx-auto max-w-2xl rounded-md bg-white px-4 pb-24 pt-16 shadow-sm sm:px-6 lg:max-w-7xl lg:px-8">
-        {products.length === 0 ? (
-          <div className="flex flex-col items-center justify-center gap-6">
-            <h1 className="text-center text-2xl">
-              Uh oh! It appears you have nothing in your shopping cart!
-            </h1>
-            <Link
-              href="/products"
-              className="w-fit rounded-md border border-transparent bg-green-600 px-4 py-3 text-center text-base font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-50"
-            >
-              Add products to cart here
-            </Link>
-          </div>
-        ) : (
-          <div className="lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
-            <section aria-labelledby="cart-heading" className="lg:col-span-7">
-              <h2 id="cart-heading" className="sr-only">
-                Items in your shopping cart
-              </h2>
+    <div className="bg-gray-50">
+      <Script
+        src="https://secure.safewebservices.com/token/Collect.js"
+        data-tokenization-key={process.env.NEXT_PUBLIC_COLLECTJS_KEY}
+        strategy="beforeInteractive"
+      />
+      <div className="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
+        <h2 className="sr-only">Checkout</h2>
 
-              <ul
-                role="list"
-                className="divide-y divide-gray-200 border-b border-t border-gray-200"
-              >
+        <form onSubmit={handleSubmit} className="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
+          <CheckoutForm fields={data} setFields={setData} />
+
+          {/* Order summary */}
+          <div className="mt-10 lg:mt-0">
+            <h2 className="text-lg font-medium text-gray-900">Order summary</h2>
+
+            <div className="mt-4 rounded-lg border border-gray-200 bg-white shadow-sm">
+              <h3 className="sr-only">Items in your cart</h3>
+              <ul role="list" className="divide-y divide-gray-200 px-5">
                 {products?.map((product, productIdx) => (
                   <li key={product.id} className="flex py-6 sm:py-10">
                     <div className="flex-shrink-0">
@@ -71,102 +143,105 @@ export default async function CartPage() {
                         alt={product.title!}
                         width={800}
                         height={600}
-                        className="h-24 w-24 rounded-md object-cover object-center sm:h-48 sm:w-48"
+                        className="w-20 rounded-md"
                       />
                     </div>
-                    <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
-                      <div className="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
-                        <div>
-                          <div className="flex justify-between">
-                            <h3 className="text-sm">
-                              <a
-                                href={product.title}
-                                className="font-medium text-gray-700 hover:text-gray-800"
-                              >
-                                {product.title}
-                              </a>
-                            </h3>
-                          </div>
-                          <p className="mt-1 text-sm font-medium text-gray-900">
+
+                    <div className="ml-6 flex flex-1 flex-col">
+                      <div className="flex">
+                        <div className="min-w-0 flex-1">
+                          <h4 className="text-sm">
+                            <Link
+                              href={"/products"}
+                              className="font-medium text-gray-700 hover:text-gray-800"
+                            >
+                              {product.title}
+                            </Link>
+                          </h4>
+                          <p className="mt-1 text-sm text-gray-500">
                             ${Number(product.amount).toFixed(2)}
                           </p>
                         </div>
 
-                        <div className="mt-4 sm:mt-0 sm:pr-9">
-                          <CartSelect
-                            cartId={product.cartId!}
-                            productIdx={productIdx}
-                            quantity={product.quantity}
-                          />
-                          <Form action={handleRemoveFromCart} className="absolute right-0 top-0">
-                            <input type="hidden" name="id" defaultValue={product.cartId} />
-                            <button
-                              type="submit"
-                              className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500"
-                            >
-                              <span className="sr-only">Remove</span>
-                              <XMarkIcon aria-hidden="true" className="h-5 w-5" />
-                            </button>
-                          </Form>
+                        <div className="ml-4 flow-root flex-shrink-0">
+                          <button
+                            type="button"
+                            onClick={(e) => handleRemoveFromCart(e, product.cartId!)}
+                            className="-m-2.5 flex items-center justify-center bg-white p-2.5 text-gray-400 hover:text-gray-500"
+                          >
+                            <span className="sr-only">Remove</span>
+                            <TrashIcon aria-hidden="true" className="h-5 w-5" />
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-1 items-end justify-between pt-2">
+                        <p className="mt-1 text-sm font-medium text-gray-900">{product.price}</p>
+
+                        <div className="ml-4">
+                          <label htmlFor="quantity" className="sr-only">
+                            Quantity
+                          </label>
+                          <select
+                            id={`quantity-${productIdx}`}
+                            name={`quantity-${productIdx}`}
+                            value={product.quantity}
+                            onChange={(e) => handleQuantityChange(productIdx, e.target.value)}
+                            className="max-w-full rounded-md border border-gray-300 p-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 sm:text-sm"
+                          >
+                            {[...Array(8)].map((_, i) => (
+                              <option key={i + 1} value={i + 1}>
+                                {i + 1}
+                              </option>
+                            ))}
+                          </select>
                         </div>
                       </div>
                     </div>
                   </li>
                 ))}
               </ul>
-            </section>
-
-            {/* Order summary */}
-            <section
-              aria-labelledby="summary-heading"
-              className="mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8"
-            >
-              <h2 id="summary-heading" className="text-lg font-medium text-gray-900">
-                Order summary
-              </h2>
-
-              <dl className="mt-6 space-y-4">
+              <dl className="space-y-6 border-t border-gray-200 px-4 py-6 sm:px-6">
                 <div className="flex items-center justify-between">
-                  <dt className="text-sm text-gray-600">Subtotal</dt>
+                  <dt className="text-sm">Subtotal</dt>
                   <dd className="text-sm font-medium text-gray-900">${total.toFixed(2)}</dd>
                 </div>
-                <div className="flex items-center justify-between border-t border-gray-200 pt-4">
-                  <dt className="flex items-center text-sm text-gray-600">
-                    <span>Shipping estimate</span>
-                    <a href="#" className="ml-2 flex-shrink-0 text-gray-400 hover:text-gray-500">
-                      <span className="sr-only">Learn more about how shipping is calculated</span>
-                      <QuestionMarkCircleIcon aria-hidden="true" className="h-5 w-5" />
-                    </a>
-                  </dt>
-                  <dd className="text-sm font-medium text-gray-900">$0.00</dd>
+                <div className="flex items-center justify-between">
+                  <dt className="text-sm">Shipping</dt>
+                  <dd className="text-sm font-medium text-gray-900">TBA</dd>
                 </div>
-                <div className="flex items-center justify-between border-t border-gray-200 pt-4">
-                  <dt className="flex text-sm text-gray-600">
-                    <span>Tax estimate</span>
-                    <a href="#" className="ml-2 flex-shrink-0 text-gray-400 hover:text-gray-500">
-                      <span className="sr-only">Learn more about how tax is calculated</span>
-                      <QuestionMarkCircleIcon aria-hidden="true" className="h-5 w-5" />
-                    </a>
-                  </dt>
-                  <dd className="text-sm font-medium text-gray-900">TBD</dd>
+                <div className="flex items-center justify-between">
+                  <dt className="text-sm">Taxes</dt>
+                  <dd className="text-sm font-medium text-gray-900">TBA</dd>
                 </div>
-                <div className="flex items-center justify-between border-t border-gray-200 pt-4">
-                  <dt className="text-base font-medium text-gray-900">Order total</dt>
+                <div className="flex items-center justify-between border-t border-gray-200 pt-6">
+                  <dt className="text-base font-medium">Total</dt>
                   <dd className="text-base font-medium text-gray-900">${total.toFixed(2)}</dd>
                 </div>
               </dl>
-              <div className="mt-6">
+
+              <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                 <button
                   type="submit"
-                  className="w-full rounded-md border border-transparent bg-green-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+                  disabled={isSubmitting}
+                  className="w-full rounded-md border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
                 >
-                  Checkout
+                  {!isSubmitting ? (
+                    "Confirm order"
+                  ) : (
+                    <span>
+                      <LoaderCircle className="animate-spin" />
+                      Placing Order
+                    </span>
+                  )}
                 </button>
               </div>
-            </section>
+            </div>
           </div>
-        )}
+        </form>
       </div>
     </div>
   )
 }
+
+export default CartPage

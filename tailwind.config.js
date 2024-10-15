@@ -17,7 +17,7 @@ module.exports = {
         "marquee-vertical": "marquee-vertical var(--duration) linear infinite",
       },
       keyframes: {
-        "marquee": {
+        marquee: {
           from: { transform: "translateX(0)" },
           to: { transform: "translateX(calc(-100% - var(--gap)))" },
         },

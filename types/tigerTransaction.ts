@@ -72,3 +72,34 @@ export type Tokenization = {
     }
   }
 }
+
+export interface OrderSubmission {
+  email: string
+  first_name: string
+  last_name: string
+  company?: string
+  phone?: string
+  address1: string
+  address2?: string
+  city: string
+  state: string
+  zip: string
+  country: string
+  shipping_first_name: string
+  shipping_last_name: string
+  shipping_address1: string
+  shipping_address2?: string
+  shipping_city: string
+  shipping_state: string
+  shipping_zip: string
+  shipping_country: string
+  same_addresses?: boolean
+  amount: Number
+  merchant_defined_field_1: string
+}
+
+export interface FinishedSubmission extends OrderSubmission {
+  type: string
+  security_key: string
+  payment_token: string
+}
