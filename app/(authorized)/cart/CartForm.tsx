@@ -42,7 +42,7 @@ const CartForm = (props: { user: User; cart: CartItem[]; total: Number }) => {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-    const tempData = new FormData(e.target)
+    const tempData = new FormData(e.target as HTMLFormElement)
 
     let data: any = {}
     tempData.forEach((value: any, key: string) => (data[key] = value))
@@ -99,7 +99,7 @@ const CartForm = (props: { user: User; cart: CartItem[]; total: Number }) => {
         <CartPreview
           cart={cart}
           total={total}
-          SubmissionButton={() => <CartButton isSubmitting={isSubmitting} />}
+          SubmissionButton={<CartButton isSubmitting={isSubmitting} />}
         />
       </div>
     </form>

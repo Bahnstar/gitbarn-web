@@ -12,8 +12,6 @@ export default async function DashboardPage() {
     getRecentConversations(5),
   ])
 
-  console.log(recentOrders, recentConversations)
-
   return (
     <div className="flex w-full flex-1 flex-col items-center gap-20">
       <h1 className="self-start text-4xl font-semibold leading-6 text-gray-900">
