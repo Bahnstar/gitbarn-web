@@ -2,7 +2,6 @@
 
 import { updateCart } from "@/server/handlers/carts"
 import { useState } from "react"
-import clientRevalidate from "@/utils/clientRevalidate"
 
 type Props = {
   cartId: string
