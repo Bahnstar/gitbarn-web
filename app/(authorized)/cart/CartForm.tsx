@@ -116,7 +116,7 @@ const CartForm = (props: { user: User; cart: CartWithTotal }) => {
       <Script
         src="https://secure.safewebservices.com/token/Collect.js"
         data-tokenization-key={process.env.NEXT_PUBLIC_COLLECTJS_KEY}
-        onLoad={configureCreditFields}
+        onReady={configureCreditFields}
       />
 
       <div className="flex-1">
