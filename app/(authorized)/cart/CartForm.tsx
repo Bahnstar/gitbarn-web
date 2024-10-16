@@ -86,29 +86,28 @@ const CartForm = (props: { user: User; cart: CartWithTotal }) => {
     }
   }
 
+  const configureCreditFields = () => {
+    CollectJS.configure({
+      variant: "inline",
+      styleSniffer: true,
+      callback: (response: Tokenization) => finishSubmit(response),
+      fields: {
+        ccnumber: {
+          selector: "#ccnumber",
+        },
+        ccexp: {
+          selector: "#ccexp",
+        },
+        cvv: {
+          selector: "#cvv",
+        },
+      },
+    })
+  }
+
   useEffect(() => {
     if (typeof window === "undefined") return
-
     setClientWindow(window)
-
-    CollectJS.configure &&
-      CollectJS.configure({
-        variant: "inline",
-        styleSniffer: true,
-        callback: (response: Tokenization) => finishSubmit(response),
-        fields: {
-          ccnumber: {
-            selector: "#ccnumber",
-          },
-          ccexp: {
-            selector: "#ccexp",
-          },
-          cvv: {
-            selector: "#cvv",
-          },
-        },
-      })
-
     setTimeout(() => setHideCollect(false), 1000)
   }, [])
 
@@ -117,7 +116,7 @@ const CartForm = (props: { user: User; cart: CartWithTotal }) => {
       <Script
         src="https://secure.safewebservices.com/token/Collect.js"
         data-tokenization-key={process.env.NEXT_PUBLIC_COLLECTJS_KEY}
-        strategy="beforeInteractive"
+        onLoad={configureCreditFields}
       />
 
       <div className="flex-1">

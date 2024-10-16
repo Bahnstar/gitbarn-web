@@ -6,7 +6,7 @@ import Swiper, { SwiperData } from "@/components/Swiper"
 import MarqueeDemo from "@/components/Marquee"
 import HeroVideoDialog from "@/components/magicui/hero-video-dialog"
 
-export default async function Index() {
+export default function Index() {
   const serviceStyle = "bg-gray-50 p-2 rounded-md shadow-sm text-center"
   const swiperData: SwiperData[] = [
     {
