@@ -66,7 +66,7 @@ export const getCartWithTotal = async (): Promise<CartWithTotal> => {
   cartItems && cartItems.forEach((item) => (subtotal += Number(item.amount) * item.quantity))
 
   const taxRate = 0.06
-  const taxes = subtotal * 0.06
+  const taxes = subtotal * taxRate
   const total = subtotal + taxes
 
   return {
