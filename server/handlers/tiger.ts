@@ -74,6 +74,8 @@ export const makeTransaction = async (order: OrderSubmission, token: string): Pr
     return "The cart is empty"
   }
 
+  console.log("Order data", order)
+
   let append_billing_add = {}
   order.same_billing_address === "true" &&
     (append_billing_add = {
@@ -99,6 +101,8 @@ export const makeTransaction = async (order: OrderSubmission, token: string): Pr
     vat_tax_rate: cart.taxRate.toString(),
   }
 
+  console.log(finishedOrder)
+
   const response = await fetch(endpoint, {
     method: "POST",
     headers: {
@@ -107,6 +111,7 @@ export const makeTransaction = async (order: OrderSubmission, token: string): Pr
     body: new URLSearchParams(finishedOrder as unknown as Record<string, string>).toString(),
   })
 
+  console.log(response)
   revalidatePath("/orders")
   return response.statusText
 }
