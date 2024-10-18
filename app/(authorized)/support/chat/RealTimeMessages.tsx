@@ -1,4 +1,6 @@
 "use client"
+import { sendNewMessageEmail } from "@/server/handlers/emails"
+import { createMessage } from "@/server/handlers/messages"
 import { Conversation } from "@/types/conversation"
 import { Message } from "@/types/message"
 import { createClient } from "@/utils/supabase/client"
@@ -21,13 +23,32 @@ const RealTimeMessages = (props: Props) => {
 
   const handleSubmit = async () => {
     if (!message) return
-    const { data, error } = await supabase.from("Messages").insert({
-      conversation_id: props.conversation.id,
-      user_id: props.userId,
-      text: message,
-    })
+    const { data: newMessage, error } = await createMessage(
+      props.conversation.id!,
+      props.userId!,
+      message,
+    )
+    console.log("New Message: ", newMessage)
+
     if (error) console.error(error)
     setMessage("")
+
+    if (newMessage) {
+      const fromCustomer = props.conversation.support_id !== newMessage.user_id
+      const recipientId = fromCustomer
+        ? props.conversation.support_id
+        : props.conversation.customer_id
+
+      if (!connectedUsers.includes(recipientId!)) {
+        console.log("Sending new message email")
+        await sendNewMessageEmail(
+          props.conversation.title!,
+          props.conversation.id!,
+          newMessage.user_id!,
+          newMessage.text,
+        )
+      }
+    }
   }
 
   // Force scroll to bottom

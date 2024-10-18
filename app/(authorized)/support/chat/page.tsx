@@ -1,7 +1,7 @@
 import { getConversationById } from "@/server/handlers/conversations"
 import { getConversationMessages } from "@/server/handlers/messages"
 import { getCurrentUser } from "@/server/handlers/users"
-import RealTimeMessages from "../../../../components/RealTimeMessages"
+import RealTimeMessages from "./RealTimeMessages"
 import { redirect } from "next/navigation"
 import Toaster from "@/components/Toaster"
 

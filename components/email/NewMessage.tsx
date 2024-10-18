@@ -1,19 +1,25 @@
 type Props = {
   chatId: string
   chatTitle: string
+  senderName: string
+  messagePreview: string
 }
 
-export const NewChatEmailTemplate = (props: Props) => (
+export const NewMessageEmailTemplate = (props: Props) => (
   <div style={styles.container}>
     <div style={styles.innerContainer}>
-      <h1 style={styles.heading}>New Support Chat</h1>
-      <p style={styles.paragraph}>
-        A user has created a new support chat with the following title:
-      </p>
+      <h1 style={styles.heading}>New Support Message</h1>
+      <p style={styles.paragraph}>You have received a new message in the following support chat:</p>
       <p style={styles.chatTitle}>{props.chatTitle}</p>
       <p style={styles.paragraph}>
-        Please log in to the GitBarn portal and check conversations to respond to this chat as soon
-        as possible.
+        <strong>From:</strong> {props.senderName}
+      </p>
+      <p style={styles.paragraph}>
+        <strong>Message Preview:</strong>
+      </p>
+      <p style={styles.messagePreview}>{props.messagePreview}</p>
+      <p style={styles.paragraph}>
+        Please log in to the GitBarn portal to view and respond to this message.
       </p>
       <div style={styles.buttonContainer}>
         <a href={`${process.env.URL}/support/chat?id=${props.chatId}`} style={styles.button}>
@@ -63,6 +69,15 @@ const styles = {
     padding: "15px",
     marginBottom: "20px",
   },
+  messagePreview: {
+    backgroundColor: "#f0f0f0",
+    borderRadius: "4px",
+    color: "#333333",
+    fontSize: "16px",
+    padding: "15px",
+    marginBottom: "20px",
+    fontStyle: "italic",
+  },
   footer: {
     color: "#666666",
     fontSize: "14px",
@@ -85,4 +100,4 @@ const styles = {
   },
 }
 
-export default NewChatEmailTemplate
+export default NewMessageEmailTemplate

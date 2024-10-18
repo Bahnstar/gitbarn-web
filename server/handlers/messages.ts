@@ -14,3 +14,20 @@ export const getConversationMessages = async (
     .eq("conversation_id", conversationId)
     .order("created_at", { ascending: true })
 }
+
+export const createMessage = async (
+  conversationId: string,
+  userId: string,
+  text: string,
+): Promise<PostgrestSingleResponse<Message>> => {
+  const supabase = createClient()
+  return await supabase
+    .from("Messages")
+    .insert({
+      conversation_id: conversationId,
+      user_id: userId,
+      text: text,
+    })
+    .select()
+    .single()
+}
