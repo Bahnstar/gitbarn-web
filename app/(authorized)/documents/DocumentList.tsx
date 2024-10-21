@@ -1,4 +1,5 @@
 "use client"
+import { useEffect } from "react"
 import Image from "next/image"
 import { DownloadIcon, FileIcon } from "lucide-react"
 import { DocumentFile } from "@/types/documentFile"
@@ -8,7 +9,47 @@ export default function DocumentList({ documents }: { documents: DocumentFile[] 
     return <p className="text-center text-gray-500">No documents uploaded yet.</p>
   }
 
-  const isImageFile = (type: string) => type.startsWith("image/")
+  const getFileType = async (url: string) => {
+    const response = await fetch(url)
+    const blob = await response.blob()
+    const type = blob.type
+
+    if (type.startsWith("image/")) {
+      return "image"
+    } else if (type.startsWith("application/pdf")) {
+      return "pdf"
+    } else {
+      return "file"
+    }
+  }
+
+  const generatePreview = async (fileId: string) => {
+    const fileType = await getFileType(
+      `${process.env.NEXT_PUBLIC_SUPABASE_BUCKET_DOCUMENTS}${fileId}`,
+    )
+
+    switch (fileType) {
+      case "image":
+        return (
+          <Image
+            src={`${process.env.NEXT_PUBLIC_SUPABASE_BUCKET_DOCUMENTS}${fileId}`}
+            alt={fileId}
+            layout="fill"
+            objectFit="cover"
+            className="h-full w-full object-cover"
+          />
+        )
+      case "pdf":
+        return (
+          <iframe
+            src={`http://docs.google.com/gview?url=${process.env.NEXT_PUBLIC_SUPABASE_BUCKET_DOCUMENTS}${fileId}&embedded=true`}
+            className="h-full w-full"
+          />
+        )
+      default:
+        return <FileIcon className="h-16 w-16 text-gray-400" />
+    }
+  }
 
   const handleDownload = (doc: DocumentFile) => {
     const url = `${process.env.NEXT_PUBLIC_SUPABASE_BUCKET_DOCUMENTS}${doc.id}`
@@ -28,21 +69,7 @@ export default function DocumentList({ documents }: { documents: DocumentFile[] 
           key={doc.id}
           className="flex flex-col overflow-hidden rounded-lg bg-white shadow-sm transition-shadow hover:shadow-md"
         >
-          <div className="relative h-32 w-full bg-gray-100">
-            {/* {isImageFile(doc.type) ? ( */}
-            <Image
-              src={`${process.env.NEXT_PUBLIC_SUPABASE_BUCKET_DOCUMENTS}${doc.id}`}
-              alt={doc.name}
-              layout="fill"
-              objectFit="cover"
-              className="h-full w-full object-cover"
-            />
-            {/* ) : (
-              <div className="flex h-full items-center justify-center">
-                <FileIcon className="h-16 w-16 text-gray-400" />
-              </div>
-            )} */}
-          </div>
+          <div className="relative h-32 w-full bg-gray-100">{generatePreview(doc.id)}</div>
           <div className="flex flex-1 flex-col justify-between p-4">
             <div>
               <h3 className="mb-1 line-clamp-1 text-sm font-medium">{doc.name}</h3>
