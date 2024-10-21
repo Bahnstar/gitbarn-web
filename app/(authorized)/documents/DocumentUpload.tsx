@@ -4,15 +4,19 @@ import { useState, useCallback, useEffect, useRef } from "react"
 import { UploadIcon, FileIcon } from "lucide-react"
 import Image from "next/image"
 
-interface FilePreview {
+type FilePreview = {
   file: File
   preview: string
 }
 
-export default function DocumentUpload({ onUpload }: { onUpload: (doc: any) => void }) {
+export default function DocumentUpload(props: { action: any }) {
   const [filePreview, setFilePreview] = useState<FilePreview | null>(null)
   const [isDragging, setIsDragging] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    console.log("File preview", filePreview)
+  }, [filePreview])
 
   const handleFile = useCallback((file: File) => {
     setFilePreview({
@@ -60,14 +64,10 @@ export default function DocumentUpload({ onUpload }: { onUpload: (doc: any) => v
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (filePreview) {
-      const newDocument = {
-        id: Date.now(),
-        name: filePreview.file.name,
-        size: filePreview.file.size,
-        type: filePreview.file.type,
-        file: filePreview.file,
-      }
-      onUpload(newDocument)
+      const formData = new FormData()
+      formData.append("file", filePreview.file)
+      formData.append("name", filePreview.file.name)
+      props.action(null, formData)
       setFilePreview(null)
       if (fileInputRef.current) {
         fileInputRef.current.value = ""
@@ -101,7 +101,13 @@ export default function DocumentUpload({ onUpload }: { onUpload: (doc: any) => v
           >
             <UploadIcon className="mb-2 h-8 w-8 text-gray-400" />
             <p className="text-sm text-gray-500">Drag & drop or click to upload</p>
-            <input type="file" onChange={handleFileChange} className="hidden" ref={fileInputRef} />
+            <input
+              type="file"
+              name="file"
+              onChange={handleFileChange}
+              className="hidden"
+              ref={fileInputRef}
+            />
           </div>
         ) : (
           <div className="mb-4 overflow-hidden rounded-lg border border-gray-300">
@@ -128,9 +134,10 @@ export default function DocumentUpload({ onUpload }: { onUpload: (doc: any) => v
             </div>
           </div>
         )}
+        <input type="hidden" name="name" value={filePreview?.file.name} />
         <button
           type="submit"
-          disabled={!filePreview}
+          // disabled={!filePreview}
           className="w-full rounded bg-blue-500 px-4 py-2 text-white disabled:bg-gray-300"
         >
           Upload Document

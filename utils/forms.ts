@@ -3,10 +3,48 @@ import { createClient } from "@/utils/supabase/server"
 import { createProduct, updateProduct } from "@/server/handlers/products"
 import { Product } from "@/types/product"
 import { revalidatePath } from "next/cache"
+import { DocumentFile } from "@/types/documentFile"
+import { createDocument } from "@/server/handlers/documents"
+import { getCurrentUser } from "@/server/handlers/users"
 
 type FormResult = {
   message: string
   status?: string
+}
+
+const processDocument = async (prevState: any, formData: any): Promise<FormResult> => {
+  const supabase = createClient()
+
+  const {
+    data: { user },
+    error: userError,
+  } = await getCurrentUser()
+
+  const file: Partial<DocumentFile> = {
+    name: formData.get("name") as string,
+    user_id: user?.id,
+    document_id: Date.now().toString(),
+  }
+
+  const { data: fileData, error: fileError } = await createDocument(file)
+  if (fileError) return { message: "There was an error uploading the document" }
+
+  const document = formData.get("file") as File
+  if (document.size > 0 && fileData.id) {
+    const { data: documentData, error: documentError } = await supabase.storage
+      .from("images")
+      .upload(`documents/${fileData.id}`, document, {
+        cacheControl: "3600",
+        upsert: true,
+      })
+
+    if (documentError) return { message: "There was an error uploading the document" }
+  } else {
+    return { message: "No document provided" }
+  }
+
+  revalidatePath("/documents")
+  return { message: "Document successfully uploaded", status: "success" }
 }
 
 const processProduct = async (prevState: any, formData: FormData): Promise<FormResult> => {
@@ -44,4 +82,4 @@ const processProduct = async (prevState: any, formData: FormData): Promise<FormR
   return { message: "Product successfully created", status: "success" }
 }
 
-export { processProduct }
+export { processProduct, processDocument }
