@@ -16,7 +16,7 @@ const CartPreview = (props: { cart: CartWithTotal; SubmissionButton: React.React
           cart.items.map((item, i) => (
             <li key={item.id} className="flex gap-3 py-6 sm:py-10">
               <Image
-                src={`${process.env.NEXT_PUBLIC_SUPABASE_BUCKET}${item.id}?v=${item.image}`}
+                src={`${process.env.NEXT_PUBLIC_SUPABASE_BUCKETS}${item.image}`}
                 alt={item.title || "Product image"}
                 width={600}
                 height={600}
@@ -50,7 +50,7 @@ const CartPreview = (props: { cart: CartWithTotal; SubmissionButton: React.React
           <dd className="text-md font-medium text-gray-900">${cart.subtotal.toFixed(2)}</dd>
         </div>
         <div className="flex justify-between">
-          <dt className="text-md">Taxes</dt>
+          <dt className="text-md">Estimated Taxes</dt>
           <dd className="text-md font-medium text-gray-900">${cart.taxes.toFixed(2)}</dd>
         </div>
         <hr />

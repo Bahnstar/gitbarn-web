@@ -110,7 +110,7 @@ const ProductsPage = () => {
             >
               <figure>
                 <Image
-                  src={`${process.env.NEXT_PUBLIC_SUPABASE_BUCKET}${product.id}?v=${product.image}`}
+                  src={`${process.env.NEXT_PUBLIC_SUPABASE_BUCKETS}${product.image}`}
                   alt={product.title}
                   width={800}
                   height={600}

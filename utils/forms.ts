@@ -4,7 +4,7 @@ import { createProduct, updateProduct } from "@/server/handlers/products"
 import { Product } from "@/types/product"
 import { revalidatePath } from "next/cache"
 import { DocumentFile } from "@/types/documentFile"
-import { createDocument } from "@/server/handlers/documents"
+import { createDocument, updateDocument } from "@/server/handlers/documents"
 import { getCurrentUser } from "@/server/handlers/users"
 
 type FormResult = {
@@ -23,22 +23,24 @@ const processDocument = async (prevState: any, formData: any): Promise<FormResul
   const file: Partial<DocumentFile> = {
     name: formData.get("name") as string,
     user_id: user?.id,
-    document_id: Date.now().toString(),
   }
 
   const { data: fileData, error: fileError } = await createDocument(file)
-  if (fileError) return { message: "There was an error uploading the document" }
+  if (fileError || userError) return { message: "There was an error uploading the document" }
 
   const document = formData.get("file") as File
   if (document.size > 0 && fileData.id) {
     const { data: documentData, error: documentError } = await supabase.storage
-      .from("images")
-      .upload(`documents/${fileData.id}`, document, {
+      .from("documents")
+      .upload(`${user!.id}/${fileData.id}`, document, {
         cacheControl: "3600",
         upsert: true,
       })
 
+    console.log("Document", documentData, documentError)
+
     if (documentError) return { message: "There was an error uploading the document" }
+    updateDocument(fileData.id, { path: `${documentData.fullPath}` })
   } else {
     return { message: "No document provided" }
   }
@@ -55,7 +57,6 @@ const processProduct = async (prevState: any, formData: FormData): Promise<FormR
     description: formData.get("description") as string,
     amount: formData.get("cost") as string,
     status: formData.get("status") as string,
-    image: Date.now().toString(),
   }
 
   const id = formData.get("id") as string
@@ -76,6 +77,8 @@ const processProduct = async (prevState: any, formData: FormData): Promise<FormR
       })
 
     if (imageError) return { message: "There was an error uploading the provided image" }
+
+    updateProduct(productData.id, { image: `${imageData.fullPath}?v=${Date.now().toString()}` })
   }
 
   revalidatePath("/products")

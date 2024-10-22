@@ -4,10 +4,10 @@ import Image from "next/image"
 import { useState } from "react"
 import { Image as ImageIcon } from "lucide-react"
 
-const ImageUpload = (props: { id?: string; version?: string }) => {
+const ImageUpload = (props: { id?: string; image?: string }) => {
   const [image, setImage] = useState<File>()
   const [preview, setPreview] = useState<string>(
-    props.id ? `${process.env.NEXT_PUBLIC_SUPABASE_BUCKET}${props.id}?v=${props.version}` : "",
+    props.id ? `${process.env.NEXT_PUBLIC_SUPABASE_BUCKETS}${props.image}` : "",
   )
   const [isOver, setIsOver] = useState<boolean>(false)
 

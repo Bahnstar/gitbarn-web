@@ -14,10 +14,6 @@ export default function DocumentUpload(props: { action: any }) {
   const [isDragging, setIsDragging] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  useEffect(() => {
-    console.log("File preview", filePreview)
-  }, [filePreview])
-
   const handleFile = useCallback((file: File) => {
     setFilePreview({
       file,

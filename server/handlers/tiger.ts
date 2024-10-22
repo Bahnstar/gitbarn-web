@@ -25,6 +25,8 @@ export const getRecentOrders = async (): Promise<Transaction[]> => {
 }
 
 export const getCompletedTransactions = async (page: number): Promise<Transaction[]> => {
+  const { data: userData } = await getCurrentUser()
+
   const startDate = "20241001000000" // October 1, 2024, 00:00:00
   const params = new URLSearchParams({
     security_key: process.env.TIGER_API_KEY!,
@@ -32,6 +34,7 @@ export const getCompletedTransactions = async (page: number): Promise<Transactio
     result_limit: "10",
     page_number: page.toString(),
     condition: "pendingsettlement,complete",
+    email: userData.user?.email || "",
   })
 
   const data = await fetchTransactions(params)
