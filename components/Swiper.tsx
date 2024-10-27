@@ -41,8 +41,8 @@ export default function CarouselPlugin(props: Readonly<{ data: SwiperData[] }>) 
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious className="hidden hover:bg-green-400 md:block" />
-      <CarouselNext className="hidden hover:bg-green-400 md:block" />
+      <CarouselPrevious className="hidden hover:bg-green-400 md:flex" />
+      <CarouselNext className="hidden hover:bg-green-400 md:flex" />
     </Carousel>
   )
 }

@@ -11,6 +11,7 @@ import { getCurrentUser } from "@/server/handlers/users"
 import { revalidatePath } from "next/cache"
 
 export const getRecentOrders = async (): Promise<Transaction[]> => {
+  console.log(process.env)
   const params = new URLSearchParams({
     security_key: process.env.TIGER_API_KEY!,
     result_order: "reverse",
