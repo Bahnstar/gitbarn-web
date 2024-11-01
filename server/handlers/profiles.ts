@@ -7,9 +7,9 @@ export const getProfiles = async () => {
   return await supabase.from("profiles").select("*")
 }
 
-export const getProfile = async (profileId: string) => {
+export const getProfile = async (profileId: string): Promise<PostgrestSingleResponse<Profile>> => {
   const supabase = createClient()
-  return await supabase.from("profiles").select("*").eq("id", profileId)
+  return await supabase.from("profiles").select("*").eq("id", profileId).single()
 }
 
 export const updateProfile = async (

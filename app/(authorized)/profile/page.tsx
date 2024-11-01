@@ -1,11 +1,14 @@
+import { getProfile } from "@/server/handlers/profiles"
 import { getCurrentUser } from "@/server/handlers/users"
+import { redirect } from "next/navigation"
 
 export default async function ProfilePage() {
   const {
     data: { user },
   } = await getCurrentUser()
 
-  const email = user?.email
+  if (!user) redirect("/login")
+  const { data: profile, error: profileError } = await getProfile(user.id)
 
   return (
     <div className="flex w-full flex-1 flex-col items-center gap-20">
@@ -51,6 +54,7 @@ export default async function ProfilePage() {
                     type="text"
                     name="first-name"
                     id="first-name"
+                    defaultValue={profile?.first_name}
                     autoComplete="given-name"
                     className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
                   />
@@ -66,6 +70,7 @@ export default async function ProfilePage() {
                     type="text"
                     name="last-name"
                     id="last-name"
+                    defaultValue={profile?.last_name}
                     autoComplete="family-name"
                     className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
                   />
@@ -81,7 +86,8 @@ export default async function ProfilePage() {
                     id="email"
                     name="email"
                     type="email"
-                    value={email}
+                    value={user.email}
+                    defaultValue={profile?.email}
                     disabled
                     autoComplete="email"
                     className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6"
