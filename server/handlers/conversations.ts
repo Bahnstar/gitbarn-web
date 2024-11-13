@@ -109,13 +109,7 @@ export const updateConversation = async (
   conversation: Partial<Conversation>,
 ): Promise<PostgrestSingleResponse<Conversation>> => {
   const supabase = createClient()
-  return await supabase
-    .from("Conversations")
-    .update(conversation)
-    .eq("id", id)
-    .select()
-    .limit(1)
-    .single()
+  return await supabase.from("Conversations").update(conversation).eq("id", id).select().single()
 }
 
 export const deleteConversation = async (id: string): Promise<void> => {

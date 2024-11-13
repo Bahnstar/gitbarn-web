@@ -1,10 +1,19 @@
 import { getCurrentUser } from "@/server/handlers/users"
-import { createConversation, getConversationsByCustomerId } from "@/server/handlers/conversations"
+import {
+  createConversation,
+  getConversationsByCustomerId,
+  updateConversation,
+} from "@/server/handlers/conversations"
 import { redirect } from "next/navigation"
 import { Conversation } from "@/types/conversation"
 import Link from "next/link"
 import { formatDate } from "@/utils/utils"
 import NewConversationButton from "@/components/NewConversationButton"
+import { getProfile } from "@/server/handlers/profiles"
+import { revalidatePath } from "next/cache"
+import { Role } from "@/types/profile"
+import CloseConversationButton from "@/components/CloseConversationButton"
+import { ArrowRightCircle } from "lucide-react"
 
 const SupportPage = async () => {
   const {
@@ -12,7 +21,10 @@ const SupportPage = async () => {
   } = await getCurrentUser()
   const userId = user!.id
 
-  const { data, error } = await getConversationsByCustomerId(userId)
+  const [{ data: userProfile }, { data, error }] = await Promise.all([
+    getProfile(userId),
+    getConversationsByCustomerId(userId),
+  ])
 
   const startConversation = async () => {
     "use server"
@@ -25,6 +37,12 @@ const SupportPage = async () => {
     const { data, error } = await createConversation(conversation)
     const newConversationId = data?.id
     redirect(`/support/chat?id=${newConversationId}`)
+  }
+
+  const endConversation = async (conversationId: string) => {
+    "use server"
+    await updateConversation(conversationId, { is_active: false })
+    revalidatePath("/support")
   }
 
   return (
@@ -95,13 +113,21 @@ const SupportPage = async () => {
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                           {row.is_active ? "Open" : "Closed"}
                         </td>
-                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                        <td className="relative space-x-4 whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                           <Link
                             href={`/support/chat?id=${row.id}`}
-                            className="text-green-600 hover:text-green-700"
+                            className="inline-flex items-center gap-1.5 rounded-md bg-green-50 px-3 py-1.5 text-sm text-green-600 transition-colors hover:bg-green-100"
                           >
-                            Resume
+                            <ArrowRightCircle className="h-4 w-4" />
+                            Enter
                           </Link>
+                          {(userProfile?.role === Role.SUPPORT ||
+                            userProfile?.role === Role.ADMIN) && (
+                            <CloseConversationButton
+                              conversationId={row.id!}
+                              onClose={endConversation}
+                            />
+                          )}
                         </td>
                       </tr>
                     ))}
@@ -111,7 +137,7 @@ const SupportPage = async () => {
             </div>
           </div>
         </div>
-      </div>{" "}
+      </div>
     </div>
   )
 }
