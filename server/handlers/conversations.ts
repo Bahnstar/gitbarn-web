@@ -97,11 +97,10 @@ export const createConversation = async (
 
   const supportEmails = supportProfiles?.map((profile) => profile.email)
 
-  // if (process.env.ENVIRONMENT !== "development") {
-  if (supportEmails) {
+  if (process.env.ENVIRONMENT !== "development" && supportEmails) {
     await sendNewChatEmail(newConversation.data.title, newConversation.data.id, supportEmails)
   }
-  // }
+
   return newConversation
 }
 
