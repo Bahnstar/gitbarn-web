@@ -35,8 +35,10 @@ const NewConversationButton = (props: Props) => {
       router.push(`/support/chat?id=${data.id}`)
     } else {
       console.error("Failed to create conversation:", error)
+      toast.error("Failed to create conversation")
     }
     setIsLoading(false)
+    setIsModalOpen(false)
   }
 
   return (

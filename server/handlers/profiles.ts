@@ -1,4 +1,4 @@
-import { Profile } from "@/types/profile"
+import { Profile, Role } from "@/types/profile"
 import { createClient } from "@/utils/supabase/server"
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
 
@@ -10,6 +10,11 @@ export const getProfiles = async () => {
 export const getProfile = async (profileId: string): Promise<PostgrestSingleResponse<Profile>> => {
   const supabase = createClient()
   return await supabase.from("profiles").select("*").eq("id", profileId).single()
+}
+
+export const getAllSupportProfiles = async () => {
+  const supabase = createClient()
+  return await supabase.from("profiles").select("*").eq("role", Role.SUPPORT)
 }
 
 export const updateProfile = async (

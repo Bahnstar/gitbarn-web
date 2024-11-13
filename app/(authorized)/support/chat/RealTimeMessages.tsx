@@ -1,5 +1,6 @@
 "use client"
-import { sendNewMessageEmail } from "@/server/handlers/emails"
+
+import { sendUserNotification } from "@/server/handlers/emails"
 import { createMessage } from "@/server/handlers/messages"
 import { Conversation } from "@/types/conversation"
 import { Message } from "@/types/message"
@@ -40,11 +41,11 @@ const RealTimeMessages = (props: Props) => {
         : props.conversation.customer_id
 
       if (!connectedUsers.includes(recipientId!)) {
-        console.log("Sending new message email")
-        await sendNewMessageEmail(
+        await sendUserNotification(
           props.conversation.title!,
           props.conversation.id!,
-          newMessage.user_id!,
+          props.userId!,
+          recipientId!,
           newMessage.text,
         )
       }

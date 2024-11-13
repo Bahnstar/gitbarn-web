@@ -4,6 +4,7 @@ import { Conversation } from "@/types/conversation"
 import { createClient } from "@/utils/supabase/server"
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
 import { sendNewChatEmail } from "./emails"
+import { getAllSupportProfiles } from "./profiles"
 
 export const getConversations = async (): Promise<PostgrestSingleResponse<Conversation[]>> => {
   const supabase = createClient()
@@ -85,10 +86,22 @@ export const createConversation = async (
     .limit(1)
     .single()
 
-  if (process.env.ENVIRONMENT !== "development") {
-    // TODO: send to all users with support role
-    await sendNewChatEmail(newConversation.data.title, newConversation.data.id)
+  if (newConversation.error) {
+    console.error(newConversation.error)
   }
+
+  const { data: supportProfiles, error } = await getAllSupportProfiles()
+  if (error || !supportProfiles) {
+    console.error("Error getting support emails", error)
+  }
+
+  const supportEmails = supportProfiles?.map((profile) => profile.email)
+
+  // if (process.env.ENVIRONMENT !== "development") {
+  if (supportEmails) {
+    await sendNewChatEmail(newConversation.data.title, newConversation.data.id, supportEmails)
+  }
+  // }
   return newConversation
 }
 
