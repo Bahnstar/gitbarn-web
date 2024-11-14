@@ -1,7 +1,8 @@
 "use client"
 
-import { XCircleIcon } from "lucide-react"
+import { Loader2, XCircleIcon } from "lucide-react"
 import { useState } from "react"
+import { toast } from "sonner"
 
 type Props = {
   conversationId: string
@@ -10,10 +11,18 @@ type Props = {
 
 const CloseConversationButton = ({ conversationId, onClose }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleClose = async () => {
-    await onClose(conversationId)
-    setIsModalOpen(false)
+    setIsLoading(true)
+    try {
+      await onClose(conversationId)
+    } catch (error) {
+      toast.error("Failed to close conversation")
+    } finally {
+      setIsLoading(false)
+      setIsModalOpen(false)
+    }
   }
 
   return (
@@ -21,9 +30,10 @@ const CloseConversationButton = ({ conversationId, onClose }: Props) => {
       <button
         onClick={() => setIsModalOpen(true)}
         className="inline-flex items-center gap-1.5 rounded-md bg-red-50 px-3 py-1.5 text-sm text-red-600 transition-colors hover:bg-red-100"
+        disabled={isLoading}
       >
-        <XCircleIcon className="h-4 w-4" />
         Close
+        <XCircleIcon className="h-4 w-4" />
       </button>
 
       {isModalOpen && (
@@ -35,14 +45,23 @@ const CloseConversationButton = ({ conversationId, onClose }: Props) => {
               <button
                 onClick={() => setIsModalOpen(false)}
                 className="rounded-md bg-gray-100 px-4 py-2 text-gray-700 hover:bg-gray-200"
+                disabled={isLoading}
               >
                 Cancel
               </button>
               <button
                 onClick={handleClose}
-                className="rounded-md bg-red-600 px-4 py-2 text-white hover:bg-red-700"
+                className="inline-flex items-center gap-2 rounded-md bg-red-600 px-4 py-2 text-white hover:bg-red-700"
+                disabled={isLoading}
               >
-                Close Conversation
+                {isLoading ? (
+                  <>
+                    Closing...
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  </>
+                ) : (
+                  "Close Conversation"
+                )}
               </button>
             </div>
           </div>

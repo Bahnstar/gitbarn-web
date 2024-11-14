@@ -13,7 +13,8 @@ import { getProfile } from "@/server/handlers/profiles"
 import { revalidatePath } from "next/cache"
 import { Role } from "@/types/profile"
 import CloseConversationButton from "@/components/CloseConversationButton"
-import { ArrowRightCircle } from "lucide-react"
+import ReopenConversationButton from "@/components/ReopenConversationButton"
+import EnterConversationButton from "@/components/EnterConversationButton"
 
 const SupportPage = async () => {
   const {
@@ -42,6 +43,12 @@ const SupportPage = async () => {
   const endConversation = async (conversationId: string) => {
     "use server"
     await updateConversation(conversationId, { is_active: false })
+    revalidatePath("/support")
+  }
+
+  const reopenConversation = async (conversationId: string) => {
+    "use server"
+    await updateConversation(conversationId, { is_active: true })
     revalidatePath("/support")
   }
 
@@ -114,18 +121,21 @@ const SupportPage = async () => {
                           {row.is_active ? "Open" : "Closed"}
                         </td>
                         <td className="relative space-x-4 whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                          <Link
-                            href={`/support/chat?id=${row.id}`}
-                            className="inline-flex items-center gap-1.5 rounded-md bg-green-50 px-3 py-1.5 text-sm text-green-600 transition-colors hover:bg-green-100"
-                          >
-                            <ArrowRightCircle className="h-4 w-4" />
-                            Enter
-                          </Link>
-                          {(userProfile?.role === Role.SUPPORT ||
-                            userProfile?.role === Role.ADMIN) && (
-                            <CloseConversationButton
+                          {row.is_active ? (
+                            <>
+                              <EnterConversationButton conversationId={row.id!} />
+                              {(userProfile?.role === Role.SUPPORT ||
+                                userProfile?.role === Role.ADMIN) && (
+                                <CloseConversationButton
+                                  conversationId={row.id!}
+                                  onClose={endConversation}
+                                />
+                              )}
+                            </>
+                          ) : (
+                            <ReopenConversationButton
                               conversationId={row.id!}
-                              onClose={endConversation}
+                              onReopen={reopenConversation}
                             />
                           )}
                         </td>
