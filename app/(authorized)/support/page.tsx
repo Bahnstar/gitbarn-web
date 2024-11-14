@@ -1,12 +1,5 @@
 import { getCurrentUser } from "@/server/handlers/users"
-import {
-  createConversation,
-  getConversationsByCustomerId,
-  updateConversation,
-} from "@/server/handlers/conversations"
-import { redirect } from "next/navigation"
-import { Conversation } from "@/types/conversation"
-import Link from "next/link"
+import { getConversationsByCustomerId, updateConversation } from "@/server/handlers/conversations"
 import { formatDate } from "@/utils/utils"
 import NewConversationButton from "@/components/NewConversationButton"
 import { getProfile } from "@/server/handlers/profiles"
@@ -15,6 +8,7 @@ import { Role } from "@/types/profile"
 import CloseConversationButton from "@/components/CloseConversationButton"
 import ReopenConversationButton from "@/components/ReopenConversationButton"
 import EnterConversationButton from "@/components/EnterConversationButton"
+import { toast } from "sonner"
 
 const SupportPage = async () => {
   const {
@@ -27,17 +21,8 @@ const SupportPage = async () => {
     getConversationsByCustomerId(userId),
   ])
 
-  const startConversation = async () => {
-    "use server"
-    const conversation: Conversation = {
-      title: "New Support Chat",
-      customer_id: userId,
-      is_active: true,
-    }
-
-    const { data, error } = await createConversation(conversation)
-    const newConversationId = data?.id
-    redirect(`/support/chat?id=${newConversationId}`)
+  if (error) {
+    toast.error(error.message)
   }
 
   const endConversation = async (conversationId: string) => {
