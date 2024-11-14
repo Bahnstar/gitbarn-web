@@ -1,15 +1,17 @@
 import { getRecentConversations } from "@/server/handlers/conversations"
-import { getRecentOrders } from "@/server/handlers/tiger"
+import { getMonthOrderCounts, getRecentOrders } from "@/server/handlers/tiger"
 import { getCurrentUser } from "@/server/handlers/users"
+import Chart from "./Chart"
 
 export default async function DashboardPage() {
   const {
     data: { user },
   } = await getCurrentUser()
 
-  const [recentOrders, { data: recentConversations }] = await Promise.all([
+  const [recentOrders, { data: recentConversations }, orderCounts] = await Promise.all([
     getRecentOrders(),
     getRecentConversations(5),
+    getMonthOrderCounts(),
   ])
 
   return (
@@ -17,6 +19,17 @@ export default async function DashboardPage() {
       <h1 className="self-start text-4xl font-semibold leading-6 text-gray-900">
         Welcome, {user?.email?.split("@")[0]}
       </h1>
+      <div className="container grid gap-8 px-4 md:px-6 lg:grid-cols-[1fr_1fr] lg:gap-8">
+        <div className="aspect-h-7 aspect-w-10 group block w-full space-y-6 overflow-hidden rounded-lg bg-base-100 p-6 shadow-lg">
+          <div className="grid gap-1">
+            <h2 className="text-lg font-semibold">Order Counts</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              View the number of orders placed per month.
+            </p>
+            <Chart orderCounts={orderCounts} />
+          </div>
+        </div>
+      </div>
       <div className="container grid gap-8 px-4 md:px-6 lg:grid-cols-[1fr_1fr] lg:gap-8">
         <div className="aspect-h-7 aspect-w-10 group block w-full space-y-6 overflow-hidden rounded-lg bg-base-100 p-6 shadow-lg">
           <div className="grid gap-1">

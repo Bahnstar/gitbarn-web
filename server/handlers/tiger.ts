@@ -9,9 +9,11 @@ import { fetchTransactions, parseXMLResponse, transformTransactions } from "@/ut
 import { getCartWithTotal } from "./carts"
 import { getCurrentUser } from "@/server/handlers/users"
 import { revalidatePath } from "next/cache"
+import { getProfile } from "./profiles"
+import { Role } from "@/types/profile"
+import { constants } from "crypto"
 
 export const getRecentOrders = async (): Promise<Transaction[]> => {
-  console.log(process.env)
   const params = new URLSearchParams({
     security_key: process.env.TIGER_API_KEY!,
     result_order: "reverse",
@@ -23,6 +25,58 @@ export const getRecentOrders = async (): Promise<Transaction[]> => {
   const result = parseXMLResponse(data)
   const transformedTransactions = transformTransactions(result)
   return transformedTransactions
+}
+
+const getFirstDayOfEachMonthUpToCurrent = () => {
+  const currentDate = new Date()
+  const currentYear = currentDate.getFullYear()
+  const currentMonth = currentDate.getMonth() // 0-indexed (0 for January, 11 for December)
+  const dates = []
+
+  for (let month = 0; month <= currentMonth; month++) {
+    const targetDate = new Date(currentYear, month, 1) // First day of the month
+
+    const year = targetDate.getFullYear()
+    const monthStr = String(targetDate.getMonth() + 1).padStart(2, "0") // Months are 0-indexed
+    const day = String(targetDate.getDate()).padStart(2, "0")
+
+    dates.push(`${year}${monthStr}${day}000000`)
+  }
+
+  return dates
+}
+
+export const getMonthOrderCounts = async () => {
+  const { data: userData } = await getCurrentUser()
+  const { data: userProfile } = await getProfile(userData.user?.id!)
+
+  if (userProfile?.role === Role.USER) {
+    return []
+  }
+
+  const dates = getFirstDayOfEachMonthUpToCurrent()
+
+  const params = new URLSearchParams({
+    security_key: process.env.TIGER_API_KEY!,
+    condition: "pendingsettlement,complete",
+    // email: userData.user?.email || "",
+  })
+
+  const res = await Promise.all(
+    dates.slice(0, -1).map(async (start_date, i) => {
+      // Reuse a single instance of URLSearchParams
+      const newParams = new URLSearchParams(params)
+      newParams.set("start_date", start_date)
+      newParams.set("end_date", dates[i + 1])
+
+      const data = await fetchTransactions(newParams)
+      const result = parseXMLResponse(data)
+      const transformedTransactions = transformTransactions(result)
+
+      return transformedTransactions.length // Return the length for each promise
+    }),
+  )
+  return res
 }
 
 export const getCompletedTransactions = async (page: number): Promise<Transaction[]> => {
@@ -39,11 +93,9 @@ export const getCompletedTransactions = async (page: number): Promise<Transactio
   })
 
   const data = await fetchTransactions(params)
-  console.log(data)
   const result = parseXMLResponse(data)
   const transformedTransactions = transformTransactions(result)
 
-  // console.log(JSON.stringify(transformedTransactions, null, 2))
   return transformedTransactions
 }
 
