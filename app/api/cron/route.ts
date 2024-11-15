@@ -1,4 +1,4 @@
-import { createMontlyStats, updateMonthlyStats } from "@/server/handlers/monthlyStats"
+import { updateMonthlyStats } from "@/server/handlers/monthlyStats"
 import { getMonthOrderCounts } from "@/server/handlers/tiger"
 import { MonthlyStat } from "@/types/monthlyStat"
 import { NextRequest } from "next/server"
