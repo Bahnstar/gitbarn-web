@@ -2,16 +2,17 @@ import { getRecentConversations } from "@/server/handlers/conversations"
 import { getMonthOrderCounts, getRecentOrders } from "@/server/handlers/tiger"
 import { getCurrentUser } from "@/server/handlers/users"
 import Chart from "./Chart"
+import { getMonthlyStatsByYearAndType } from "@/server/handlers/monthlyStats"
 
 export default async function DashboardPage() {
   const {
     data: { user },
   } = await getCurrentUser()
 
-  const [recentOrders, { data: recentConversations }, orderCounts] = await Promise.all([
+  const [recentOrders, { data: recentConversations }, { data: orderStats }] = await Promise.all([
     getRecentOrders(),
     getRecentConversations(5),
-    getMonthOrderCounts(),
+    getMonthlyStatsByYearAndType(new Date().getFullYear(), "orders"),
   ])
 
   return (
@@ -26,7 +27,7 @@ export default async function DashboardPage() {
             <p className="text-sm text-gray-500 dark:text-gray-400">
               View the number of orders placed per month.
             </p>
-            <Chart orderCounts={orderCounts} />
+            <Chart orderStats={orderStats!} />
           </div>
         </div>
       </div>
