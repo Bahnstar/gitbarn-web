@@ -1,4 +1,5 @@
 "use server"
+
 import {
   FinishedSubmission,
   OrderSubmission,
@@ -11,7 +12,7 @@ import { getCurrentUser } from "@/server/handlers/users"
 import { revalidatePath } from "next/cache"
 import { getProfile } from "./profiles"
 import { Role } from "@/types/profile"
-import { constants } from "crypto"
+import { MonthlyStat } from "@/types/monthlyStat"
 
 export const getRecentOrders = async (): Promise<Transaction[]> => {
   const params = new URLSearchParams({
@@ -62,9 +63,9 @@ export const getMonthOrderCounts = async () => {
     // email: userData.user?.email || "",
   })
 
-  const res = await Promise.all(
+  const res: MonthlyStat[] = []
+  await Promise.all(
     dates.slice(0, -1).map(async (start_date, i) => {
-      // Reuse a single instance of URLSearchParams
       const newParams = new URLSearchParams(params)
       newParams.set("start_date", start_date)
       newParams.set("end_date", dates[i + 1])
@@ -72,8 +73,13 @@ export const getMonthOrderCounts = async () => {
       const data = await fetchTransactions(newParams)
       const result = parseXMLResponse(data)
       const transformedTransactions = transformTransactions(result)
-
-      return transformedTransactions.length // Return the length for each promise
+      // console.log(transformedTransactions.reduce((acc, t) => acc + Number(t.actions[0].amount), 0))
+      res.push({
+        month: i,
+        year: new Date().getFullYear(),
+        type: "orders",
+        value: transformedTransactions.length,
+      })
     }),
   )
   return res
