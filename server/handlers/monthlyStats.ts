@@ -14,7 +14,12 @@ export async function getMonthlyStatsByYearAndType(
   type: string,
 ): Promise<PostgrestSingleResponse<MonthlyStat[]>> {
   const supabase = createClient()
-  return await supabase.from("MonthlyStats").select("*").eq("year", year).eq("type", type)
+  return await supabase
+    .from("MonthlyStats")
+    .select("*")
+    .eq("year", year)
+    .eq("type", type)
+    .order("month")
 }
 
 export async function createMonthlyStats(

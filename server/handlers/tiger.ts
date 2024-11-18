@@ -28,20 +28,32 @@ export const getRecentOrders = async (): Promise<Transaction[]> => {
   return transformedTransactions
 }
 
-const getFirstDayOfEachMonthUpToCurrent = () => {
+const getMonthBoundaryDates = () => {
   const currentDate = new Date()
   const currentYear = currentDate.getFullYear()
-  const currentMonth = currentDate.getMonth() // 0-indexed (0 for January, 11 for December)
+  const currentMonth = currentDate.getMonth()
   const dates = []
 
   for (let month = 0; month <= currentMonth; month++) {
-    const targetDate = new Date(currentYear, month, 1) // First day of the month
+    const firstDay = new Date(currentYear, month, 1)
+    const lastDay = new Date(currentYear, month + 1, 0)
 
-    const year = targetDate.getFullYear()
-    const monthStr = String(targetDate.getMonth() + 1).padStart(2, "0") // Months are 0-indexed
-    const day = String(targetDate.getDate()).padStart(2, "0")
+    const firstDayStr = {
+      year: firstDay.getFullYear(),
+      month: String(firstDay.getMonth() + 1).padStart(2, "0"),
+      day: String(firstDay.getDate()).padStart(2, "0"),
+    }
 
-    dates.push(`${year}${monthStr}${day}000000`)
+    const lastDayStr = {
+      year: lastDay.getFullYear(),
+      month: String(lastDay.getMonth() + 1).padStart(2, "0"),
+      day: String(lastDay.getDate()).padStart(2, "0"),
+    }
+
+    dates.push({
+      start: `${firstDayStr.year}${firstDayStr.month}${firstDayStr.day}000000`,
+      end: `${lastDayStr.year}${lastDayStr.month}${lastDayStr.day}235959`,
+    })
   }
 
   return dates
@@ -55,25 +67,24 @@ export const getMonthOrderCounts = async () => {
     return []
   }
 
-  const dates = getFirstDayOfEachMonthUpToCurrent()
+  const monthBoundaries = getMonthBoundaryDates()
 
   const params = new URLSearchParams({
     security_key: process.env.TIGER_API_KEY!,
     condition: "pendingsettlement,complete",
-    // email: userData.user?.email || "",
   })
 
   const res: MonthlyStat[] = []
   await Promise.all(
-    dates.slice(0, -1).map(async (start_date, i) => {
+    monthBoundaries.map(async (boundary, i) => {
       const newParams = new URLSearchParams(params)
-      newParams.set("start_date", start_date)
-      newParams.set("end_date", dates[i + 1])
+      newParams.set("start_date", boundary.start)
+      newParams.set("end_date", boundary.end)
 
       const data = await fetchTransactions(newParams)
       const result = parseXMLResponse(data)
       const transformedTransactions = transformTransactions(result)
-      // console.log(transformedTransactions.reduce((acc, t) => acc + Number(t.actions[0].amount), 0))
+
       res.push({
         month: i,
         year: new Date().getFullYear(),
