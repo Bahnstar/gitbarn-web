@@ -5,7 +5,10 @@ import { Dialog, Transition } from "@headlessui/react"
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline"
 import Link from "next/link"
 
-const MobileSidebar = ({ children }: Readonly<{ children: React.ReactNode }>) => {
+const MobileSidebar = ({
+  children,
+  avatar_url,
+}: Readonly<{ children: React.ReactNode; avatar_url: string }>) => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
@@ -76,8 +79,8 @@ const MobileSidebar = ({ children }: Readonly<{ children: React.ReactNode }>) =>
           <span className="sr-only">Your profile</span>
           <Image
             className="h-8 w-8 rounded-full bg-gray-50"
-            src="https://media.licdn.com/dms/image/C4E03AQEaaSLgp3H6VA/profile-displayphoto-shrink_800_800/0/1662947150082?e=1724889600&v=beta&t=QNqztJneRwSArik9KqPKyu-Z2YJyAzu8omvrA9KRq8I"
-            alt=""
+            src={avatar_url}
+            alt="Profile picture"
             width={649}
             height={649}
           />

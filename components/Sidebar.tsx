@@ -5,13 +5,11 @@ import MobileSidebar from "./MobileSidebar"
 import NavButtons from "./NavButtons"
 import Link from "next/link"
 import { logout } from "@/server/handlers/auth"
-import { getCurrentUser } from "@/server/handlers/users"
-import { User } from "@supabase/supabase-js"
+import { getUserWithProfile } from "@/server/handlers/users"
+import { Profile } from "@/types/profile"
 
 const Sidebar = async ({ children }: Readonly<{ children: React.ReactNode }>) => {
-  const {
-    data: { user },
-  } = await getCurrentUser()
+  const { data: user } = await getUserWithProfile()
 
   if (!user) {
     return redirect("/login")
@@ -19,7 +17,7 @@ const Sidebar = async ({ children }: Readonly<{ children: React.ReactNode }>) =>
 
   return (
     <div className="flex flex-1 flex-col">
-      <MobileSidebar>
+      <MobileSidebar avatar_url={user.avatar_url}>
         {/* Sidebar component, swap this element with another sidebar if you like */}
         <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white">
           <SidebarContent user={user} />
@@ -40,7 +38,7 @@ const Sidebar = async ({ children }: Readonly<{ children: React.ReactNode }>) =>
   )
 }
 
-const SidebarContent = ({ user }: { user: User }) => (
+const SidebarContent = ({ user }: { user: Profile }) => (
   <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6">
     <div className="flex h-16 shrink-0 items-center">
       <Image
@@ -63,6 +61,7 @@ const SidebarContent = ({ user }: { user: User }) => (
             <Image
               className="h-8 w-8 rounded-full bg-gray-50"
               src={
+                user.avatar_url ??
                 "https://png.pngtree.com/png-vector/20210604/ourmid/pngtree-gray-avatar-placeholder-png-image_3416697.jpg"
               }
               alt=""
@@ -70,7 +69,7 @@ const SidebarContent = ({ user }: { user: User }) => (
               height={649}
             />
             <span className="sr-only">Your profile</span>
-            {user.email}
+            {user.first_name} {user.last_name}
           </Link>
           <div className="mx-4 mb-3">
             <form action={logout}>

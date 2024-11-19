@@ -1,24 +1,22 @@
 import { getRecentConversations } from "@/server/handlers/conversations"
 import { getMonthOrderCounts, getRecentOrders } from "@/server/handlers/tiger"
-import { getCurrentUser } from "@/server/handlers/users"
+import { getUserWithProfile } from "@/server/handlers/users"
 import Chart from "./Chart"
 import { getMonthlyStatsByYearAndType } from "@/server/handlers/monthlyStats"
 
 export default async function DashboardPage() {
-  const {
-    data: { user },
-  } = await getCurrentUser()
-
-  const [recentOrders, { data: recentConversations }, { data: orderStats }] = await Promise.all([
-    getRecentOrders(),
-    getRecentConversations(5),
-    getMonthlyStatsByYearAndType(new Date().getFullYear(), "orders"),
-  ])
+  const [{ data: user }, recentOrders, { data: recentConversations }, { data: orderStats }] =
+    await Promise.all([
+      getUserWithProfile(),
+      getRecentOrders(),
+      getRecentConversations(5),
+      getMonthlyStatsByYearAndType(new Date().getFullYear(), "orders"),
+    ])
 
   return (
     <div className="flex w-full flex-1 flex-col items-center gap-20">
       <h1 className="self-start text-4xl font-semibold leading-6 text-gray-900">
-        Welcome, {user?.email?.split("@")[0]}
+        Welcome, {user?.first_name} {user?.last_name}
       </h1>
       <div className="container grid gap-8 px-4 md:px-6 lg:grid-cols-[1fr_1fr] lg:gap-8">
         <div className="aspect-h-7 aspect-w-10 group block w-full space-y-6 overflow-hidden rounded-lg bg-base-100 p-6 shadow-lg">

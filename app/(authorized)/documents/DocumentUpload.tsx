@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect, useRef } from "react"
 import { UploadIcon, FileIcon, Loader2 } from "lucide-react"
 import Image from "next/image"
+import { toast } from "sonner"
 
 type FilePreview = {
   file: File
@@ -67,12 +68,19 @@ export default function DocumentUpload(props: { action: any }) {
       formData.append("name", filePreview.file.name)
       setIsLoading(true)
       const res = await props.action(null, formData)
-      console.log(res)
       setFilePreview(null)
       setIsLoading(false)
       if (fileInputRef.current) {
         fileInputRef.current.value = ""
       }
+
+      if (res.message.includes("mime type")) {
+        return toast.error("The requested file is not supported")
+      } else {
+        return toast.error("There was an error uploading the file")
+      }
+
+      setIsModalOpen(false)
     }
   }
 
@@ -87,7 +95,7 @@ export default function DocumentUpload(props: { action: any }) {
   const isImageFile = (type: string) => type.startsWith("image/")
 
   return (
-    <div className="w-full max-w-xs">
+    <div>
       <button
         onClick={() => setIsModalOpen(true)}
         className="inline-flex items-center gap-1.5 rounded-md bg-green-50 px-3 py-1.5 text-sm text-green-600 transition-colors hover:bg-green-100"
@@ -156,7 +164,13 @@ export default function DocumentUpload(props: { action: any }) {
                 // disabled={!filePreview}
                 className="flex w-full justify-center rounded bg-blue-500 px-4 py-2 text-white disabled:bg-gray-300"
               >
-                {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : "Upload Document"}
+                {isLoading ? (
+                  <>
+                    Uploading... <Loader2 className="h-5 w-5 animate-spin" />
+                  </>
+                ) : (
+                  "Upload Document"
+                )}
               </button>
             </form>
             <button

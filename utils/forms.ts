@@ -4,7 +4,7 @@ import { createProduct, updateProduct } from "@/server/handlers/products"
 import { Product } from "@/types/product"
 import { revalidatePath } from "next/cache"
 import { DocumentFile } from "@/types/documentFile"
-import { createDocument, updateDocument } from "@/server/handlers/documents"
+import { createDocument, deleteDocument, updateDocument } from "@/server/handlers/documents"
 import { getCurrentUser } from "@/server/handlers/users"
 
 type FormResult = {
@@ -26,7 +26,12 @@ const processDocument = async (prevState: any, formData: any): Promise<FormResul
   }
 
   const { data: fileData, error: fileError } = await createDocument(file)
-  if (fileError || userError) return { message: "There was an error uploading the document" }
+  if (fileError || userError) {
+    return {
+      message: fileError?.message || "There was an error uploading the document",
+      status: fileError?.hint || "",
+    }
+  }
 
   const document = formData.get("file") as File
   if (document.size > 0 && fileData.id) {
@@ -39,7 +44,13 @@ const processDocument = async (prevState: any, formData: any): Promise<FormResul
 
     console.log("Document", documentData, documentError)
 
-    if (documentError) return { message: "There was an error uploading the document" }
+    if (documentError) {
+      await deleteDocument(fileData.id)
+      return {
+        message: documentError.message,
+        status: documentError.cause as string,
+      }
+    }
     updateDocument(fileData.id, { path: `${documentData.fullPath}` })
   } else {
     return { message: "No document provided" }

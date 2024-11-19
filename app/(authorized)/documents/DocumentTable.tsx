@@ -51,6 +51,16 @@ const DocumentTable = ({ documents }: { documents: DocumentFile[] }) => {
     getSession()
   }, [])
 
+  if (documents.length === 0) {
+    return (
+      <div className="w-full">
+        <h1 className="text-2xl font-semibold text-gray-800">
+          It appears you have not uploaded any documents yet.
+        </h1>
+      </div>
+    )
+  }
+
   return (
     <div className="mt-8 flow-root">
       <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">

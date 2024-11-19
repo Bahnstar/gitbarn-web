@@ -1,5 +1,5 @@
 import { getProfile } from "@/server/handlers/profiles"
-import { getCurrentUser } from "@/server/handlers/users"
+import { getCurrentUser, getUserWithProfile } from "@/server/handlers/users"
 import { redirect } from "next/navigation"
 
 export default async function ProfilePage() {
@@ -8,7 +8,7 @@ export default async function ProfilePage() {
   } = await getCurrentUser()
 
   if (!user) redirect("/login")
-  const { data: profile, error: profileError } = await getProfile(user.id)
+  const { data: profile, error: profileError } = await getUserWithProfile()
 
   return (
     <div className="flex w-full flex-1 flex-col items-center gap-20">
@@ -30,7 +30,7 @@ export default async function ProfilePage() {
             <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:max-w-xl sm:grid-cols-6">
               <div className="col-span-full flex items-center gap-x-8">
                 <img
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                  src={profile?.avatar_url}
                   alt=""
                   className="h-24 w-24 flex-none rounded-lg bg-gray-800 object-cover"
                 />
@@ -86,29 +86,11 @@ export default async function ProfilePage() {
                     id="email"
                     name="email"
                     type="email"
-                    value={user.email}
                     defaultValue={profile?.email}
                     disabled
                     autoComplete="email"
                     className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6"
                   />
-                </div>
-              </div>
-
-              <div className="col-span-full">
-                <label htmlFor="timezone" className="block text-sm font-medium leading-6 ">
-                  Timezone
-                </label>
-                <div className="mt-2">
-                  <select
-                    id="timezone"
-                    name="timezone"
-                    className="block w-full rounded-md border-0 px-2 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
-                  >
-                    <option>Eastern Standard Time</option>
-                    <option>Pacific Standard Time</option>
-                    <option>Greenwich Mean Time</option>
-                  </select>
                 </div>
               </div>
             </div>
