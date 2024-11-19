@@ -6,7 +6,7 @@ import { DocumentFile } from "@/types/documentFile"
 import { createClient } from "@/utils/supabase/client"
 import { toast } from "sonner"
 
-export default function DocumentList({ documents }: { documents: DocumentFile[] }) {
+export default function DocumentGrid({ documents }: { documents: DocumentFile[] }) {
   const [session, setSession] = useState("")
 
   if (documents.length === 0) {
