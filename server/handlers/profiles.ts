@@ -1,3 +1,5 @@
+"use server"
+
 import { Profile, Role } from "@/types/profile"
 import { createClient } from "@/utils/supabase/server"
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
