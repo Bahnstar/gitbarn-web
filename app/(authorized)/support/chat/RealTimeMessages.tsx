@@ -2,6 +2,7 @@
 
 import { sendUserNotification } from "@/server/handlers/emails"
 import { createMessage } from "@/server/handlers/messages"
+import { getProfile } from "@/server/handlers/profiles"
 import { Conversation } from "@/types/conversation"
 import { Message } from "@/types/message"
 import { createClient } from "@/utils/supabase/client"
@@ -52,6 +53,18 @@ const RealTimeMessages = (props: Props) => {
     }
   }
 
+  const handleConnectedUsers = async (users: string[]) => {
+    let connected: string[] = []
+    await Promise.all(
+      users.map(async (user: string) => {
+        const { data: profile, error } = await getProfile(user)
+        if (error) console.error(error)
+        connected.push(`${profile?.first_name} ${profile?.last_name}`)
+      }),
+    )
+    setConnectedUsers(connected)
+  }
+
   // Force scroll to bottom
   useEffect(() => chatboxRef.current?.scrollIntoView(false), [])
 
@@ -63,7 +76,7 @@ const RealTimeMessages = (props: Props) => {
         const users = Object.values(newState)
           .flat()
           .map((user: any) => user.user_id)
-        setConnectedUsers(users)
+        handleConnectedUsers(users)
       })
       .on(
         "postgres_changes",
@@ -122,12 +135,18 @@ const RealTimeMessages = (props: Props) => {
       <h1 className="sticky top-0 z-30 bg-gray-100 py-5 text-center text-2xl md:text-left">
         {props.conversation.title}
       </h1>
-      <p>
-        Connected Users:{" "}
-        {connectedUsers.map((user) => {
-          return <span key={user}>{user} </span>
-        })}
-      </p>
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="text-md font-medium text-gray-600">Online:</span>
+        {connectedUsers.map((user) => (
+          <div
+            key={user}
+            className="flex items-center gap-2 rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800"
+          >
+            <span className="h-2 w-2 rounded-full bg-green-500"></span>
+            {user}
+          </div>
+        ))}
+      </div>
       <div className="flex flex-1 flex-col">
         <div className="flex flex-1 flex-col-reverse">
           <div>
