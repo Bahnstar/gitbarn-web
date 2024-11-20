@@ -47,7 +47,7 @@ const NewConversationButton = (props: Props) => {
         onClick={() => setIsModalOpen(true)}
         className="block rounded-md bg-green-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
       >
-        New Conversation
+        Start New Support Chat
       </button>
 
       {isModalOpen && (
@@ -67,7 +67,7 @@ const NewConversationButton = (props: Props) => {
                   <div className="sm:flex sm:items-start">
                     <div className="mt-3 w-full text-center sm:ml-4 sm:mt-0 sm:text-left">
                       <h3 className="text-lg font-medium leading-6 text-gray-900">
-                        New Conversation
+                        Start New Support Chat
                       </h3>
                       <div className="mt-2">
                         <input
