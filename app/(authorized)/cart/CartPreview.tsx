@@ -51,7 +51,7 @@ const CartPreview = (props: { cart: CartWithTotal; SubmissionButton: React.React
         </div>
         <div className="flex justify-between">
           <dt className="text-md">Estimated Taxes</dt>
-          <dd className="text-md font-medium text-gray-900">${cart.taxes.toFixed(2)}</dd>
+          <dd className="text-md font-medium text-gray-900">FREE</dd>
         </div>
         <hr />
         <div className="mt-2 flex justify-between">

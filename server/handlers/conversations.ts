@@ -5,9 +5,18 @@ import { createClient } from "@/utils/supabase/server"
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
 import { sendNewChatEmail } from "./emails"
 import { getAllSupportProfiles } from "./profiles"
+import { Role } from "@/types/profile"
+import { getUserWithProfile } from "./users"
 
 export const getConversations = async (): Promise<PostgrestSingleResponse<Conversation[]>> => {
   const supabase = createClient()
+  const { data: user } = await getUserWithProfile()
+
+  if (!user) throw Error("Could not load user")
+
+  if (user.role === Role.USER)
+    return await supabase.from("Conversations").select("*").eq("customer_id", user.id)
+
   return await supabase.from("Conversations").select("*")
 }
 

@@ -12,7 +12,6 @@ export const getCurrentUser = cache(async () => {
 
 export const getUserWithProfile = cache(async () => {
   const supabase = createClient()
-
   const { data: supData } = await supabase.auth.getUser()
   return await getProfile(supData.user!.id)
 })

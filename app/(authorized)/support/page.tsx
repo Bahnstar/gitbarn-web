@@ -1,4 +1,4 @@
-import { getCurrentUser } from "@/server/handlers/users"
+import { getCurrentUser, getUserWithProfile } from "@/server/handlers/users"
 import {
   getConversations,
   getConversationsByCustomerId,
@@ -6,7 +6,6 @@ import {
 } from "@/server/handlers/conversations"
 import { formatDate } from "@/utils/utils"
 import NewConversationButton from "@/components/NewConversationButton"
-import { getProfile } from "@/server/handlers/profiles"
 import { revalidatePath } from "next/cache"
 import { Role } from "@/types/profile"
 import CloseConversationButton from "@/components/CloseConversationButton"
@@ -15,15 +14,10 @@ import EnterConversationButton from "@/components/EnterConversationButton"
 import { toast } from "sonner"
 
 const SupportPage = async () => {
-  const {
-    data: { user },
-  } = await getCurrentUser()
-  const userId = user!.id
+  const { data: userProfile } = await getUserWithProfile()
+  const userId = userProfile!.id
 
-  const [{ data: userProfile }, { data, error }] = await Promise.all([
-    getProfile(userId),
-    getConversations(),
-  ])
+  const { data, error } = await getConversations()
 
   if (error) {
     toast.error(error.message)
