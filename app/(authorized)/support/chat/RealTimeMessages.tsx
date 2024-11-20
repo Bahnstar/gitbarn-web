@@ -70,7 +70,7 @@ const RealTimeMessages = (props: Props) => {
 
   useEffect(() => {
     const channel = supabase
-      .channel("Messages")
+      .channel(`realtime:conversation:${props.conversation.id}`)
       .on("presence", { event: "sync" }, () => {
         const newState = channel.presenceState()
         const users = Object.values(newState)
