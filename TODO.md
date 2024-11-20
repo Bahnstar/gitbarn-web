@@ -1,3 +1,8 @@
+<!--toc:start-->
+- [TO DO](#to-do)
+- [For future investigation](#for-future-investigation)
+<!--toc:end-->
+
 # TO DO
 - [ ] Add a page to manage/send mass emails for admins
 - [ ] Allow admins to upload documents for other users
@@ -27,6 +32,7 @@
 
 # Future Investigation
 - Additional analytics
+- Inventory management
 - A map with latitude/longitude for orders on the dashboard
 - Refactor the close conversation/document upload buttons to be a single unified component
 - Remove the use of RLS as a filtering method from our API
