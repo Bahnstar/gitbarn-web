@@ -128,7 +128,7 @@ const RealTimeMessages = (props: Props) => {
     return () => {
       supabase.removeChannel(channel)
     }
-  }, [supabase, messages, setMessages])
+  }, [])
 
   return (
     <div className="flex h-full flex-1 flex-col gap-y-4">
@@ -166,7 +166,7 @@ const RealTimeMessages = (props: Props) => {
                 >
                   {message.text}
                 </div>
-                <div className="chat-footer opacity-50">Delivered</div>
+                {/* <div className="chat-footer opacity-50">Delivered</div> */}
               </div>
             ))}
           </div>

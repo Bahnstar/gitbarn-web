@@ -1,5 +1,9 @@
 import { getCurrentUser } from "@/server/handlers/users"
-import { getConversationsByCustomerId, updateConversation } from "@/server/handlers/conversations"
+import {
+  getConversations,
+  getConversationsByCustomerId,
+  updateConversation,
+} from "@/server/handlers/conversations"
 import { formatDate } from "@/utils/utils"
 import NewConversationButton from "@/components/NewConversationButton"
 import { getProfile } from "@/server/handlers/profiles"
@@ -18,7 +22,7 @@ const SupportPage = async () => {
 
   const [{ data: userProfile }, { data, error }] = await Promise.all([
     getProfile(userId),
-    getConversationsByCustomerId(userId),
+    getConversations(),
   ])
 
   if (error) {

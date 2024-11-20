@@ -8,7 +8,7 @@ export const getNotifications = async (): Promise<PostgrestSingleResponse<Notifi
 }
 
 export const updateNotification = async (
-  notification: NotificationType,
+  notification: Partial<NotificationType>,
 ): Promise<PostgrestSingleResponse<NotificationType>> => {
   const supabase = createClient()
   return await supabase
