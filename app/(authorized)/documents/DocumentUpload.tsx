@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect, useRef } from "react"
 import { UploadIcon, FileIcon, Loader2 } from "lucide-react"
 import Image from "next/image"
 import { toast } from "sonner"
+import PersonAutocomplete from "@/components/PersonAutocomplete"
 
 type FilePreview = {
   file: File
@@ -159,6 +160,7 @@ export default function DocumentUpload(props: { action: any }) {
                 </div>
               )}
               <input type="hidden" name="name" value={filePreview?.file.name} />
+              <PersonAutocomplete />
               <button
                 type="submit"
                 // disabled={!filePreview}

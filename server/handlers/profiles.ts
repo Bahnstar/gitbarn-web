@@ -3,6 +3,7 @@
 import { Profile, Role } from "@/types/profile"
 import { createClient } from "@/utils/supabase/server"
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
+import { cache } from "react"
 
 export const getProfiles = async () => {
   const supabase = createClient()
@@ -31,3 +32,12 @@ export const updateProfile = async (
   const supabase = createClient()
   return await supabase.from("profiles").update(profile).eq("id", profileId).select().single()
 }
+
+export const searchProfiles = cache(
+  async (search: string): Promise<PostgrestSingleResponse<Profile[]>> => {
+    const supabase = createClient()
+
+    const formattedSearch = search.split(" ").join("' | '")
+    return await supabase.from("profiles").select().textSearch("full_name", `'${formattedSearch}'`)
+  },
+)
