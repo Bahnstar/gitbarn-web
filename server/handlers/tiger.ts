@@ -7,12 +7,13 @@ import {
   Transaction,
 } from "@/types/tigerTransaction"
 import { fetchTransactions, parseXMLResponse, transformTransactions } from "@/utils/tigerUtils"
-import { getCartWithTotal } from "./carts"
+import { deleteAllCarts, getCartWithTotal } from "./carts"
 import { getCurrentUser } from "@/server/handlers/users"
 import { revalidatePath } from "next/cache"
 import { getProfile } from "./profiles"
 import { Role } from "@/types/profile"
 import { MonthlyStat } from "@/types/monthlyStat"
+import { sendAdminNotificationOnOrder } from "./emails"
 
 export const getRecentOrders = async (): Promise<Transaction[]> => {
   const params = new URLSearchParams({
@@ -99,7 +100,6 @@ export const getMonthOrderCounts = async () => {
 export const getCompletedTransactions = async (page: number): Promise<Transaction[]> => {
   const { data: userData } = await getCurrentUser()
 
-  const startDate = "20241001000000" // October 1, 2024, 00:00:00
   const params = new URLSearchParams({
     security_key: process.env.TIGER_API_KEY!,
     result_order: "reverse",
@@ -179,6 +179,9 @@ export const makeTransaction = async (order: OrderSubmission, token: string): Pr
     },
     body: new URLSearchParams(finishedOrder as unknown as Record<string, string>).toString(),
   })
+
+  await sendAdminNotificationOnOrder(order, cart)
+  await deleteAllCarts(userData.user!.id)
 
   revalidatePath("/orders")
   return response.statusText

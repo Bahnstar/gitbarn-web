@@ -4,10 +4,9 @@ import { Cart, CartItem, CartWithTotal } from "@/types/cart"
 import { createClient } from "@/utils/supabase/server"
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
 
-export const getCarts = async (): Promise<PostgrestSingleResponse<Cart[]>> => {
+export const getCarts = async (userId: string): Promise<PostgrestSingleResponse<Cart[]>> => {
   const supabase = createClient()
-
-  return await supabase.from("Carts").select("*")
+  return await supabase.from("Carts").select("*").eq("user_id", userId)
 }
 
 export const getCartsWithProducts = async (): Promise<PostgrestSingleResponse<Cart[]>> => {
