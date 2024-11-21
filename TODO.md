@@ -1,12 +1,14 @@
 <!--toc:start-->
+
 - [TO DO](#to-do)
 - [For future investigation](#for-future-investigation)
 <!--toc:end-->
 
 # TO DO
+
 - [ ] Add a page to manage/send mass emails for admins
 - [ ] Allow admins to upload documents for other users
-- [ ] Send a notification to support/admins on order submission
+- [x] Send a notification to admins on order submission
 - [ ] Connect the profile page to supabase
 - [ ] Integrate pulling customer data from Tiger on sign-up
 - [ ] Allow support to open a new chat with a specific user
@@ -22,15 +24,18 @@
 - [ ] User management page
 
 # Bugs
+
 - [ ] Client gives error when no avatar url is set for a user
 - [ ] Login button on the home page on mobile needs to be visible
 - [ ] Mobile responsiveness (Maybe swap out tables?)
 
 # Security Questions
+
 - RBAC? https://supabase.com/docs/guides/database/postgres/custom-claims-and-role-based-access-control-rbac?queryGroups=language&language=plpgsql
 - Could someone authenticated technically read any of the support chats from the client?
 
 # Future Investigation
+
 - Additional analytics
 - Inventory management
 - A map with latitude/longitude for orders on the dashboard
