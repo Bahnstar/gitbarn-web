@@ -1,14 +1,11 @@
 import { getConversationById } from "@/server/handlers/conversations"
 import { getConversationMessages } from "@/server/handlers/messages"
-import { getCurrentUser } from "@/server/handlers/users"
+import { getUserWithProfile } from "@/server/handlers/users"
 import RealTimeMessages from "./RealTimeMessages"
-import { redirect } from "next/navigation"
 import Toaster from "@/components/Toaster"
 
 const SupportChatPage = async ({ searchParams }: { searchParams: { id: string } }) => {
-  const {
-    data: { user },
-  } = await getCurrentUser()
+  const { data: user } = await getUserWithProfile()
 
   if (!user) {
     return <div>Error</div>
@@ -43,7 +40,7 @@ const SupportChatPage = async ({ searchParams }: { searchParams: { id: string } 
     )
   }
 
-  return <RealTimeMessages messages={messages} userId={user?.id} conversation={conversation} />
+  return <RealTimeMessages messages={messages} user={user} conversation={conversation} />
 }
 
 export default SupportChatPage
