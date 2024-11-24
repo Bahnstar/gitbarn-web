@@ -84,7 +84,7 @@ export const getConversationById = async (
 }
 
 export const createConversation = async (
-  conversation: Conversation,
+  conversation: Partial<Conversation>,
 ): Promise<PostgrestSingleResponse<Conversation>> => {
   const supabase = createClient()
 

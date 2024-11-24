@@ -21,7 +21,7 @@ const NewConversationButton = (props: Props) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
-    const conversation: Conversation = {
+    const conversation: Partial<Conversation> = {
       title: title,
       customer_id: props.userId,
       is_active: true,
