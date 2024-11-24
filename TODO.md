@@ -15,7 +15,7 @@
 - [ ] Order details page
 - [ ] Order page should implement proper filtering
 - [ ] Move products to use Tiger instead of supabase
-- [ ] Allow support users to claim a chat
+- [x] Allow support users to claim a chat
 - [ ] Cart/Notifications in sidebar should have an indicator if there are things inside
 - [ ] Add "drops per month" analytic to the dashboard (Low priority)
 - [ ] Chats should show avatar URL and name

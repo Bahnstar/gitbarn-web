@@ -10,7 +10,7 @@ import { Profile, Role } from "@/types/profile"
 import clientRevalidate from "@/utils/clientRevalidate"
 import { createClient } from "@/utils/supabase/client"
 import { PaperAirplaneIcon, PaperClipIcon } from "@heroicons/react/24/outline"
-import { Loader2, UserPlus } from "lucide-react"
+import { Loader2, SquareX, UserPlus } from "lucide-react"
 import { useEffect, useState, useRef } from "react"
 import { toast } from "sonner"
 
@@ -81,6 +81,21 @@ const RealTimeMessages = (props: Props) => {
     if (data) {
       setIsLoading(false)
       toast.success("Chat claimed successfully!")
+    }
+
+    clientRevalidate("/support")
+  }
+
+  const handleRemoveSupportClaim = async () => {
+    setIsLoading(true)
+    const { data, error } = await updateConversation(props.conversation.id!, {
+      support_id: null,
+    })
+
+    if (error) console.error(error)
+    if (data) {
+      setIsLoading(false)
+      toast.success("Support claim removed successfully!")
     }
 
     clientRevalidate("/support")
@@ -179,12 +194,21 @@ const RealTimeMessages = (props: Props) => {
         ) : (
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setIsLoading(true)}
+              onClick={handleRemoveSupportClaim}
               disabled={isLoading}
               className="inline-flex items-center gap-1.5 rounded-md bg-green-50 px-3 py-1.5 text-sm text-green-600 transition-colors hover:bg-green-100"
             >
-              Claimed
-              {/* <UserPlus className="h-4 w-4" /> */}
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  Removing...
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                </div>
+              ) : (
+                <div className="flex items-center gap-2" onClick={handleRemoveSupportClaim}>
+                  Claimed
+                  <SquareX className="h-4 w-4 transform duration-100 hover:scale-110 hover:text-red-600" />
+                </div>
+              )}
             </button>
           </div>
         )}
