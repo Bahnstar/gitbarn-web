@@ -20,11 +20,41 @@ export const getConversations = async (): Promise<PostgrestSingleResponse<Conver
   return await supabase.from("Conversations").select("*")
 }
 
+export const getConversationsWithSupportAgent = async () => {
+  const supabase = createClient()
+  const { data: user } = await getUserWithProfile()
+
+  if (!user) throw Error("Could not load user")
+
+  if (user.role === Role.USER)
+    return await supabase
+      .from("Conversations")
+      .select("*, profiles (first_name, last_name)")
+      .eq("customer_id", user.id)
+
+  return await supabase
+    .from("Conversations")
+    .select("*, profiles (first_name, last_name)")
+    .order("created_at", { ascending: false })
+}
+
 export const getRecentConversations = async (
   n: number,
 ): Promise<PostgrestSingleResponse<Conversation[]>> => {
   const supabase = createClient()
-  // also get the user email
+
+  const { data: user } = await getUserWithProfile()
+
+  if (!user) throw Error("Could not load user")
+
+  if (user.role === Role.USER)
+    return await supabase
+      .from("Conversations")
+      .select("*")
+      .eq("customer_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(n)
+
   return await supabase
     .from("Conversations")
     .select("*")

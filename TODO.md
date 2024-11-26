@@ -19,7 +19,7 @@
 - [ ] Cart/Notifications in sidebar should have an indicator if there are things inside
 - [ ] Add "drops per month" analytic to the dashboard (Low priority)
 - [ ] Chats should show avatar URL and name
-- [ ] Chat list should show who's claimed it (To both client/user)
+- [x] Chat list should show who's claimed it (To both client/user)
 - [ ] Support/Admins should be able to see order details for all orders
 - [ ] User management page
 

@@ -2,6 +2,7 @@ import { getCurrentUser, getUserWithProfile } from "@/server/handlers/users"
 import {
   getConversations,
   getConversationsByCustomerId,
+  getConversationsWithSupportAgent,
   updateConversation,
 } from "@/server/handlers/conversations"
 import { formatDate } from "@/utils/utils"
@@ -17,11 +18,7 @@ const SupportPage = async () => {
   const { data: userProfile } = await getUserWithProfile()
   const userId = userProfile!.id
 
-  const { data, error } = await getConversations()
-
-  if (error) {
-    toast.error(error.message)
-  }
+  const { data } = await getConversationsWithSupportAgent()
 
   const endConversation = async (conversationId: string) => {
     "use server"
@@ -78,6 +75,12 @@ const SupportPage = async () => {
                         scope="col"
                         className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                       >
+                        Support Agent
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
                         Created
                       </th>
                       <th
@@ -87,7 +90,7 @@ const SupportPage = async () => {
                         Status
                       </th>
                       <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                        <span className="sr-only">Edit</span>
+                        <span className="sr-only">Actions</span>
                       </th>
                     </tr>
                   </thead>
@@ -96,6 +99,9 @@ const SupportPage = async () => {
                       <tr key={row.id}>
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                           {row.title}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                          {row.profiles?.first_name ?? "Unclaimed"} {row.profiles?.last_name ?? ""}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                           {row.created_at ? formatDate(row.created_at) : ""}
