@@ -15,6 +15,13 @@ export const getProfile = async (profileId: string): Promise<PostgrestSingleResp
   return await supabase.from("profiles").select("*").eq("id", profileId).single()
 }
 
+export const getProfilesByEmail = async (
+  email: string,
+): Promise<PostgrestSingleResponse<Profile[]>> => {
+  const supabase = createClient()
+  return await supabase.from("profiles").select("*").like("email", `%${email}%`).limit(5)
+}
+
 export const getAllSupportProfiles = async (): Promise<PostgrestSingleResponse<Profile[]>> => {
   const supabase = createClient()
   return await supabase.from("profiles").select("*").eq("role", Role.SUPPORT)

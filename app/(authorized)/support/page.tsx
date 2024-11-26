@@ -12,13 +12,17 @@ import { Role } from "@/types/profile"
 import CloseConversationButton from "@/components/CloseConversationButton"
 import ReopenConversationButton from "@/components/ReopenConversationButton"
 import EnterConversationButton from "@/components/EnterConversationButton"
-import { toast } from "sonner"
+import { redirect } from "next/navigation"
 
 const SupportPage = async () => {
-  const { data: userProfile } = await getUserWithProfile()
-  const userId = userProfile!.id
+  const [{ data: userProfile }, { data }] = await Promise.all([
+    getUserWithProfile(),
+    getConversationsWithSupportAgent(),
+  ])
 
-  const { data } = await getConversationsWithSupportAgent()
+  if (!userProfile) {
+    redirect("/login")
+  }
 
   const endConversation = async (conversationId: string) => {
     "use server"
@@ -55,7 +59,7 @@ const SupportPage = async () => {
             </label>
           </div>
           <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-            <NewConversationButton userId={userId} />
+            <NewConversationButton user={userProfile} />
           </div>
         </div>
         <div className="mt-8 flow-root">

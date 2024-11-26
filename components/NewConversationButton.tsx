@@ -1,21 +1,24 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { createConversation } from "@/server/handlers/conversations"
 import { Conversation } from "@/types/conversation"
 import clientRevalidate from "@/utils/clientRevalidate"
 import { toast } from "sonner"
 import { LoaderCircle } from "lucide-react"
+import ComboBox from "./ComboBox"
+import { Profile, Role } from "@/types/profile"
 
 type Props = {
-  userId: string
+  user: Profile
 }
 
 const NewConversationButton = (props: Props) => {
   const [isLoading, setIsLoading] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [title, setTitle] = useState("")
+  const [customerId, setCustomerId] = useState("")
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -23,7 +26,7 @@ const NewConversationButton = (props: Props) => {
     setIsLoading(true)
     const conversation: Partial<Conversation> = {
       title: title,
-      customer_id: props.userId,
+      customer_id: customerId || props.user.id,
       is_active: true,
     }
 
@@ -39,6 +42,10 @@ const NewConversationButton = (props: Props) => {
     }
     setIsLoading(false)
     setIsModalOpen(false)
+  }
+
+  const supportOrAdmin = () => {
+    return props.user.role === Role.SUPPORT || props.user.role === Role.ADMIN
   }
 
   return (
@@ -79,6 +86,11 @@ const NewConversationButton = (props: Props) => {
                           required
                         />
                       </div>
+                      {supportOrAdmin() && (
+                        <div className="mt-2">
+                          <ComboBox setCustomerId={setCustomerId} />
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
