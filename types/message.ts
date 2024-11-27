@@ -5,3 +5,11 @@ export type Message = {
   text: string
   readonly created_at?: Date
 }
+
+export type MessageWithProfile = Message & {
+  profiles: {
+    first_name: string
+    last_name: string
+    avatar_url: string
+  }
+}

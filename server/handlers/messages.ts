@@ -2,15 +2,15 @@
 
 import { createClient } from "@/utils/supabase/server"
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
-import { Message } from "@/types/message"
+import { Message, MessageWithProfile } from "@/types/message"
 
 export const getConversationMessages = async (
   conversationId: string,
-): Promise<PostgrestSingleResponse<Message[]>> => {
+): Promise<PostgrestSingleResponse<MessageWithProfile[]>> => {
   const supabase = createClient()
   return await supabase
     .from("Messages")
-    .select("*")
+    .select("*, profiles (id, avatar_url, first_name, last_name)")
     .eq("conversation_id", conversationId)
     .order("created_at", { ascending: true })
 }

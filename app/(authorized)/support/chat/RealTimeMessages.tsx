@@ -5,7 +5,7 @@ import { sendUserNotification } from "@/server/handlers/emails"
 import { createMessage } from "@/server/handlers/messages"
 import { getProfile } from "@/server/handlers/profiles"
 import { Conversation } from "@/types/conversation"
-import { Message } from "@/types/message"
+import { MessageWithProfile } from "@/types/message"
 import { Profile, Role } from "@/types/profile"
 import clientRevalidate from "@/utils/clientRevalidate"
 import { createClient } from "@/utils/supabase/client"
@@ -15,7 +15,7 @@ import { useEffect, useState, useRef } from "react"
 import { toast } from "sonner"
 
 type Props = {
-  messages: Message[]
+  messages: MessageWithProfile[]
   conversation: Conversation
   user: Profile
 }
@@ -23,7 +23,7 @@ type Props = {
 const RealTimeMessages = (props: Props) => {
   const supabase = createClient()
 
-  const [messages, setMessages] = useState<Message[]>(props.messages)
+  const [messages, setMessages] = useState<MessageWithProfile[]>(props.messages)
   const [message, setMessage] = useState<string>("")
   const [connectedUsers, setConnectedUsers] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -36,7 +36,6 @@ const RealTimeMessages = (props: Props) => {
       props.user.id,
       message,
     )
-    console.log("New Message: ", newMessage)
 
     if (error) console.error(error)
     setMessage("")
@@ -101,6 +100,17 @@ const RealTimeMessages = (props: Props) => {
     clientRevalidate("/support")
   }
 
+  const payloadWithProfileDetails = (payload: any) => {
+    return {
+      ...payload,
+      profiles: {
+        first_name: props.user.first_name,
+        last_name: props.user.last_name,
+        avatar_url: props.user.avatar_url,
+      },
+    }
+  }
+
   // Force scroll to bottom
   useEffect(() => chatboxRef.current?.scrollIntoView(false), [])
 
@@ -123,7 +133,8 @@ const RealTimeMessages = (props: Props) => {
           filter: `conversation_id=eq.${props.conversation.id}`,
         },
         (payload) => {
-          setMessages((prev) => [...prev, payload.new as Message])
+          const newPayload: MessageWithProfile = payloadWithProfileDetails(payload.new)
+          setMessages((prev) => [...prev, newPayload])
           chatboxRef.current?.scrollIntoView({ behavior: "smooth", block: "end" })
         },
       )
@@ -138,7 +149,7 @@ const RealTimeMessages = (props: Props) => {
         (payload) => {
           setMessages((prev) =>
             prev.map((message) =>
-              message.id === payload.new.id ? (payload.new as Message) : message,
+              message.id === payload.new.id ? (payload.new as MessageWithProfile) : message,
             ),
           )
         },
@@ -233,8 +244,17 @@ const RealTimeMessages = (props: Props) => {
                 key={message.id}
                 className={`chat ${message.user_id === props.user.id ? "chat-end" : "chat-start"}`}
               >
+                <div className="avatar chat-image">
+                  <div className="w-10 rounded-full">
+                    <img
+                      alt="Tailwind CSS chat bubble component"
+                      src={message.profiles?.avatar_url || ""}
+                    />
+                  </div>
+                </div>
                 <div className="chat-header">
-                  {message.user_id === props.user.id ? "You" : "Support Agent"}
+                  {message.user_id !== props.user.id &&
+                    `${message.profiles?.first_name} ${message.profiles?.last_name}`}
                   <time className="text-xs opacity-50">
                     {"  " + message.created_at?.toString().slice(0, 10)}
                   </time>
