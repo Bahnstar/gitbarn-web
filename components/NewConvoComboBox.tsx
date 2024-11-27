@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Check, ChevronsUpDown } from "lucide-react"
+import { Check, ChevronsUpDown, Loader2 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -59,13 +59,13 @@ export default function ComboBox(props: Props) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-full justify-between text-gray-400"
+          className={`${value ? "text-black" : "text-gray-400"} text-md w-full justify-between rounded-md border border-gray-300 px-3 py-2 font-normal shadow-sm hover:bg-gray-100`}
         >
-          {value ? profiles.find((profile) => profile.id === value)?.email : "Select User..."}
+          {value ? profiles.find((profile) => profile.id === value)?.email : "Select User"}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-full p-0">
+      <PopoverContent className="w-full border bg-white p-0 shadow-md dark:bg-slate-950">
         <Command shouldFilter={false}>
           <CommandInput
             placeholder="Search Email..."
@@ -77,11 +77,13 @@ export default function ComboBox(props: Props) {
           />
           <CommandList>
             <CommandEmpty>
-              {loading
-                ? "Loading..."
-                : inputValue.length > 0
-                  ? "No users found."
-                  : "Type to search..."}
+              {loading ? (
+                <Loader2 className="m-auto animate-spin" />
+              ) : inputValue.length > 0 ? (
+                "No users found."
+              ) : (
+                "Type to search..."
+              )}
             </CommandEmpty>
             <CommandGroup>
               {profiles.map((profile) => (
@@ -93,6 +95,7 @@ export default function ComboBox(props: Props) {
                     props.setCustomerId(profile.id)
                     setOpen(false)
                   }}
+                  className="data-[selected='true']:bg-gray-300"
                 >
                   {profile.email}
                   <Check

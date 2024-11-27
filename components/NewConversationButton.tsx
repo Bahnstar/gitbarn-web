@@ -7,7 +7,7 @@ import { Conversation } from "@/types/conversation"
 import clientRevalidate from "@/utils/clientRevalidate"
 import { toast } from "sonner"
 import { LoaderCircle } from "lucide-react"
-import ComboBox from "./ComboBox"
+import ComboBox from "./NewConvoComboBox"
 import { Profile, Role } from "@/types/profile"
 
 type Props = {
@@ -82,7 +82,7 @@ const NewConversationButton = (props: Props) => {
                           value={title}
                           onChange={(e) => setTitle(e.target.value)}
                           placeholder="Enter conversation title"
-                          className="w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                          className="w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
                           required
                         />
                       </div>
