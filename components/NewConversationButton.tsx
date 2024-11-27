@@ -44,7 +44,7 @@ const NewConversationButton = (props: Props) => {
     setIsModalOpen(false)
   }
 
-  const supportOrAdmin = () => {
+  const isSupportOrAdmin = () => {
     return props.user.role === Role.SUPPORT || props.user.role === Role.ADMIN
   }
 
@@ -86,7 +86,7 @@ const NewConversationButton = (props: Props) => {
                           required
                         />
                       </div>
-                      {supportOrAdmin() && (
+                      {isSupportOrAdmin() && (
                         <div className="mt-2">
                           <ComboBox setCustomerId={setCustomerId} />
                         </div>
