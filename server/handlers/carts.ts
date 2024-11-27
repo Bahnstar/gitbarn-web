@@ -28,6 +28,21 @@ export const getCartsByTitle = async (title: string): Promise<PostgrestSingleRes
   return await supabase.from("Carts").select("*").eq("title", title)
 }
 
+export const getCartsCount = async (userId: string): Promise<number> => {
+  const supabase = createClient()
+  const { count, error } = await supabase
+    .from("Carts")
+    .select("*", { count: "exact", head: true })
+    .eq("user_id", userId)
+
+  if (error || !count) {
+    console.error("Error fetching cart count:", error)
+    return 0
+  }
+
+  return count
+}
+
 export const createCart = async (Cart: Cart): Promise<PostgrestSingleResponse<Cart>> => {
   const supabase = createClient()
   return await supabase.from("Carts").insert([Cart]).select().limit(1).single()

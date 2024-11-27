@@ -7,9 +7,20 @@ import Link from "next/link"
 import { logout } from "@/server/handlers/auth"
 import { getUserWithProfile } from "@/server/handlers/users"
 import { Profile } from "@/types/profile"
+import { getUnreadNotificationCount } from "@/server/handlers/notifications"
+import { toast } from "sonner"
+import { getCartsCount } from "@/server/handlers/carts"
 
 const Sidebar = async ({ children }: Readonly<{ children: React.ReactNode }>) => {
   const { data: user } = await getUserWithProfile()
+  if (!user) {
+    toast.error("You must be logged in to view this page")
+    redirect("/login")
+  }
+  const [notificationCount, cartCount] = await Promise.all([
+    getUnreadNotificationCount(user.id),
+    getCartsCount(user.id),
+  ])
 
   if (!user) {
     return redirect("/login")
