@@ -11,7 +11,7 @@
 - [x] Send a notification to admins on order submission
 - [ ] Connect the profile page to supabase
 - [ ] Integrate pulling customer data from Tiger on sign-up
-- [ ] Allow support to open a new chat with a specific user
+- [x] Allow support to open a new chat with a specific user
 - [ ] Order details page
 - [ ] Order page should implement proper filtering
 - [ ] Move products to use Tiger instead of supabase
