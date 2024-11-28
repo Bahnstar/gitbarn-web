@@ -15,6 +15,7 @@
 - [ ] Order details page
 - [ ] Order page should implement proper filtering
 - [ ] Move products to use Tiger instead of supabase
+- [ ] Delete products
 - [x] Allow support users to claim a chat
 - [ ] Cart/Notifications in sidebar should have an indicator if there are things inside
 - [ ] Add "drops per month" analytic to the dashboard (Low priority)
@@ -22,6 +23,7 @@
 - [x] Chat list should show who's claimed it (To both client/user)
 - [ ] Support/Admins should be able to see order details for all orders
 - [ ] User management page
+- [ ] Only Admins can manage products
 
 # Bugs
 

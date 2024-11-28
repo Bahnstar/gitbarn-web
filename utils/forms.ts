@@ -20,6 +20,8 @@ const processDocument = async (prevState: any, formData: any): Promise<FormResul
     error: userError,
   } = await getCurrentUser()
 
+  console.log("FORM", formData)
+
   const file: Partial<DocumentFile> = {
     name: formData.get("name") as string,
     user_id: user?.id,
@@ -68,6 +70,8 @@ const processProduct = async (prevState: any, formData: FormData): Promise<FormR
     description: formData.get("description") as string,
     amount: formData.get("cost") as string,
     status: formData.get("status") as string,
+    sku: formData.get("sku") as string,
+    tiger_id: formData.get("tiger_id") as unknown as number,
   }
 
   const id = formData.get("id") as string

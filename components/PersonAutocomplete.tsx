@@ -13,13 +13,12 @@ import { useState } from "react"
 import { Profile } from "@/types/profile"
 import { toast } from "sonner"
 
-const people = [{ id: 1, name: "Leslie Alexander" }]
-
 const PersonAutocomplete = () => {
-  const [selectedPerson, setSelectedPerson] = useState(null)
   const [results, setResults] = useState<Profile[]>([])
 
   const handleSearch = async (search: string) => {
+    if (search.trim() === "") return
+
     const { data, error } = await searchProfiles(search)
 
     if (error) return toast.error("There was an error while searching for users")
@@ -28,19 +27,13 @@ const PersonAutocomplete = () => {
   }
 
   return (
-    <Combobox
-      as="div"
-      value={selectedPerson}
-      onChange={(person) => {
-        setSelectedPerson(person)
-      }}
-    >
+    <Combobox defaultValue="" name="user">
       <Label className="block text-sm/6 font-medium text-gray-900">Assigned to</Label>
-      <div className="relative mt-2">
+      <div className="relative my-2">
         <ComboboxInput
           className="w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
           onChange={(event) => handleSearch(event.target.value)}
-          displayValue={(u: Profile) => u?.first_name + " " + u?.last_name}
+          displayValue={(u: Profile) => (u ? u?.first_name + " " + u?.last_name : "")}
         />
         <ComboboxButton className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
           <ChevronUpDownIcon className="size-5 text-gray-400" aria-hidden="true" />

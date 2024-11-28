@@ -3,6 +3,7 @@
 import { Product } from "@/types/product"
 import { createClient } from "@/utils/supabase/server"
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
+import { manageTigerProduct } from "./tiger"
 
 export const getProducts = async (
   showAll?: boolean,
@@ -30,7 +31,12 @@ export const createProduct = async (
   product: Product,
 ): Promise<PostgrestSingleResponse<Product>> => {
   const supabase = createClient()
-  return await supabase.from("Products").insert([product]).select().limit(1).single()
+  const res = await manageTigerProduct(product, "add_product")
+  const newProduct = {
+    ...product,
+    tiger_id: res.product_id,
+  }
+  return await supabase.from("Products").insert([newProduct]).select().limit(1).single()
 }
 
 export const updateProduct = async (
@@ -38,10 +44,13 @@ export const updateProduct = async (
   product: Partial<Product>,
 ): Promise<PostgrestSingleResponse<Product>> => {
   const supabase = createClient()
+  const res = await manageTigerProduct(product, "update_product")
+  console.log(res, product)
   return await supabase.from("Products").update(product).eq("id", id).select().single()
 }
 
-export const deleteProduct = async (id: string): Promise<void> => {
+export const deleteProduct = async (id: string, tiger_id: number): Promise<void> => {
   const supabase = createClient()
+  await manageTigerProduct({ tiger_id: tiger_id }, "delete_product")
   await supabase.from("Products").delete().eq("id", id)
 }

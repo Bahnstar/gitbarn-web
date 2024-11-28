@@ -25,6 +25,87 @@ export interface Action {
   response: string
 }
 
+export type TransactionQueryParams = {
+  security_key?: string
+  transaction_id?: string
+  subscription_id?: string
+  invoice_id?: string
+  order_id?: string
+  email?: string
+  first_name?: string
+  last_name?: string
+  address1?: string
+  city?: string
+  state?: string
+  zip?: string
+  phone?: string
+  fax?: string
+  order_description?: string
+  drivers_license_number?: string
+  drivers_license_dob?: string
+  drivers_license_state?: string
+  customer_vault_id?: string
+  cc_number?: string
+  start_date?: string
+  end_date?: string
+  date_search?: "created" | "updated" | string
+  mobile_device_license?: string
+  mobile_device_nickname?: string
+  merchant_defined_fields?: [{ index: number; value: string }]
+  report_type?:
+    | "receipt"
+    | "customer_vault"
+    | "recurring"
+    | "recurring_plans"
+    | "invoicing"
+    | "gateway_processors"
+    | "account_updater"
+    | "test_mode_status"
+    | "profile"
+    | string
+  condition?:
+    | "pending"
+    | "pendingsettlement"
+    | "in_progress"
+    | "abandoned"
+    | "failed"
+    | "canceled"
+    | "complete"
+    | "unknown"
+    | string
+  transaction_type?: "cc" | "ck" | string
+  action_type?: "sale" | "refund" | "credit" | "auth" | "capture" | "void" | string
+  source?:
+    | "api"
+    | "batch_upload"
+    | "mobile"
+    | "quickclick"
+    | "quickbooks"
+    | "recurring"
+    | "swipe"
+    | "virtual_terminal"
+    | "internal"
+    | string
+  result_order?: "standard" | "reverse"
+  result_limit?: number
+  page_number?: number
+  invoice_status?: "open" | "paid" | "closed" | "past_due" | string
+  processor_details?: boolean
+}
+
+export type TransactionResponse = {
+  response: string
+  responsetext: string
+  product_id?: string
+  authcode: string
+  transactionid: string
+  avsresponse: string
+  cvvresponse: string
+  orderid: string
+  response_code: string
+  emv_auth_response_data?: string
+}
+
 export type Tokenization = {
   initiatedBy?: string
   token: string

@@ -10,6 +10,7 @@ export default function OrdersTable({ initialOrders }: { initialOrders: Transact
   const getNextPage = async () => {
     const orders = await getCompletedTransactions(currentPage + 1)
     setOrders(orders)
+    console.log(orders)
     setCurrentPage(currentPage + 1)
   }
 

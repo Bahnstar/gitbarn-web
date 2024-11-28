@@ -5,8 +5,10 @@ import {
   OrderSubmission,
   Tokenization,
   Transaction,
+  TransactionQueryParams,
+  TransactionResponse,
 } from "@/types/tigerTransaction"
-import { fetchTransactions, parseXMLResponse, transformTransactions } from "@/utils/tigerUtils"
+import { fetchTransactions, postTransactions } from "@/utils/tigerUtils"
 import { deleteAllCarts, getCartWithTotal } from "./carts"
 import { getCurrentUser } from "@/server/handlers/users"
 import { revalidatePath } from "next/cache"
@@ -14,19 +16,33 @@ import { getProfile } from "./profiles"
 import { Role } from "@/types/profile"
 import { MonthlyStat } from "@/types/monthlyStat"
 import { sendAdminNotificationOnOrder } from "./emails"
+import { Product } from "@/types/product"
+
+export const manageTigerProduct = async (
+  product: Partial<Product>,
+  action: "add_product" | "update_product" | "delete_product",
+): Promise<TransactionResponse> => {
+  const params = {
+    products: action,
+    product_sku: product.sku,
+    product_description: product.title,
+    product_cost: product.amount,
+    product_id: product.tiger_id || "",
+    product_currency: "USD",
+  }
+
+  const response = await postTransactions(params)
+  return response
+}
 
 export const getRecentOrders = async (): Promise<Transaction[]> => {
-  const params = new URLSearchParams({
-    security_key: process.env.TIGER_API_KEY!,
+  const params: TransactionQueryParams = {
     result_order: "reverse",
-    result_limit: "5",
+    result_limit: 5,
     // condition: "complete",
-  })
+  }
 
-  const data = await fetchTransactions(params)
-  const result = parseXMLResponse(data)
-  const transformedTransactions = transformTransactions(result)
-  return transformedTransactions
+  return await fetchTransactions(params)
 }
 
 const getMonthBoundaryDates = () => {
@@ -78,19 +94,18 @@ export const getMonthOrderCounts = async () => {
   const res: MonthlyStat[] = []
   await Promise.all(
     monthBoundaries.map(async (boundary, i) => {
-      const newParams = new URLSearchParams(params)
-      newParams.set("start_date", boundary.start)
-      newParams.set("end_date", boundary.end)
+      const params: TransactionQueryParams = {
+        start_date: boundary.start,
+        end_date: boundary.end,
+      }
 
-      const data = await fetchTransactions(newParams)
-      const result = parseXMLResponse(data)
-      const transformedTransactions = transformTransactions(result)
+      const data = await fetchTransactions(params)
 
       res.push({
         month: i,
         year: new Date().getFullYear(),
         type: "orders",
-        value: transformedTransactions.length,
+        value: data.length,
       })
     }),
   )
@@ -100,33 +115,28 @@ export const getMonthOrderCounts = async () => {
 export const getCompletedTransactions = async (page: number): Promise<Transaction[]> => {
   const { data: userData } = await getCurrentUser()
 
-  const params = new URLSearchParams({
-    security_key: process.env.TIGER_API_KEY!,
+  const params: TransactionQueryParams = {
     result_order: "reverse",
-    result_limit: "10",
-    page_number: page.toString(),
+    result_limit: 10,
+    page_number: page,
     condition: "pendingsettlement,complete",
     email: userData.user?.email || "",
-  })
+  }
 
-  const data = await fetchTransactions(params)
-  const result = parseXMLResponse(data)
-  const transformedTransactions = transformTransactions(result)
+  return await fetchTransactions(params)
+}
 
-  return transformedTransactions
+export const getTransaction = async (id: string): Promise<Transaction> => {
+  const params: TransactionQueryParams = {
+    transaction_id: id,
+  }
+
+  const res = await fetchTransactions(params)
+  return res[0]
 }
 
 export const testTiger = async (): Promise<Transaction[]> => {
-  const params = new URLSearchParams({
-    security_key: process.env.TIGER_API_KEY!,
-  })
-
-  const data = await fetchTransactions(params)
-  const result = parseXMLResponse(data)
-  const transformedTransactions = transformTransactions(result)
-
-  // console.log(JSON.stringify(transformedTransactions, null, 2))
-  return transformedTransactions
+  return await fetchTransactions()
 }
 
 // Payment API functions
@@ -138,7 +148,7 @@ const validateTransactionData = (info: Tokenization) => {
 
 export const makeTransaction = async (order: OrderSubmission, token: string): Promise<string> => {
   const apiKey = process.env.TIGER_API_KEY!
-  const endpoint = process.env.TIGER_ENDPOINT!
+  const endpoint = process.env.TIGER_TRANSACT_API!
 
   const { data: userData } = await getCurrentUser()
   const cart = await getCartWithTotal()
@@ -172,12 +182,25 @@ export const makeTransaction = async (order: OrderSubmission, token: string): Pr
     vat_tax_rate: cart.taxRate.toString(),
   }
 
+  let orderWProducts: any = {
+    ...finishedOrder,
+  }
+
+  cart.items.forEach((item, i) => {
+    ;(orderWProducts[`item_product_code_${i + 1}`] = item.sku),
+      (orderWProducts[`item_description_${i + 1}`] = item.description),
+      (orderWProducts[`item_quantity_${i + 1}`] = item.quantity),
+      (orderWProducts[`item_unit_cost_${i + 1}`] = item.amount)
+  })
+
+  console.log(orderWProducts)
+
   const response = await fetch(endpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     },
-    body: new URLSearchParams(finishedOrder as unknown as Record<string, string>).toString(),
+    body: new URLSearchParams(orderWProducts as unknown as Record<string, string>).toString(),
   })
 
   await sendAdminNotificationOnOrder(order, cart)

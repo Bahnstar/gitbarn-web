@@ -31,6 +31,7 @@ const ProductForm = (props: { action: any; product?: Product }) => {
             </div>
 
             <input id="id" name="id" defaultValue={product?.id} hidden />
+            <input id="tiger_id" name="tiger_id" defaultValue={product?.tiger_id} hidden />
 
             <div>
               <label
@@ -67,6 +68,22 @@ const ProductForm = (props: { action: any; product?: Product }) => {
                 step={0.01}
                 required
                 defaultValue={product?.amount}
+                className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6"
+              />
+            </div>
+          </div>
+
+          <div className="flex-1">
+            <label htmlFor="sku" className="block text-sm font-medium leading-6 ">
+              SKU
+            </label>
+            <div className="mt-2">
+              <input
+                id="sku"
+                name="sku"
+                type="text"
+                required
+                defaultValue={product?.sku}
                 className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6"
               />
             </div>

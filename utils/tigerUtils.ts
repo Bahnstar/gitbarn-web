@@ -1,13 +1,39 @@
-import { Transaction } from "@/types/tigerTransaction"
+import { Transaction, TransactionResponse } from "@/types/tigerTransaction"
 import { XMLParser } from "fast-xml-parser"
 
-export const fetchTransactions = async (params: URLSearchParams): Promise<string> => {
-  const url = "https://secure.networkmerchants.com/api/query.php"
+export const postTransactions = async (args?: any): Promise<TransactionResponse> => {
+  const url = process.env.TIGER_TRANSACT_API!
+  const params = new URLSearchParams({
+    security_key: process.env.TIGER_API_KEY!,
+    ...args,
+  })
+
   const response = await fetch(url, {
     method: "POST",
     body: params,
   })
-  return response.text()
+
+  const result = await response.text()
+  const transformedResult = Object.fromEntries(new URLSearchParams(result))
+  return transformedResult as TransactionResponse
+}
+
+export const fetchTransactions = async (args?: any): Promise<Transaction[]> => {
+  const url = process.env.TIGER_QUERY_API!
+  const params = new URLSearchParams({
+    security_key: process.env.TIGER_API_KEY!,
+    ...args,
+  })
+
+  const response = await fetch(url, {
+    method: "POST",
+    body: params,
+  })
+
+  const result = await response.text()
+  const parsedTransaction = parseXMLResponse(result)
+  const transformededTransaction = transformTransactions(parsedTransaction)
+  return transformededTransaction
 }
 
 export const parseXMLResponse = (data: string): any => {

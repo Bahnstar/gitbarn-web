@@ -26,7 +26,10 @@ const CartPreview = (props: { cart: CartWithTotal; SubmissionButton: React.React
               <div className="flex w-full justify-between">
                 <div className="flex flex-col justify-between">
                   <h3 className="text-sm">{item.title}</h3>
-                  <h2>${Number(item.amount).toFixed(2)}</h2>
+                  <h2 className="flex items-center">
+                    ${Number(item.amount).toFixed(2)}
+                    <span className="text-xs text-gray-800">/ea</span>
+                  </h2>
                 </div>
 
                 <div className="flex flex-col justify-between">

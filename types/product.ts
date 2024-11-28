@@ -7,4 +7,6 @@ export type Product = {
   createdAt?: Date
   modifiedAt?: Date
   status?: string
+  sku: string
+  tiger_id?: number
 }
