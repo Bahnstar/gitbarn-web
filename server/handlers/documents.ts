@@ -15,7 +15,6 @@ export async function createDocument(
   document: Partial<DocumentFile>,
 ): Promise<PostgrestSingleResponse<DocumentFile>> {
   const supabase = createClient()
-
   return await supabase.from("Documents").insert([document]).select().single()
 }
 

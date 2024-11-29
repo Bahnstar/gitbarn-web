@@ -9,11 +9,13 @@ import {
   Label,
 } from "@headlessui/react"
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Profile } from "@/types/profile"
 import { toast } from "sonner"
+import { getUserWithProfile } from "@/server/handlers/users"
 
 const PersonAutocomplete = () => {
+  const [currentUser, setCurrentUser] = useState<Profile>()
   const [results, setResults] = useState<Profile[]>([])
 
   const handleSearch = async (search: string) => {
@@ -26,8 +28,17 @@ const PersonAutocomplete = () => {
     setResults(data)
   }
 
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: user } = await getUserWithProfile()
+      setCurrentUser(user!)
+    }
+
+    getUser()
+  }, [])
+
   return (
-    <Combobox defaultValue="" name="user">
+    <Combobox defaultValue={currentUser} name="user">
       <Label className="block text-sm/6 font-medium text-gray-900">Assigned to</Label>
       <div className="relative my-2">
         <ComboboxInput

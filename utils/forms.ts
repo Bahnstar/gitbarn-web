@@ -20,14 +20,13 @@ const processDocument = async (prevState: any, formData: any): Promise<FormResul
     error: userError,
   } = await getCurrentUser()
 
-  console.log("FORM", formData)
-
   const file: Partial<DocumentFile> = {
     name: formData.get("name") as string,
-    user_id: user?.id,
+    user_id: formData.get("user[id]") || user?.id,
   }
 
   const { data: fileData, error: fileError } = await createDocument(file)
+  console.log(fileData, fileError)
   if (fileError || userError) {
     return {
       message: fileError?.message || "There was an error uploading the document",
@@ -39,12 +38,12 @@ const processDocument = async (prevState: any, formData: any): Promise<FormResul
   if (document.size > 0 && fileData.id) {
     const { data: documentData, error: documentError } = await supabase.storage
       .from("documents")
-      .upload(`${user!.id}/${fileData.id}`, document, {
+      .upload(`${file.user_id}/${fileData.id}`, document, {
         cacheControl: "3600",
         upsert: true,
       })
 
-    console.log("Document", documentData, documentError)
+    console.log(documentData, documentError)
 
     if (documentError) {
       await deleteDocument(fileData.id)
@@ -53,7 +52,10 @@ const processDocument = async (prevState: any, formData: any): Promise<FormResul
         status: documentError.cause as string,
       }
     }
-    updateDocument(fileData.id, { path: `${documentData.fullPath}` })
+    const { data: updateData, error: updateError } = await updateDocument(fileData.id, {
+      path: `${documentData.fullPath}`,
+    })
+    if (updateError) return { message: "There was an error uploading the document" }
   } else {
     return { message: "No document provided" }
   }

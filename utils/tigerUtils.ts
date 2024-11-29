@@ -46,6 +46,8 @@ export const parseXMLResponse = (data: string): any => {
 }
 
 export const transformTransactions = (result: any): Transaction[] => {
+  if (!result.nm_response) return []
+
   const transactions: Transaction[] = Array.isArray(result.nm_response.transaction)
     ? result.nm_response.transaction
     : [result.nm_response.transaction]

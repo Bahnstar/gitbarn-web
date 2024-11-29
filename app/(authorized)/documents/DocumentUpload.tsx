@@ -64,9 +64,10 @@ export default function DocumentUpload(props: { action: any }) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (filePreview) {
-      const formData = new FormData()
+      const formData = new FormData(e.target as HTMLFormElement)
       formData.append("file", filePreview.file)
       formData.append("name", filePreview.file.name)
+
       setIsLoading(true)
       const res = await props.action(null, formData)
       setFilePreview(null)
@@ -75,12 +76,14 @@ export default function DocumentUpload(props: { action: any }) {
         fileInputRef.current.value = ""
       }
 
+      console.log(res.message)
       if (res.message.includes("mime type")) {
         return toast.error("The requested file is not supported")
-      } else {
+      } else if (res.message.includes("error")) {
         return toast.error("There was an error uploading the file")
       }
 
+      toast.success(`${filePreview.file.name} was successfully uploaded`)
       setIsModalOpen(false)
     }
   }
