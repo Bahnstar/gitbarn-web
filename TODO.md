@@ -23,7 +23,7 @@
 - [x] Chat list should show who's claimed it (To both client/user)
 - [ ] Support/Admins should be able to see order details for all orders
 - [ ] User management page
-- [ ] Only Admins can manage products
+- [x] Only Admins can manage products
 
 # Bugs
 
