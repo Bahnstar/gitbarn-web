@@ -7,7 +7,7 @@
 # TO DO
 
 - [ ] Add a page to manage/send mass emails for admins
-- [ ] Allow admins to upload documents for other users
+- [x] Allow admins to upload documents for other users
 - [x] Send a notification to admins on order submission
 - [ ] Connect the profile page to supabase
 - [ ] Integrate pulling customer data from Tiger on sign-up

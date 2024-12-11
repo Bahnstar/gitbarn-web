@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect, useRef } from "react"
 import { UploadIcon, FileIcon, Loader2 } from "lucide-react"
 import Image from "next/image"
 import { toast } from "sonner"
+import { getUserWithProfile } from "@/server/handlers/users"
 import PersonAutocomplete from "@/components/PersonAutocomplete"
 
 type FilePreview = {
@@ -13,6 +14,8 @@ type FilePreview = {
 
 export default function DocumentUpload(props: { action: any }) {
   const [filePreview, setFilePreview] = useState<FilePreview | null>(null)
+  const [userId, setUserId] = useState("")
+  const [role, setRole] = useState("user")
   const [isDragging, setIsDragging] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -67,6 +70,7 @@ export default function DocumentUpload(props: { action: any }) {
       const formData = new FormData(e.target as HTMLFormElement)
       formData.append("file", filePreview.file)
       formData.append("name", filePreview.file.name)
+      formData.append("user", userId)
 
       setIsLoading(true)
       const res = await props.action(null, formData)
@@ -89,6 +93,12 @@ export default function DocumentUpload(props: { action: any }) {
   }
 
   useEffect(() => {
+    const getRole = async () => {
+      const { data: user, error } = await getUserWithProfile()
+      setRole(user?.role || "user")
+    }
+    getRole()
+
     return () => {
       if (filePreview) {
         URL.revokeObjectURL(filePreview.preview)
@@ -162,12 +172,12 @@ export default function DocumentUpload(props: { action: any }) {
                   </div>
                 </div>
               )}
-              <input type="hidden" name="name" value={filePreview?.file.name} />
-              <PersonAutocomplete />
+
+              {role === "admin" && <PersonAutocomplete setCustomerId={(u) => setUserId(u)} />}
               <button
                 type="submit"
                 // disabled={!filePreview}
-                className="flex w-full justify-center rounded bg-blue-500 px-4 py-2 text-white disabled:bg-gray-300"
+                className=" mt-4 flex w-full justify-center rounded bg-blue-500 px-4 py-2 text-white disabled:bg-gray-300"
               >
                 {isLoading ? (
                   <>
@@ -181,6 +191,7 @@ export default function DocumentUpload(props: { action: any }) {
             <button
               onClick={() => {
                 setIsModalOpen(false)
+                setUserId("")
                 setFilePreview(null)
               }}
               className="w-full rounded-md bg-gray-100 px-4 py-2 text-gray-700 hover:bg-gray-200"

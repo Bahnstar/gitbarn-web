@@ -12,7 +12,7 @@ export default async function DocumentsPage() {
         <h1 className="text-3xl font-semibold text-gray-900 ">Documents</h1>
         <DocumentUpload action={processDocument} />
       </div>
-      <div className="w-full md:w-3/4 lg:w-4/5">
+      <div className="">
         <DocumentTable documents={documents || []} />
       </div>
     </div>

@@ -1,77 +1,124 @@
 "use client"
-import { searchProfiles } from "@/server/handlers/profiles"
-import {
-  Combobox,
-  ComboboxButton,
-  ComboboxInput,
-  ComboboxOption,
-  ComboboxOptions,
-  Label,
-} from "@headlessui/react"
-import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid"
-import { useState, useEffect } from "react"
-import { Profile } from "@/types/profile"
-import { toast } from "sonner"
-import { getUserWithProfile } from "@/server/handlers/users"
 
-const PersonAutocomplete = () => {
-  const [currentUser, setCurrentUser] = useState<Profile>()
-  const [results, setResults] = useState<Profile[]>([])
+import * as React from "react"
+import { Check, ChevronsUpDown, Loader2 } from "lucide-react"
+
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { getProfilesByEmail } from "@/server/handlers/profiles"
+import { Profile } from "@/types/profile"
+
+type Props = {
+  setCustomerId: (customerId: string) => void
+}
+
+export default function PersonAutocomplete(props: Props) {
+  const [open, setOpen] = React.useState(false)
+  const [value, setValue] = React.useState("")
+  const [profiles, setProfiles] = React.useState<Profile[]>([])
+  const [loading, setLoading] = React.useState(false)
+  const [inputValue, setInputValue] = React.useState("")
 
   const handleSearch = async (search: string) => {
-    if (search.trim() === "") return
-
-    const { data, error } = await searchProfiles(search)
-
-    if (error) return toast.error("There was an error while searching for users")
-
-    setResults(data)
-  }
-
-  useEffect(() => {
-    const getUser = async () => {
-      const { data: user } = await getUserWithProfile()
-      setCurrentUser(user!)
+    if (!search) {
+      setProfiles([])
+      return
     }
 
-    getUser()
-  }, [])
+    setLoading(true)
+    try {
+      const { data, error } = await getProfilesByEmail(search)
+      if (error) throw error
+      setProfiles(Array.isArray(data) ? data : [])
+    } catch (error) {
+      console.error("Error fetching profiles:", error)
+      setProfiles([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const debouncedSearch = React.useMemo(
+    () => debounce((search: string) => handleSearch(search), 300),
+    [],
+  )
 
   return (
-    <Combobox defaultValue={currentUser} name="user">
-      <Label className="block text-sm/6 font-medium text-gray-900">Assigned to</Label>
-      <div className="relative my-2">
-        <ComboboxInput
-          className="w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-          onChange={(event) => handleSearch(event.target.value)}
-          displayValue={(u: Profile) => (u ? u?.first_name + " " + u?.last_name : "")}
-        />
-        <ComboboxButton className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
-          <ChevronUpDownIcon className="size-5 text-gray-400" aria-hidden="true" />
-        </ComboboxButton>
-
-        {results.length > 0 && (
-          <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
-            {results.map((user) => (
-              <ComboboxOption
-                key={user.id}
-                value={user}
-                className="group relative cursor-default select-none py-2 pl-3 pr-9 text-gray-900 data-[focus]:bg-indigo-600 data-[focus]:text-white data-[focus]:outline-none"
-              >
-                <span className="block truncate group-data-[selected]:font-semibold">
-                  {user.first_name} {user.last_name}
-                </span>
-
-                <span className="absolute inset-y-0 right-0 hidden items-center pr-4 text-indigo-600 group-data-[selected]:flex group-data-[focus]:text-white">
-                  <CheckIcon className="size-5" aria-hidden="true" />
-                </span>
-              </ComboboxOption>
-            ))}
-          </ComboboxOptions>
-        )}
-      </div>
-    </Combobox>
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className={`${value ? "text-black" : "text-gray-400"} text-md w-full justify-between rounded-md border border-gray-300 px-3 py-2 font-normal shadow-sm hover:bg-gray-100`}
+        >
+          {value ? profiles.find((profile) => profile.id === value)?.email : "Select User"}
+          <ChevronsUpDown className="opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-full border bg-white p-0 shadow-md dark:bg-slate-950">
+        <Command shouldFilter={false}>
+          <CommandInput
+            placeholder="Search Email..."
+            value={inputValue}
+            onValueChange={(search) => {
+              setInputValue(search)
+              debouncedSearch(search)
+            }}
+          />
+          <CommandList>
+            <CommandEmpty>
+              {loading ? (
+                <Loader2 className="m-auto animate-spin" />
+              ) : inputValue.length > 0 ? (
+                "No users found."
+              ) : (
+                "Type to search..."
+              )}
+            </CommandEmpty>
+            <CommandGroup>
+              {profiles.map((profile) => (
+                <CommandItem
+                  key={profile.id}
+                  value={profile.email}
+                  onSelect={() => {
+                    setValue(profile.id)
+                    props.setCustomerId(profile.id)
+                    setOpen(false)
+                  }}
+                  className="data-[selected='true']:bg-gray-300"
+                >
+                  {profile.email}
+                  <Check
+                    className={cn("ml-auto", value === profile.id ? "opacity-100" : "opacity-0")}
+                  />
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
   )
 }
 
-export default PersonAutocomplete
+function debounce(func: Function, wait: number) {
+  let timeout: NodeJS.Timeout
+  return function executedFunction(...args: any[]) {
+    const later = () => {
+      clearTimeout(timeout)
+      func(...args)
+    }
+    clearTimeout(timeout)
+    timeout = setTimeout(later, wait)
+  }
+}

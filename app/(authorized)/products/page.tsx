@@ -7,7 +7,7 @@ import { toast } from "sonner"
 
 import { getProducts } from "@/server/handlers/products"
 import { createCart, getCartsById, updateCart } from "@/server/handlers/carts"
-import { getCurrentUser } from "@/server/handlers/users"
+import { getCurrentUser, getUserWithProfile } from "@/server/handlers/users"
 import { Product } from "@/types/product"
 import { Cart } from "@/types/cart"
 import { ShoppingCartIcon, LoaderCircle } from "lucide-react"
@@ -20,6 +20,7 @@ type CartLoading = {
 }
 
 const ProductsPage = () => {
+  const [role, setRole] = useState("user")
   const [products, setProducts] = useState<Product[]>([])
   const [addToCartLoading, setAddToCartLoading] = useState<CartLoading>({
     loading: false,
@@ -28,6 +29,13 @@ const ProductsPage = () => {
 
   useEffect(() => {
     getPublicProducts()
+
+    const getRole = async () => {
+      const { data: profile, error } = await getUserWithProfile()
+      setRole(profile?.role || "user")
+    }
+
+    getRole()
   }, [])
 
   const getPublicProducts = async () => {
@@ -95,13 +103,15 @@ const ProductsPage = () => {
             </svg>
             <input type="text" className="grow" placeholder="Search Products" />
           </label>
-          <Link
-            href="/products/manage"
-            type="button"
-            className="btn bg-green-600 text-white hover:bg-green-700"
-          >
-            Manage Products
-          </Link>
+          {role === "admin" && (
+            <Link
+              href="/products/manage"
+              type="button"
+              className="btn bg-green-600 text-white hover:bg-green-700"
+            >
+              Manage Products
+            </Link>
+          )}
         </div>
         <div className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 xl:gap-x-8 2xl:grid-cols-4">
           {products?.map((product, index) => (

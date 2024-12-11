@@ -8,7 +8,7 @@ import { getCurrentUser } from "./users"
 export async function getDocuments(): Promise<PostgrestSingleResponse<DocumentFile[]>> {
   const supabase = createClient()
 
-  return await supabase.from("Documents").select()
+  return await supabase.from("Documents").select("*, profiles(*)")
 }
 
 export async function createDocument(

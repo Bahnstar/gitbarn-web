@@ -1,6 +1,6 @@
 import dayjs from "dayjs"
 
-export const formatDate = (date: string, format?: string): string => {
+export const formatDate = (date: string | Date, format?: string): string => {
   if (format) {
     return dayjs(date).format(format)
   }

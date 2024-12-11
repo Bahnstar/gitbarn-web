@@ -2,16 +2,18 @@
 
 import { useState, useEffect } from "react"
 import { toast } from "sonner"
-import { DownloadIcon, Trash2Icon } from "lucide-react"
+import { DownloadIcon } from "lucide-react"
 
 import { DocumentFile } from "@/types/documentFile"
 import { createClient } from "@/utils/supabase/client"
 import DeleteDocumentButton from "./DeleteDocumentButton"
 import { deleteDocument } from "@/server/handlers/documents"
 import revalidateTag from "@/utils/clientRevalidate"
+import { formatDate } from "@/utils/utils"
 
 const DocumentTable = ({ documents }: { documents: DocumentFile[] }) => {
   const [session, setSession] = useState("")
+  const [role, setRole] = useState("")
 
   const handleDownload = async (doc: DocumentFile) => {
     const sourceURL = `${process.env.NEXT_PUBLIC_SUPABASE_BUCKETS_AUTHENTICATED}${doc.path}`
@@ -43,11 +45,13 @@ const DocumentTable = ({ documents }: { documents: DocumentFile[] }) => {
   }
 
   useEffect(() => {
+    const supabase = createClient()
+
     const getSession = async () => {
-      const supabase = createClient()
       const { data } = await supabase.auth.getSession()
       setSession(data.session?.access_token || "")
     }
+
     getSession()
   }, [])
 
@@ -75,6 +79,18 @@ const DocumentTable = ({ documents }: { documents: DocumentFile[] }) => {
                   >
                     Name
                   </th>
+                  <th
+                    scope="col"
+                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                  >
+                    User
+                  </th>
+                  <th
+                    scope="col"
+                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                  >
+                    Uploaded
+                  </th>
                   <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
                     <span className="sr-only">Edit</span>
                   </th>
@@ -85,6 +101,14 @@ const DocumentTable = ({ documents }: { documents: DocumentFile[] }) => {
                   <tr key={document.path}>
                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                       {document.name}
+                    </td>
+                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                      {document.profiles?.email}
+                    </td>
+                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                      {document.created_at
+                        ? formatDate(document?.created_at, "MM/d/YY [at] h:mm A")
+                        : "Unknown"}
                     </td>
                     <td className="relative space-x-2 whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                       <button

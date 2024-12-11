@@ -7,7 +7,7 @@ import { Conversation } from "@/types/conversation"
 import clientRevalidate from "@/utils/clientRevalidate"
 import { toast } from "sonner"
 import { LoaderCircle } from "lucide-react"
-import ComboBox from "./NewConvoComboBox"
+import PersonAutocomplete from "./PersonAutocomplete"
 import { Profile, Role } from "@/types/profile"
 
 type Props = {
@@ -88,7 +88,7 @@ const NewConversationButton = (props: Props) => {
                       </div>
                       {isSupportOrAdmin() && (
                         <div className="mt-2">
-                          <ComboBox setCustomerId={setCustomerId} />
+                          <PersonAutocomplete setCustomerId={setCustomerId} />
                         </div>
                       )}
                     </div>

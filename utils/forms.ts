@@ -22,11 +22,10 @@ const processDocument = async (prevState: any, formData: any): Promise<FormResul
 
   const file: Partial<DocumentFile> = {
     name: formData.get("name") as string,
-    user_id: formData.get("user[id]") || user?.id,
+    user_id: formData.get("user") || user?.id,
   }
 
   const { data: fileData, error: fileError } = await createDocument(file)
-  console.log(fileData, fileError)
   if (fileError || userError) {
     return {
       message: fileError?.message || "There was an error uploading the document",
@@ -42,8 +41,6 @@ const processDocument = async (prevState: any, formData: any): Promise<FormResul
         cacheControl: "3600",
         upsert: true,
       })
-
-    console.log(documentData, documentError)
 
     if (documentError) {
       await deleteDocument(fileData.id)
