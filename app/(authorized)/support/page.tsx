@@ -1,7 +1,5 @@
-import { getCurrentUser, getUserWithProfile } from "@/server/handlers/users"
+import { getUserWithProfile } from "@/server/handlers/users"
 import {
-  getConversations,
-  getConversationsByCustomerId,
   getConversationsWithSupportAgent,
   updateConversation,
 } from "@/server/handlers/conversations"

@@ -14,7 +14,7 @@
 - [x] Allow support to open a new chat with a specific user
 - [ ] Order details page
 - [ ] Order page should implement proper filtering
-- [ ] Move products to use Tiger instead of supabase
+- [x] Move products to use Tiger instead of supabase
 - [ ] Delete products
 - [x] Allow support users to claim a chat
 - [ ] Cart/Notifications in sidebar should have an indicator if there are things inside
