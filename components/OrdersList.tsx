@@ -10,6 +10,7 @@ import { formatDate } from "@/utils/utils"
 
 import { EllipsisVerticalIcon } from "@heroicons/react/24/outline"
 import { CheckCircleIcon } from "@heroicons/react/20/solid"
+import AddToCartButton from "./AddToCartButton"
 
 const OrdersList = ({ initialOrders }: { initialOrders: Transaction[] }) => {
   const [currentPage, setCurrentPage] = useState(0)
@@ -102,7 +103,7 @@ const OrdersList = ({ initialOrders }: { initialOrders: Transaction[] }) => {
                     </div>
                   </dl>
 
-                  <Menu as="div" className="relative flex justify-end lg:hidden">
+                  {/* <Menu as="div" className="relative flex justify-end lg:hidden">
                     <div className="flex items-center">
                       <MenuButton className="-m-2 flex items-center p-2 text-gray-400 hover:text-gray-500">
                         <span className="sr-only">Options for order {order.transaction_id}</span>
@@ -133,9 +134,9 @@ const OrdersList = ({ initialOrders }: { initialOrders: Transaction[] }) => {
                         </MenuItem>
                       </div>
                     </MenuItems>
-                  </Menu>
+                  </Menu> */}
 
-                  <div className="hidden lg:col-span-2 lg:flex lg:items-center lg:justify-end lg:space-x-4">
+                  {/* <div className="hidden lg:col-span-2 lg:flex lg:items-center lg:justify-end lg:space-x-4">
                     <a
                       href={`/orders/${order.transaction_id}`}
                       className="flex items-center justify-center rounded-md border border-gray-300 bg-white px-2.5 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
@@ -150,33 +151,34 @@ const OrdersList = ({ initialOrders }: { initialOrders: Transaction[] }) => {
                       <span>View Invoice</span>
                       <span className="sr-only">for order {order.transaction_id}</span>
                     </a>
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* Products */}
                 <h4 className="sr-only">Items</h4>
                 <ul role="list" className="divide-y divide-gray-200">
                   {order.products.map((product, pIndex) =>
-                    product.id ? (
-                      <li key={product.id} className="p-4 sm:p-6">
+                    product?.supabase?.id ? (
+                      <li key={product.supabase.id} className="p-4 sm:p-6">
                         <div className="flex items-center sm:items-start">
                           <div className="size-20 shrink-0 overflow-hidden rounded-lg bg-gray-200 sm:size-40">
                             <img
-                              alt={product.title}
-                              src={`${process.env.NEXT_PUBLIC_SUPABASE_BUCKETS}${product.image}`}
+                              alt={product.supabase.title}
+                              src={`${process.env.NEXT_PUBLIC_SUPABASE_BUCKETS}${product.supabase.image}`}
                               className="size-full object-cover"
                             />
                           </div>
                           <div className="ml-6 flex-1 text-sm">
                             <div className="font-medium text-gray-900 sm:flex sm:justify-between">
-                              <h5>{product.title}</h5>
+                              <h5>{product.supabase.title}</h5>
                               <p className="mt-2 sm:mt-0">
-                                ${Number(product.amount).toFixed(2)} <br /> Qty:{" "}
-                                {Number(product.quantity).toFixed(0)}
+                                ${Number(product.tiger.amount).toFixed(2)}
+                                <span className="text-xs text-gray-800">/ea</span> <br /> Qty:{" "}
+                                {Number(product.tiger.quantity).toFixed(0)}
                               </p>
                             </div>
                             <p className="hidden text-gray-500 sm:mt-2 sm:block">
-                              {product.description}
+                              {product.supabase.description}
                             </p>
                           </div>
                         </div>
@@ -195,19 +197,20 @@ const OrdersList = ({ initialOrders }: { initialOrders: Transaction[] }) => {
                           <div className="mt-6 flex items-center space-x-4 divide-x divide-gray-200 border-t border-gray-200 pt-4 text-sm font-medium sm:ml-4 sm:mt-0 sm:border-none sm:pt-0">
                             <div className="flex flex-1 justify-center">
                               <a
-                                href={`/products/${product.id}`}
+                                href={`/products/${product.supabase.id}`}
                                 className="whitespace-nowrap text-green-600 hover:text-green-500"
                               >
                                 View product
                               </a>
                             </div>
                             <div className="flex flex-1 justify-center pl-4">
-                              <a
-                                href="#"
+                              <AddToCartButton
                                 className="whitespace-nowrap text-green-600 hover:text-green-500"
+                                productId={product.supabase.id}
+                                productTitle={product.supabase.title}
                               >
                                 Buy again
-                              </a>
+                              </AddToCartButton>
                             </div>
                           </div>
                         </div>

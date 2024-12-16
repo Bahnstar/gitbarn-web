@@ -3,16 +3,12 @@
 import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { toast } from "sonner"
 
 import { getProducts } from "@/server/handlers/products"
-import { createCart, getCartsById, updateCart } from "@/server/handlers/carts"
-import { getCurrentUser, getUserWithProfile } from "@/server/handlers/users"
+import { getUserWithProfile } from "@/server/handlers/users"
 import { Product } from "@/types/product"
-import { Cart } from "@/types/cart"
-import { ShoppingCartIcon, LoaderCircle } from "lucide-react"
-import { revalidatePath } from "next/cache"
-import clientRevalidate from "@/utils/clientRevalidate"
+import AddToCartButton from "@/components/AddToCartButton"
+import { ShoppingCartIcon } from "lucide-react"
 
 type CartLoading = {
   loading: boolean
@@ -22,10 +18,6 @@ type CartLoading = {
 const ProductsPage = () => {
   const [role, setRole] = useState("user")
   const [products, setProducts] = useState<Product[]>([])
-  const [addToCartLoading, setAddToCartLoading] = useState<CartLoading>({
-    loading: false,
-    productTitle: "",
-  })
 
   useEffect(() => {
     getPublicProducts()
@@ -45,42 +37,6 @@ const ProductsPage = () => {
       return
     }
     setProducts(products!)
-  }
-
-  const addToCart = async (product: Product) => {
-    const {
-      data: { user },
-    } = await getCurrentUser()
-
-    const { data: carts, error: cError } = await getCartsById(product.id!, true)
-
-    const cartItem: Cart = {
-      user_id: user!.id,
-      product_id: product.id!,
-      quantity: 1,
-    }
-
-    setAddToCartLoading({ loading: true, productTitle: product.title })
-
-    let error: any
-    if (carts && carts?.length > 0) {
-      const { data, error: err } = await updateCart(carts[0].id!, {
-        quantity: carts[0].quantity + 1,
-      })
-      error = err
-    } else {
-      const { error: err } = await createCart(cartItem)
-      error = err
-    }
-
-    if (error) {
-      console.error(error)
-      return
-    }
-
-    setAddToCartLoading({ loading: false, productTitle: "" })
-    clientRevalidate("/cart")
-    toast.success(`${product.title} was successfully added to your cart`)
   }
 
   return (
@@ -132,17 +88,13 @@ const ProductsPage = () => {
                 <h2 className="card-title">{product.title}</h2>
                 <p className="line-clamp-1">{product.description}</p>
                 <div className="card-actions justify-end">
-                  <button
-                    onClick={() => addToCart(product)}
-                    className="btn flex items-center bg-green-600 text-white hover:bg-green-700"
+                  <AddToCartButton
+                    className="inline-flex items-center gap-1.5 rounded-md bg-green-50 px-3 py-3 text-sm text-green-600 transition-colors hover:bg-green-100"
+                    productId={product.id!}
+                    productTitle={product.title}
                   >
-                    {addToCartLoading.loading && addToCartLoading.productTitle === product.title ? (
-                      <LoaderCircle className="animate-spin" />
-                    ) : (
-                      <ShoppingCartIcon className="h-5 w-5" />
-                    )}
-                    Add to Cart
-                  </button>
+                    <ShoppingCartIcon /> Add to Cart
+                  </AddToCartButton>
                 </div>
               </div>
             </div>

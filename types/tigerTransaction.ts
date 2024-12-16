@@ -18,7 +18,7 @@ export interface Transaction {
   cc_type: string
   cc_bin: string
   tax: string
-  products: Product[]
+  products: TigerSupabaseProduct[]
   actions: Action[]
 }
 
@@ -27,6 +27,11 @@ export interface TigerProduct {
   description: string
   quantity: string
   amount: string
+}
+
+export interface TigerSupabaseProduct {
+  tiger: TigerProduct
+  supabase: Product
 }
 
 export interface Action {

@@ -1,6 +1,11 @@
 import { getProductsBySku } from "@/server/handlers/products"
 import { Product } from "@/types/product"
-import { TigerProduct, Transaction, TransactionResponse } from "@/types/tigerTransaction"
+import {
+  TigerProduct,
+  TigerSupabaseProduct,
+  Transaction,
+  TransactionResponse,
+} from "@/types/tigerTransaction"
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
 import { XMLParser } from "fast-xml-parser"
 
@@ -84,7 +89,7 @@ export const transformTransactions = async (result: any): Promise<Transaction[]>
   return await Promise.all(promisedTrans)
 }
 
-const processProducts = async (products: TigerProduct[]): Promise<Product[]> => {
+const processProducts = async (products: TigerProduct[]): Promise<TigerSupabaseProduct[]> => {
   if (!products) return []
   if (!Array.isArray(products)) products = [products]
 
@@ -95,7 +100,7 @@ const processProducts = async (products: TigerProduct[]): Promise<Product[]> => 
   const supabaseProducts = responses.map((res, i) => {
     if (res.error) throw new Error("There was an error grabbing products for orders")
 
-    return { ...res.data[0], quantity: products[i].quantity }
+    return { supabase: res.data[0], tiger: products[i] }
   })
 
   return supabaseProducts
