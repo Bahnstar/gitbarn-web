@@ -9,4 +9,5 @@ export type Product = {
   status?: string
   sku: string
   tiger_id?: number
+  quantity?: string
 }

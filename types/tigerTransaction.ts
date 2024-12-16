@@ -1,3 +1,5 @@
+import { Product } from "./product"
+
 export interface Transaction {
   transaction_id: string
   transaction_type: string
@@ -14,7 +16,17 @@ export interface Transaction {
     id: string
   }
   cc_type: string
+  cc_bin: string
+  tax: string
+  products: Product[]
   actions: Action[]
+}
+
+export interface TigerProduct {
+  sku: string
+  description: string
+  quantity: string
+  amount: string
 }
 
 export interface Action {

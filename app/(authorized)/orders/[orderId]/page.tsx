@@ -1,10 +1,7 @@
 import { getTransaction } from "@/server/handlers/tiger"
 
-const OrderDetailsPage = ({ params }: { params: { orderId: string } }) => {
-  const transaction = getTransaction(params.orderId)
-  console.log(transaction)
-
-  const products = [{}]
+const OrderDetailsPage = async ({ params }: { params: { orderId: string } }) => {
+  const transaction = await getTransaction(params.orderId)
 
   return (
     <div className="bg-gray-50">
@@ -38,13 +35,13 @@ const OrderDetailsPage = ({ params }: { params: { orderId: string } }) => {
         </div>
 
         {/* Products */}
-        <div className="mt-6">
+        {/* <div className="mt-6">
           <h2 className="sr-only">Products purchased</h2>
 
           <div className="space-y-8">
             {products.map((product) => (
               <div
-                key={product.id}
+                key={product.}
                 className="border-b border-t border-gray-200 bg-white shadow-sm sm:rounded-lg sm:border"
               >
                 <div className="px-4 py-6 sm:px-6 lg:grid lg:grid-cols-12 lg:gap-x-8 lg:p-8">
@@ -93,7 +90,7 @@ const OrderDetailsPage = ({ params }: { params: { orderId: string } }) => {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Billing */}
         <div className="mt-16">

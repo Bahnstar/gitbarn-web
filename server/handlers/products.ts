@@ -4,21 +4,29 @@ import { Product } from "@/types/product"
 import { createClient } from "@/utils/supabase/server"
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
 import { manageTigerProduct } from "./tiger"
+import { cache } from "react"
 
-export const getProducts = async (
-  showAll?: boolean,
-): Promise<PostgrestSingleResponse<Product[]>> => {
-  const supabase = createClient()
+export const getProducts = cache(
+  async (showAll?: boolean): Promise<PostgrestSingleResponse<Product[]>> => {
+    const supabase = createClient()
 
-  if (showAll) return await supabase.from("Products").select("*")
+    if (showAll) return await supabase.from("Products").select("*")
 
-  return await supabase.from("Products").select("*").eq("status", "Public")
-}
+    return await supabase.from("Products").select("*").eq("status", "Public")
+  },
+)
 
 export const getProductsById = async (id: string): Promise<PostgrestSingleResponse<Product[]>> => {
   const supabase = createClient()
   return await supabase.from("Products").select("*").eq("id", id)
 }
+
+export const getProductsBySku = cache(
+  async (sku: string): Promise<PostgrestSingleResponse<Product[]>> => {
+    const supabase = createClient()
+    return await supabase.from("Products").select("*").eq("sku", sku)
+  },
+)
 
 export const getProductsByTitle = async (
   title: string,

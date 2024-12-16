@@ -77,7 +77,7 @@ const ManageProductsPage = async () => {
                         {product.status}
                       </td>
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                        <CloseConversationButton conversationId="" onClose={test} />
+                        {/* <CloseConversationButton conversationId="" onClose={test} /> */}
                         <Link
                           href={`/products/manage/${product.id}`}
                           className="text-green-600 hover:text-green-900"

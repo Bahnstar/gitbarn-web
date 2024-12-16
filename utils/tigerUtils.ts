@@ -1,4 +1,7 @@
-import { Transaction, TransactionResponse } from "@/types/tigerTransaction"
+import { getProductsBySku } from "@/server/handlers/products"
+import { Product } from "@/types/product"
+import { TigerProduct, Transaction, TransactionResponse } from "@/types/tigerTransaction"
+import { PostgrestSingleResponse } from "@supabase/supabase-js"
 import { XMLParser } from "fast-xml-parser"
 
 export const postTransactions = async (args?: any): Promise<TransactionResponse> => {
@@ -45,7 +48,7 @@ export const parseXMLResponse = (data: string): any => {
   return parser.parse(data)
 }
 
-export const transformTransactions = (result: any): Transaction[] => {
+export const transformTransactions = async (result: any): Promise<Transaction[]> => {
   if (!result.nm_response) return []
 
   const transactions: Transaction[] = Array.isArray(result.nm_response.transaction)
@@ -54,7 +57,7 @@ export const transformTransactions = (result: any): Transaction[] => {
 
   if (transactions.length === 0 || transactions[0] === undefined) return []
 
-  return transactions.map((trans: any) => ({
+  const promisedTrans = transactions.map(async (trans: any) => ({
     transaction_id: trans.transaction_id,
     transaction_type: trans.transaction_type,
     condition: trans.condition,
@@ -70,10 +73,32 @@ export const transformTransactions = (result: any): Transaction[] => {
       id: trans.customerid,
     },
     cc_type: trans.cc_type,
+    cc_bin: trans.cc_bin,
+    tax: trans.tax,
+    products: await processProducts(trans.product),
     actions: Array.isArray(trans.action)
       ? trans.action.map(transformAction)
       : [transformAction(trans.action)],
   }))
+
+  return await Promise.all(promisedTrans)
+}
+
+const processProducts = async (products: TigerProduct[]): Promise<Product[]> => {
+  if (!products) return []
+  if (!Array.isArray(products)) products = [products]
+
+  const skus = products.map((p) => p.sku)
+  const promises = skus.map((s) => getProductsBySku(s))
+  const responses = await Promise.all([...promises])
+
+  const supabaseProducts = responses.map((res, i) => {
+    if (res.error) throw new Error("There was an error grabbing products for orders")
+
+    return { ...res.data[0], quantity: products[i].quantity }
+  })
+
+  return supabaseProducts
 }
 
 const transformAction = (action: any) => ({
