@@ -61,7 +61,6 @@ export const transformTransactions = async (result: any): Promise<Transaction[]>
     : [result.nm_response.transaction]
 
   if (transactions.length === 0 || transactions[0] === undefined) return []
-  console.log(transactions)
 
   const promisedTrans = transactions.map(async (trans: any) => ({
     transaction_id: trans.transaction_id,

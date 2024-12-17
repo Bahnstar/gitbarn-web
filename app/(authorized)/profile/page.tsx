@@ -1,13 +1,10 @@
-import { getProfile } from "@/server/handlers/profiles"
-import { getCurrentUser, getUserWithProfile } from "@/server/handlers/users"
-import { redirect } from "next/navigation"
+import Form from "@/components/Form"
+import { FormResponse } from "@/components/Form"
+import { getUserWithProfile } from "@/server/handlers/users"
+import { processProfile } from "@/utils/forms"
+import ImageUpload from "@/components/ImageUpload"
 
 export default async function ProfilePage() {
-  const {
-    data: { user },
-  } = await getCurrentUser()
-
-  if (!user) redirect("/login")
   const { data: profile, error: profileError } = await getUserWithProfile()
 
   return (
@@ -26,10 +23,18 @@ export default async function ProfilePage() {
             </p>
           </div>
 
-          <form className="md:col-span-2">
+          <Form className="md:col-span-2" action={processProfile} showSubmitButton={false}>
             <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:max-w-xl sm:grid-cols-6">
               <div className="col-span-full flex items-center gap-x-8">
-                <img
+                <ImageUpload
+                  buttonText="Change avatar"
+                  caption="JPG, GIF, or PNG up to 1MB"
+                  containerClassName="flex w-full gap-5"
+                  imageClassName="w-28 h-28"
+                  id={profile?.id}
+                  image={profile?.avatar_url}
+                />
+                {/* <img
                   src={profile?.avatar_url}
                   alt=""
                   className="h-24 w-24 flex-none rounded-lg bg-gray-800 object-cover"
@@ -42,9 +47,10 @@ export default async function ProfilePage() {
                     Change avatar
                   </button>
                   <p className="mt-2 text-xs leading-5 text-gray-400">JPG, GIF or PNG. 1MB max.</p>
-                </div>
+                </div> */}
               </div>
 
+              <input id="id" name="id" defaultValue={profile?.id} hidden />
               <div className="sm:col-span-3">
                 <label htmlFor="first-name" className="block text-sm font-medium leading-6 ">
                   First name
@@ -52,7 +58,7 @@ export default async function ProfilePage() {
                 <div className="mt-2">
                   <input
                     type="text"
-                    name="first-name"
+                    name="first_name"
                     id="first-name"
                     defaultValue={profile?.first_name}
                     autoComplete="given-name"
@@ -68,7 +74,7 @@ export default async function ProfilePage() {
                 <div className="mt-2">
                   <input
                     type="text"
-                    name="last-name"
+                    name="last_name"
                     id="last-name"
                     defaultValue={profile?.last_name}
                     autoComplete="family-name"
@@ -103,7 +109,7 @@ export default async function ProfilePage() {
                 Save
               </button>
             </div>
-          </form>
+          </Form>
         </div>
 
         <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 rounded-lg border border-gray-200 bg-white px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8">

@@ -7,10 +7,11 @@ import { redirect } from "next/navigation"
 import Toaster from "@/components/Toaster"
 import { revalidatePath } from "next/cache"
 
-const initialState = {
-  message: "",
-  status: "",
+export type FormResponse = {
+  message: string
+  status: string
 }
+type ActionFunction = (prevState: any, formData: FormData) => Promise<FormResponse>
 
 const SubmitButton = () => {
   const { pending } = useFormStatus()
@@ -44,12 +45,17 @@ const SubmitButton = () => {
 
 const Form = (
   props: PropsWithChildren<{
-    action: any
+    action: ActionFunction
     redirect?: string
     showSubmitButton?: boolean
     className?: string
   }>,
 ) => {
+  const initialState: FormResponse = {
+    message: "",
+    status: "unknown",
+  }
+
   const [state, formAction] = useFormState(props.action, initialState)
 
   return (
@@ -57,7 +63,7 @@ const Form = (
       className={`${props.className ? props.className : "flex flex-col gap-6"}`}
       action={formAction}
     >
-      {state.status !== "" && <Toaster message={state.message} />}
+      {state.status !== "unknown" && <Toaster message={state?.message} />}
       {state.status === "success" && props.redirect && redirect(props.redirect)}
       {props.children}
       {props.showSubmitButton && <SubmitButton />}

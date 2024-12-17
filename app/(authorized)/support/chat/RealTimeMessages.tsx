@@ -248,7 +248,10 @@ const RealTimeMessages = (props: Props) => {
                   <div className="w-10 rounded-full">
                     <img
                       alt="Tailwind CSS chat bubble component"
-                      src={message.profiles?.avatar_url || ""}
+                      src={
+                        `${process.env.NEXT_PUBLIC_SUPABASE_BUCKETS}${message.profiles?.avatar_url}` ||
+                        ""
+                      }
                     />
                   </div>
                 </div>

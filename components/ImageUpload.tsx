@@ -1,19 +1,28 @@
 "use client"
 
-import Image from "next/image"
 import { useState } from "react"
 import { Image as ImageIcon } from "lucide-react"
 
-const ImageUpload = (props: { id?: string; image?: string }) => {
-  const [image, setImage] = useState<File>()
+type Props = {
+  id?: string
+  image?: string
+  title?: string
+  buttonText?: string
+  caption?: string
+  containerClassName?: string
+  imageClassName?: string
+}
+
+const ImageUpload = (props: Props) => {
+  const { id, image, title, buttonText, caption, containerClassName, imageClassName } = props
+
   const [preview, setPreview] = useState<string>(
-    props.id ? `${process.env.NEXT_PUBLIC_SUPABASE_BUCKETS}${props.image}` : "",
+    id ? `${process.env.NEXT_PUBLIC_SUPABASE_BUCKETS}${image}` : "",
   )
   const [isOver, setIsOver] = useState<boolean>(false)
 
   const makeImage = (rawImg: File) => {
     setPreview(URL.createObjectURL(rawImg))
-    setImage(rawImg)
   }
 
   const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,12 +56,12 @@ const ImageUpload = (props: { id?: string; image?: string }) => {
   // }
 
   return (
-    <div className="flex h-full flex-col">
+    <div className={containerClassName}>
       <label htmlFor="cover-photo" className="block text-sm font-medium leading-6 text-gray-900">
-        Product Image
+        {title}
       </label>
       <div
-        className={`mt-2 flex min-h-[175px] flex-1 items-center justify-center rounded-lg border border-dashed border-gray-900/25 bg-cover bg-center px-6 py-6 ${isOver ? "bg-gray-50" : ""}`}
+        className={`mt-2 flex items-center justify-center rounded-lg border border-dashed border-gray-900/25 bg-cover bg-center px-6 py-6 ${isOver ? "bg-gray-50" : ""} ${imageClassName}`}
         style={{
           backgroundImage: preview ? `url(${preview})` : "",
         }}
@@ -68,7 +77,7 @@ const ImageUpload = (props: { id?: string; image?: string }) => {
             htmlFor="image"
             className="relative cursor-pointer rounded-md font-semibold text-green-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-green-600 focus-within:ring-offset-2 hover:text-green-500"
           >
-            <span>Upload a file</span>
+            <span>{buttonText}</span>
             <input
               id="image"
               name="image"
@@ -79,7 +88,7 @@ const ImageUpload = (props: { id?: string; image?: string }) => {
             />
           </label>
         </div>
-        <p className="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
+        <p className="text-xs leading-5 text-gray-600">{caption}</p>
       </div>
     </div>
   )

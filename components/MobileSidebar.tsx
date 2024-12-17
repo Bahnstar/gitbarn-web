@@ -79,7 +79,7 @@ const MobileSidebar = ({
           <span className="sr-only">Your profile</span>
           <Image
             className="h-8 w-8 rounded-full bg-gray-50"
-            src={avatar_url}
+            src={`${process.env.NEXT_PUBLIC_SUPABASE_BUCKETS}${avatar_url}`}
             alt="Profile picture"
             width={649}
             height={649}

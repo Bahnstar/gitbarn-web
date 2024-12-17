@@ -10,7 +10,15 @@ const ProductForm = (props: { action: any; product?: Product }) => {
       <div className="flex flex-col gap-6 px-4 py-4">
         <div className="flex flex-col gap-6 md:flex-row">
           <div className="flex-[2]">
-            <ImageUpload id={product?.id} image={product?.image} />
+            <ImageUpload
+              id={product?.id}
+              image={product?.image}
+              caption="PNG, JPG, GIF up to 10MB"
+              containerClassName="flex h-full flex-col"
+              imageClassName="min-h-[175px] flex-1"
+              title="Product Image"
+              buttonText="Upload a file"
+            />
           </div>
 
           <div className="flex flex-[4] flex-col gap-6">
