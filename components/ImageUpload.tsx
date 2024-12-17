@@ -61,7 +61,7 @@ const ImageUpload = (props: Props) => {
         {title}
       </label>
       <div
-        className={`mt-2 flex items-center justify-center rounded-lg border border-dashed border-gray-900/25 bg-cover bg-center px-6 py-6 ${isOver ? "bg-gray-50" : ""} ${imageClassName}`}
+        className={`mt-2 flex items-center justify-center rounded-lg ${!preview && "border border-dashed border-gray-900/25"} bg-cover bg-center px-6 py-6 ${isOver ? "bg-gray-50" : ""} ${imageClassName}`}
         style={{
           backgroundImage: preview ? `url(${preview})` : "",
         }}

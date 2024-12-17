@@ -83,10 +83,19 @@ const processProduct = async (prevState: any, formData: FormData): Promise<FormR
   if (productError) return { message: "There was an error creating the product", status: "error" }
 
   const image = formData.get("image") as File
-  if (productData.id)
-    uploadImage(image, `products/${productData.id}`, (path: string) => {
-      updateProduct(productData.id!, { image: `${path}?v=${Date.now().toString()}` })
-    })
+  console.log("image", image)
+  if (productData.id) {
+    const res = await uploadImage(image, `products/${productData.id}`)
+    if (res.status === "error") return res
+
+    if (res.path) {
+      const { data, error } = await updateProduct(productData.id!, {
+        image: `${res.path}?v=${Date.now().toString()}`,
+      })
+      if (error)
+        return { message: "There was an error linking product image to product", status: "error" }
+    }
+  }
 
   revalidatePath("/products")
   return { message: "Product successfully created", status: "success" }
@@ -99,15 +108,22 @@ const processProfile = async (prevState: any, formData: FormData): Promise<FormR
   }
 
   const id = formData.get("id") as string
-
   const image = formData.get("image") as File
-  if (id)
-    uploadImage(image, `avatars/${id}`, (path: string) => {
-      updateProfile(id, {
-        ...profile,
-        avatar_url: `${path}?v=${Date.now().toString()}`,
+  if (id) {
+    updateProfile(id, profile)
+    const res = await uploadImage(image, `avatars/${id}`)
+
+    if (res.status === "error") return res
+
+    if (res.path) {
+      const { data, error } = await updateProfile(id, {
+        avatar_url: res.path && `${res.path}?v=${Date.now().toString()}`,
       })
-    })
+
+      if (error)
+        return { message: "There was an error linking new avatar to profile", status: "error" }
+    }
+  }
 
   revalidatePath("/profile")
   return { message: "Profile successfully updated", status: "success" }
@@ -116,8 +132,7 @@ const processProfile = async (prevState: any, formData: FormData): Promise<FormR
 const uploadImage = async (
   image: File,
   uploadPath: string,
-  callback: Function,
-): Promise<string> => {
+): Promise<{ message: string; status: string; path?: string }> => {
   const supabase = createClient()
 
   if (image.size > 0) {
@@ -128,12 +143,21 @@ const uploadImage = async (
         upsert: true,
       })
 
-    if (error) return `There was an error uploading ${image.name} to ${uploadPath}`
-    callback(imageData.fullPath)
-    return `Image ${image.name} successfully uploaded to ${uploadPath}`
+    if (error) {
+      return {
+        message: `There was an error uploading ${image.name} to ${uploadPath}`,
+        status: "error",
+      }
+    }
+
+    return {
+      message: `Image ${image.name} successfully uploaded to ${uploadPath}`,
+      status: "success",
+      path: imageData.fullPath,
+    }
   }
 
-  return `No image provided`
+  return { message: `No image provided`, status: "unknown" }
 }
 
 export { processProduct, processDocument, processProfile }
