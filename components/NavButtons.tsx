@@ -13,36 +13,43 @@ const classNames = (...classes: string[]) => {
   return classes.filter(Boolean).join(" ")
 }
 
-const NavButtons = () => {
+const NavButtons = (props: { role: string }) => {
+  const { role } = props
   const pathname: string = usePathname()
 
   return (
     <li>
       <ul className="-mx-2 space-y-1">
-        {navigation.map((item) => (
-          <li key={item.name}>
-            <Link
-              href={item.href}
-              className={classNames(
-                item.href === pathname
-                  ? "bg-gray-50 text-green-600"
-                  : "text-gray-700 hover:bg-gray-50 hover:text-green-600",
-                "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6",
-              )}
-            >
-              <item.icon
+        {navigation.map((item) => {
+          const itemRole = item.role
+
+          if (itemRole && !(role === itemRole || role === "admin")) return <></>
+
+          return (
+            <li key={item.name}>
+              <Link
+                href={item.href}
                 className={classNames(
                   item.href === pathname
-                    ? "text-green-600"
-                    : "text-gray-400 group-hover:text-green-600",
-                  "h-6 w-6 shrink-0",
+                    ? "bg-gray-50 text-green-600"
+                    : "text-gray-700 hover:bg-gray-50 hover:text-green-600",
+                  "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6",
                 )}
-                aria-hidden="true"
-              />
-              {item.name}
-            </Link>
-          </li>
-        ))}
+              >
+                <item.icon
+                  className={classNames(
+                    item.href === pathname
+                      ? "text-green-600"
+                      : "text-gray-400 group-hover:text-green-600",
+                    "h-6 w-6 shrink-0",
+                  )}
+                  aria-hidden="true"
+                />
+                {item.name}
+              </Link>
+            </li>
+          )
+        })}
       </ul>
     </li>
   )

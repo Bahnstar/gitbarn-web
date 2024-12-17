@@ -15,7 +15,7 @@ export default async function NotificationsPage() {
   }
 
   return (
-    <div className="flex w-full flex-1 flex-col gap-6 p-4 sm:gap-10 ">
+    <div className="flex w-full flex-1 flex-col gap-6 p-4 sm:gap-10">
       <h1 className="text-4xl font-semibold leading-6 text-gray-900">Notifications</h1>
       {notifications.length === 0 ? (
         <p className="mt-6 text-center text-lg text-gray-500">

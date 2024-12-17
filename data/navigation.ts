@@ -7,6 +7,7 @@ import {
   HomeIcon,
   ShoppingCartIcon,
   BellIcon,
+  UserIcon,
 } from "@heroicons/react/24/outline"
 
 const navigation = [
@@ -17,6 +18,7 @@ const navigation = [
   { name: "Notifications", href: "/notifications", icon: BellIcon },
   { name: "Documents", href: "/documents", icon: DocumentDuplicateIcon },
   { name: "Cart", href: "/cart", icon: ShoppingCartIcon },
+  { name: "Users", href: "/users", icon: UserIcon, role: "support" },
 ]
 
 export default navigation

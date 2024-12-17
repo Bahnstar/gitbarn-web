@@ -35,9 +35,9 @@ const SupportPage = async () => {
   }
 
   return (
-    <div className="flex w-full flex-1 flex-col items-center gap-20">
+    <div className="flex w-full flex-1 flex-col gap-6 p-4 sm:gap-10">
       <h1 className="self-start text-4xl font-semibold leading-6 text-gray-900">Support</h1>
-      <div className="w-full px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full">
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
             <label className="input input-bordered flex w-full max-w-xs items-center gap-2">
@@ -77,7 +77,7 @@ const SupportPage = async () => {
                         scope="col"
                         className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                       >
-                        Support Agent
+                        Agent
                       </th>
                       <th
                         scope="col"
@@ -106,7 +106,7 @@ const SupportPage = async () => {
                           {row.profiles?.first_name ?? "Unclaimed"} {row.profiles?.last_name ?? ""}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {row.created_at ? formatDate(row.created_at) : ""}
+                          {row.created_at ? formatDate(row.created_at, "MM/DD/YYYY, h:MM A") : ""}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                           {row.is_active ? "Open" : "Closed"}

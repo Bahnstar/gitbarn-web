@@ -1,15 +1,21 @@
 "use server"
-
-import { PostgrestSingleResponse } from "@supabase/supabase-js"
+import { cache } from "react"
+import { PostgrestResponse, PostgrestSingleResponse } from "@supabase/supabase-js"
 import { DocumentFile } from "@/types/documentFile"
 import { createClient } from "@/utils/supabase/server"
 import { getCurrentUser } from "./users"
 
-export async function getDocuments(): Promise<PostgrestSingleResponse<DocumentFile[]>> {
+export const getDocuments = cache(async (): Promise<PostgrestSingleResponse<DocumentFile[]>> => {
   const supabase = createClient()
-
   return await supabase.from("Documents").select("*, profiles(*)")
-}
+})
+
+export const getDocumentsByUserId = cache(
+  async (userId: string): Promise<PostgrestSingleResponse<DocumentFile[]>> => {
+    const supabase = createClient()
+    return await supabase.from("Documents").select("*, profiles(*)").eq("user_id", userId)
+  },
+)
 
 export async function createDocument(
   document: Partial<DocumentFile>,

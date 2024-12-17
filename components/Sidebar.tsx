@@ -62,7 +62,7 @@ const SidebarContent = ({ user }: { user: Profile }) => (
     </div>
     <nav className="flex flex-1 flex-col">
       <ul className="flex flex-1 flex-col gap-y-7">
-        <NavButtons />
+        <NavButtons role={user.role} />
 
         <li className="-mx-6 mt-auto">
           <Link

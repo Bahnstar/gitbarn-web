@@ -61,6 +61,7 @@ export const transformTransactions = async (result: any): Promise<Transaction[]>
     : [result.nm_response.transaction]
 
   if (transactions.length === 0 || transactions[0] === undefined) return []
+  console.log(transactions)
 
   const promisedTrans = transactions.map(async (trans: any) => ({
     transaction_id: trans.transaction_id,
@@ -70,6 +71,7 @@ export const transformTransactions = async (result: any): Promise<Transaction[]>
     customer: {
       first_name: trans.first_name,
       last_name: trans.last_name,
+      company: trans.company,
       city: trans.city,
       state: trans.state,
       postal_code: trans.postal_code,
@@ -77,8 +79,26 @@ export const transformTransactions = async (result: any): Promise<Transaction[]>
       email: trans.email,
       id: trans.customerid,
     },
+    billing: {
+      address1: trans.address_1,
+      address2: trans.address2,
+      city: trans.city,
+      state: trans.state,
+      zip: trans.postal_code,
+    },
+    shipping: {
+      first_name: trans.shipping_first_name,
+      last_name: trans.shipping_last_name,
+      company: trans.shipping_company,
+      address1: trans.shipping_address_1,
+      address2: trans.shipping_address_2,
+      city: trans.shipping_city,
+      state: trans.shipping_state,
+      zip: trans.shipping_postal_code,
+    },
     cc_type: trans.cc_type,
     cc_bin: trans.cc_bin,
+    cc_exp: trans.cc_exp,
     tax: trans.tax,
     products: await processProducts(trans.product),
     actions: Array.isArray(trans.action)

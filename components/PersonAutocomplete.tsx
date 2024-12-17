@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { useEffect } from "react"
 import { Check, ChevronsUpDown, Loader2 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -16,9 +17,11 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { getProfilesByEmail } from "@/server/handlers/profiles"
 import { Profile } from "@/types/profile"
+import { getUserWithProfile } from "@/server/handlers/users"
 
 type Props = {
   setCustomerId: (customerId: string) => void
+  autoInitialCustomer?: boolean
 }
 
 export default function PersonAutocomplete(props: Props) {
@@ -51,6 +54,16 @@ export default function PersonAutocomplete(props: Props) {
     () => debounce((search: string) => handleSearch(search), 300),
     [],
   )
+
+  useEffect(() => {
+    const getInitialUser = async () => {
+      const { data: userData, error } = await getUserWithProfile()
+      setProfiles([userData!])
+      setValue(userData!.id)
+    }
+
+    if (props.autoInitialCustomer) getInitialUser()
+  }, [])
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

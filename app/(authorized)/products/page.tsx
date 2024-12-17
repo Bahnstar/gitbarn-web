@@ -40,7 +40,7 @@ const ProductsPage = () => {
   }
 
   return (
-    <div className="flex w-full flex-1 flex-col items-center gap-20">
+    <div className="flex w-full flex-1 flex-col gap-6 p-4 sm:gap-10">
       <h1 className="self-start text-4xl font-semibold leading-6 text-gray-900">View Products</h1>
       <div className="flex w-full flex-col gap-10 px-4 sm:px-6 lg:px-8">
         <div className="flex flex-row  items-center gap-x-4">

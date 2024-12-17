@@ -5,22 +5,24 @@ import { createClient } from "@/utils/supabase/server"
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
 import { cache } from "react"
 
-export const getProfiles = async () => {
+export const getProfiles = cache(async () => {
   const supabase = createClient()
   return await supabase.from("profiles").select("*")
-}
+})
 
-export const getProfile = async (profileId: string): Promise<PostgrestSingleResponse<Profile>> => {
-  const supabase = createClient()
-  return await supabase.from("profiles").select("*").eq("id", profileId).single()
-}
+export const getProfile = cache(
+  async (profileId: string): Promise<PostgrestSingleResponse<Profile>> => {
+    const supabase = createClient()
+    return await supabase.from("profiles").select("*").eq("id", profileId).single()
+  },
+)
 
-export const getProfilesByEmail = async (
-  email: string,
-): Promise<PostgrestSingleResponse<Profile[]>> => {
-  const supabase = createClient()
-  return await supabase.from("profiles").select("*").like("email", `%${email}%`).limit(5)
-}
+export const getProfilesByEmail = cache(
+  async (email: string): Promise<PostgrestSingleResponse<Profile[]>> => {
+    const supabase = createClient()
+    return await supabase.from("profiles").select("*").like("email", `%${email}%`).limit(5)
+  },
+)
 
 export const getAllSupportProfiles = async (): Promise<PostgrestSingleResponse<Profile[]>> => {
   const supabase = createClient()
