@@ -1,15 +1,15 @@
-"use client";
+"use client"
 
-import { motion, Variants } from "framer-motion";
+import { motion, Variants } from "framer-motion"
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
 interface WordPullUpProps {
-  words: string;
-  delayMultiple?: number;
-  wrapperFramerProps?: Variants;
-  framerProps?: Variants;
-  className?: string;
+  words: string
+  delayMultiple?: number
+  wrapperFramerProps?: Variants
+  framerProps?: Variants
+  className?: string
 }
 
 export default function WordPullUp({
@@ -49,5 +49,5 @@ export default function WordPullUp({
         </motion.span>
       ))}
     </motion.h1>
-  );
+  )
 }
