@@ -9,10 +9,12 @@
 - [ ] Connect the profile page to supabase
 - [ ] Add a page to manage/send mass emails for admins
 - [ ] User management page
+- [ ] Notifications should be created everywhere that an email is sent
 - [ ] Delete products
 - [ ] Cart/Notifications in sidebar should have an indicator if there are things inside
 - [ ] Integrate pulling customer data from Tiger on sign-up
 - [ ] Add "drops per month" analytic to the dashboard (Low priority)
+- [ ] Think about removing all tables
 - [x] Allow admins to upload documents for other users
 - [x] Send a notification to admins on order submission
 - [x] Allow support to open a new chat with a specific user
@@ -27,6 +29,8 @@
 
 # Bugs
 
+- [ ] Support Chat shows incorrect names
+- [ ] Support Chat Online indicator sometimes has 3 names (duplicates)
 - [ ] Client gives error when no avatar url is set for a user
 - [ ] Login button on the home page on mobile needs to be visible
 - [ ] Mobile responsiveness (Maybe swap out tables?)
