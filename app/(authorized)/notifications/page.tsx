@@ -1,10 +1,10 @@
-import { getNotifications } from "@/server/handlers/notifications"
-import { getCurrentUser } from "@/server/handlers/users"
+import { getNotifications, updateNotification } from "@/server/handlers/notifications"
 import { NotificationStatus } from "@/types/notification"
 import { formatDate } from "@/utils/utils"
 import { BellIcon, ChevronRightIcon } from "lucide-react"
-import Link from "next/link"
 import { toast } from "sonner"
+import { revalidatePath } from "next/cache"
+import NotificationActions from "./NotificationActions"
 
 export default async function NotificationsPage() {
   const { data: notifications, error } = await getNotifications()
@@ -14,10 +14,25 @@ export default async function NotificationsPage() {
     return <div>Error fetching notifications</div>
   }
 
+  const changeStatus = async (notificationId: number, status: NotificationStatus) => {
+    "use server"
+    const { error } = await updateNotification({
+      id: notificationId,
+      status: status,
+    })
+    if (error) {
+      console.error(error)
+      toast.error("Error updating notification status")
+    }
+
+    revalidatePath("/notifications")
+  }
+
   return (
     <div className="flex w-full flex-1 flex-col gap-6 p-4 sm:gap-10">
       <h1 className="text-4xl font-semibold leading-6 text-gray-900">Notifications</h1>
-      {notifications.length === 0 ? (
+      {notifications.filter((notification) => notification.status !== NotificationStatus.DISMISSED)
+        .length === 0 ? (
         <p className="mt-6 text-center text-lg text-gray-500">
           Hooray! You have caught up on all of your notifications!
         </p>
@@ -56,49 +71,57 @@ export default async function NotificationsPage() {
 
           <div className="mt-6 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-gray-900/5 sm:mt-8">
             <ul className="divide-y divide-gray-100">
-              {notifications.map((notification, index) => (
-                <li key={notification.id}>
-                  <Link
-                    href="#"
-                    className={`flex items-start gap-4 p-4 transition-colors duration-150 hover:bg-gray-50 sm:gap-6 sm:p-6 ${
-                      notification.status === NotificationStatus.UNREAD ? "bg-green-50" : ""
-                    }`}
-                  >
-                    <div className="flex-shrink-0 pt-1">
-                      <BellIcon
-                        className={`h-6 w-6 sm:h-7 sm:w-7 ${
-                          notification.status === NotificationStatus.READ
-                            ? "text-gray-400"
-                            : "text-green-500"
-                        }`}
-                      />
-                    </div>
-                    <div className="min-w-0 flex-grow">
-                      <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-                        <p
-                          className={`sm:text-md text-base font-medium ${
+              {notifications
+                .filter((notification) => notification.status !== NotificationStatus.DISMISSED)
+                .map((notification) => (
+                  <li key={notification.id}>
+                    <div
+                      className={`flex items-start gap-4 p-4 transition-colors duration-150 hover:bg-gray-50 sm:gap-6 sm:p-6 ${
+                        notification.status === NotificationStatus.UNREAD ? "bg-green-50" : ""
+                      }`}
+                    >
+                      <div className="flex-shrink-0 pt-1">
+                        <BellIcon
+                          className={`h-6 w-6 sm:h-7 sm:w-7 ${
                             notification.status === NotificationStatus.READ
-                              ? "text-gray-900"
-                              : "text-green-900"
+                              ? "text-gray-400"
+                              : "text-green-500"
                           }`}
-                        >
-                          {notification.title}
-                        </p>
-                        <span className="text-sm text-gray-500 sm:text-base">
-                          {formatDate(notification.created_at)}
-                        </span>
+                        />
                       </div>
-                      <p className="mt-1 line-clamp-1 text-base text-gray-600 sm:mt-2">
-                        {notification.message}
-                      </p>
-                    </div>
+                      <div className="min-w-0 flex-grow">
+                        <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                          <p
+                            className={`sm:text-md text-base font-medium ${
+                              notification.status === NotificationStatus.READ
+                                ? "text-gray-900"
+                                : "text-green-900"
+                            }`}
+                          >
+                            {notification.title}
+                          </p>
+                          <span className="text-sm text-gray-500 sm:text-base">
+                            {formatDate(notification.created_at)}
+                          </span>
+                        </div>
+                        <p className="mt-1 line-clamp-1 text-base text-gray-600 sm:mt-2">
+                          {notification.message}
+                        </p>
+                        <div className="mt-4">
+                          <NotificationActions
+                            notificationId={notification.id}
+                            notificationStatus={notification.status}
+                            changeStatus={changeStatus}
+                          />
+                        </div>
+                      </div>
 
-                    <div className="flex-shrink-0 self-center">
-                      <ChevronRightIcon className="h-5 w-5 text-gray-400 sm:h-6 sm:w-6" />
+                      <div className="flex-shrink-0 self-center">
+                        <ChevronRightIcon className="h-5 w-5 text-gray-400 sm:h-6 sm:w-6" />
+                      </div>
                     </div>
-                  </Link>
-                </li>
-              ))}
+                  </li>
+                ))}
             </ul>
           </div>
         </div>

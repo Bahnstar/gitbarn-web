@@ -4,7 +4,7 @@ import { PostgrestSingleResponse } from "@supabase/supabase-js"
 
 export const getNotifications = async (): Promise<PostgrestSingleResponse<NotificationType[]>> => {
   const supabase = createClient()
-  return await supabase.from("Notifications").select("*")
+  return await supabase.from("Notifications").select("*").order("created_at", { ascending: false })
 }
 
 export const getUnreadNotificationCount = async (userId: string): Promise<number> => {
