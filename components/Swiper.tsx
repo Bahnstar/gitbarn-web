@@ -21,7 +21,7 @@ export default function CarouselPlugin(props: Readonly<{ data: SwiperData[] }>) 
 
   return (
     <Carousel plugins={[plugin.current]} className="h-full w-5/6">
-      <CarouselContent className="h-[50vh]">
+      <CarouselContent className="h-[50vh] md:h-[60vh] 2xl:h-[50vh]">
         {props.data.map((slide, index) => (
           <CarouselItem key={index} className="h-full">
             <div className="h-full w-full md:p-1">

@@ -39,7 +39,7 @@ export default function Index() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <main className="flex flex-col gap-16 md:gap-28">
+      <main className="flex flex-col gap-16 md:gap-20 2xl:gap-28">
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <div className="container flex h-14 items-center">
             <div className="mx-6 flex items-center gap-2">
@@ -92,7 +92,7 @@ export default function Index() {
             </BlurFade>
           </div>
         </section>
-        <section className="m-auto h-[50vh] w-full md:w-4/6">
+        <section className="m-auto w-full md:w-5/6 2xl:w-4/6">
           <BlurFade delay={1.5} className="flex h-full flex-col items-center">
             <Swiper data={swiperData} />
           </BlurFade>
