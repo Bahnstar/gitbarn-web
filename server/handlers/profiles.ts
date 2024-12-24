@@ -24,6 +24,11 @@ export const getProfilesByEmail = cache(
   },
 )
 
+export const getAllCustomerProfiles = async (): Promise<PostgrestSingleResponse<Profile[]>> => {
+  const supabase = createClient()
+  return await supabase.from("profiles").select("*").eq("role", Role.USER)
+}
+
 export const getAllSupportProfiles = async (): Promise<PostgrestSingleResponse<Profile[]>> => {
   const supabase = createClient()
   return await supabase.from("profiles").select("*").eq("role", Role.SUPPORT)
@@ -32,6 +37,11 @@ export const getAllSupportProfiles = async (): Promise<PostgrestSingleResponse<P
 export const getAllAdminProfiles = async (): Promise<PostgrestSingleResponse<Profile[]>> => {
   const supabase = createClient()
   return await supabase.from("profiles").select("*").eq("role", Role.ADMIN)
+}
+
+export const getProfileByRole = async (role: Role): Promise<PostgrestSingleResponse<Profile[]>> => {
+  const supabase = createClient()
+  return await supabase.from("profiles").select("*").eq("role", role)
 }
 
 export const updateProfile = async (

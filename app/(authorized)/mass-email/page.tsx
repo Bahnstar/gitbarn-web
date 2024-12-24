@@ -1,7 +1,8 @@
 "use client"
 
+import { massEmailSend } from "@/server/handlers/massEmails"
 import { Role } from "@/types/profile"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 export default function MassEmailPage() {
   const [selectedRoles, setSelectedRoles] = useState<Role[]>([])
@@ -13,6 +14,10 @@ export default function MassEmailPage() {
       prev.includes(role) ? prev.filter((r) => r !== role) : [...prev, role],
     )
   }
+
+  useEffect(() => {
+    console.log(selectedRoles)
+  }, [selectedRoles])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -31,18 +36,13 @@ export default function MassEmailPage() {
       return
     }
 
-    // TODO: Add your email sending logic here
-    console.log({
-      selectedRoles,
-      subject,
-      emailBody,
-    })
+    massEmailSend(subject, emailBody, selectedRoles)
   }
 
   return (
     <div className="flex w-full flex-1 flex-col gap-6 p-4 sm:gap-10">
       <h1 className="text-4xl font-semibold leading-6 text-gray-900">Mass Email</h1>
-      <div className="rounded-lg bg-white p-6 shadow">
+      <div className=" min-w-4xl max-w-4xl rounded-lg bg-white p-6 shadow">
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <h3 className="text-md block font-medium text-gray-700">Select Recipient Roles:</h3>
           <div className="mt-4 flex w-full justify-start gap-6">
@@ -68,7 +68,7 @@ export default function MassEmailPage() {
                     </svg>
                   </div>
                   <span className="ml-3 text-sm font-medium text-gray-900">
-                    {role.charAt(0).toUpperCase() + role.slice(1)}
+                    {role === Role.USER ? "Customer" : role.charAt(0).toUpperCase() + role.slice(1)}
                   </span>
                 </div>
               </label>
