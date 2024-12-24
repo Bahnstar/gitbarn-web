@@ -1,13 +1,20 @@
 "use client"
 
-import { massEmailSend } from "@/server/handlers/massEmails"
+import { sendMassEmail } from "@/server/handlers/massEmails"
+import { getUserWithProfile } from "@/server/handlers/users"
 import { Role } from "@/types/profile"
+import { redirect } from "next/navigation"
 import { useEffect, useState } from "react"
 
-export default function MassEmailPage() {
+export default async function MassEmailPage() {
   const [selectedRoles, setSelectedRoles] = useState<Role[]>([])
   const [subject, setSubject] = useState("")
   const [emailBody, setEmailBody] = useState("")
+
+  const { data: user, error } = await getUserWithProfile()
+  if (user!.role !== Role.ADMIN) {
+    redirect("/users")
+  }
 
   const handleRoleToggle = (role: Role) => {
     setSelectedRoles((prev) =>
@@ -36,7 +43,7 @@ export default function MassEmailPage() {
       return
     }
 
-    massEmailSend(subject, emailBody, selectedRoles)
+    sendMassEmail(subject, emailBody, selectedRoles)
   }
 
   return (
