@@ -119,9 +119,14 @@ const RealTimeMessages = (props: Props) => {
       .channel(`realtime:conversation:${props.conversation.id}`)
       .on("presence", { event: "sync" }, () => {
         const newState = channel.presenceState()
-        const users = Object.values(newState)
-          .flat()
-          .map((user: any) => user.user_id)
+        // Not great, but it fixes the duplicate user issue
+        const users = Array.from(
+          new Set(
+            Object.values(newState)
+              .flat()
+              .map((user: any) => user.user_id),
+          ),
+        )
         handleConnectedUsers(users)
       })
       .on(
