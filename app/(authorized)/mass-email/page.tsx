@@ -5,11 +5,12 @@ import { getUserWithProfile } from "@/server/handlers/users"
 import { Role } from "@/types/profile"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
+import { toast } from "sonner"
 
 export default function MassEmailPage() {
   const router = useRouter()
   const [selectedRoles, setSelectedRoles] = useState<Role[]>([])
-  const [subject, setSubject] = useState("")
+  const [emailSubject, setEmailSubject] = useState("")
   const [emailBody, setEmailBody] = useState("")
   const [isLoading, setIsLoading] = useState(true)
 
@@ -48,7 +49,7 @@ export default function MassEmailPage() {
       alert("Please select at least one role")
       return
     }
-    if (!subject.trim()) {
+    if (!emailSubject.trim()) {
       alert("Please enter a subject")
       return
     }
@@ -58,14 +59,14 @@ export default function MassEmailPage() {
     }
 
     try {
-      await sendMassEmail(subject, emailBody, selectedRoles)
-      alert("Emails sent successfully!")
-      setSubject("")
+      await sendMassEmail(emailSubject, emailBody, selectedRoles)
+      toast.success("Emails sent successfully!")
+      setEmailSubject("")
       setEmailBody("")
       setSelectedRoles([])
     } catch (error) {
       console.error("Error sending emails:", error)
-      alert("Failed to send emails. Please try again.")
+      toast.error("Failed to send emails. Please try again.")
     }
   }
 
@@ -116,8 +117,8 @@ export default function MassEmailPage() {
             <input
               type="text"
               id="subject"
-              value={subject}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSubject(e.target.value)}
+              value={emailSubject}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmailSubject(e.target.value)}
               placeholder="Enter email subject"
               className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6"
             />
