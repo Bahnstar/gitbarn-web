@@ -1,10 +1,24 @@
+"use server"
+
 import { NotificationStatus, NotificationType } from "@/types/notification"
 import { createClient } from "@/utils/supabase/server"
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
+import { revalidatePath } from "next/cache"
 
 export const getNotifications = async (): Promise<PostgrestSingleResponse<NotificationType[]>> => {
   const supabase = createClient()
   return await supabase.from("Notifications").select("*").order("created_at", { ascending: false })
+}
+
+export const getNotificationsByUserId = async (
+  userId: string,
+): Promise<PostgrestSingleResponse<NotificationType[]>> => {
+  const supabase = createClient()
+  return await supabase
+    .from("Notifications")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .eq("user_id", userId)
 }
 
 export const getUnreadNotificationCount = async (userId: string): Promise<number> => {
@@ -33,4 +47,44 @@ export const updateNotification = async (
     .eq("id", notification.id)
     .select()
     .single()
+}
+
+export async function markAllAsRead() {
+  const { data, error: fetchError } = await getNotifications()
+
+  if (fetchError || !data) {
+    console.error(fetchError)
+    return { success: false, message: "Error fetching notifications" }
+  }
+
+  const unreadNotifications = data.filter(
+    (notification) => notification.status === NotificationStatus.UNREAD,
+  )
+
+  if (unreadNotifications.length === 0) {
+    return { success: true, message: "No unread notifications" }
+  }
+
+  let hasError = false
+
+  // Update each unread notification to read status
+  for (const notification of unreadNotifications) {
+    const { error } = await updateNotification({
+      id: notification.id,
+      status: NotificationStatus.READ,
+    })
+
+    if (error) {
+      console.error(error)
+      hasError = true
+    }
+  }
+
+  revalidatePath("/notifications")
+
+  if (hasError) {
+    return { success: false, message: "Error marking all notifications as read" }
+  } else {
+    return { success: true, message: "All notifications marked as read" }
+  }
 }

@@ -1,13 +1,23 @@
-import { getNotifications, updateNotification } from "@/server/handlers/notifications"
+import { getNotificationsByUserId, updateNotification } from "@/server/handlers/notifications"
 import { NotificationStatus } from "@/types/notification"
 import { formatDate } from "@/utils/utils"
 import { BellIcon, ChevronRightIcon } from "lucide-react"
 import { toast } from "sonner"
 import { revalidatePath } from "next/cache"
 import NotificationActions from "./NotificationActions"
+import MarkAllAsReadButton from "./MarkAllAsReadButton"
+import { getUserWithProfile } from "@/server/handlers/users"
+import { redirect } from "next/navigation"
 
 export default async function NotificationsPage() {
-  const { data: notifications, error } = await getNotifications()
+  const { data: user, error: userError } = await getUserWithProfile()
+  if (!user || userError) {
+    toast.error("Error fetching user")
+    redirect("/login")
+  }
+  const { data, error } = await getNotificationsByUserId(user?.id)
+  const notifications = data || []
+
   if (error) {
     console.error(error)
     toast.error("Error fetching notifications")
@@ -27,6 +37,10 @@ export default async function NotificationsPage() {
 
     revalidatePath("/notifications")
   }
+
+  const hasUnreadNotifications = notifications.some(
+    (notification) => notification.status === NotificationStatus.UNREAD,
+  )
 
   return (
     <div className="flex w-full flex-1 flex-col gap-6 p-4 sm:gap-10">
@@ -61,12 +75,7 @@ export default async function NotificationsPage() {
               />
             </div>
 
-            <button
-              type="button"
-              className="inline-flex items-center justify-center rounded-xl bg-green-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
-            >
-              Mark All as Read
-            </button>
+            {hasUnreadNotifications && <MarkAllAsReadButton />}
           </div>
 
           <div className="mt-6 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-gray-900/5 sm:mt-8">
