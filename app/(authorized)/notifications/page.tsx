@@ -70,7 +70,7 @@ export default async function NotificationsPage() {
               </div>
               <input
                 type="text"
-                className="w-full rounded-xl border border-gray-200 bg-white py-3 pl-11 pr-4 text-base placeholder:text-gray-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+                className="w-full rounded-xl border border-gray-200 bg-white py-3 pl-11 pr-4 text-base placeholder:text-gray-500 focus:border-green-500 focus:outline-hidden focus:ring-1 focus:ring-green-500"
                 placeholder="Search Notifications"
               />
             </div>
@@ -78,7 +78,7 @@ export default async function NotificationsPage() {
             {hasUnreadNotifications && <MarkAllAsReadButton />}
           </div>
 
-          <div className="mt-6 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-gray-900/5 sm:mt-8">
+          <div className="mt-6 overflow-hidden rounded-2xl bg-white shadow-xs ring-1 ring-gray-900/5 sm:mt-8">
             <ul className="divide-y divide-gray-100">
               {notifications
                 .filter((notification) => notification.status !== NotificationStatus.DISMISSED)
@@ -89,7 +89,7 @@ export default async function NotificationsPage() {
                         notification.status === NotificationStatus.UNREAD ? "bg-green-50" : ""
                       }`}
                     >
-                      <div className="flex-shrink-0 pt-1">
+                      <div className="shrink-0 pt-1">
                         <BellIcon
                           className={`h-6 w-6 sm:h-7 sm:w-7 ${
                             notification.status === NotificationStatus.READ
@@ -98,7 +98,7 @@ export default async function NotificationsPage() {
                           }`}
                         />
                       </div>
-                      <div className="min-w-0 flex-grow">
+                      <div className="min-w-0 grow">
                         <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                           <p
                             className={`sm:text-md text-base font-medium ${
@@ -125,7 +125,7 @@ export default async function NotificationsPage() {
                         </div>
                       </div>
 
-                      <div className="flex-shrink-0 self-center">
+                      <div className="shrink-0 self-center">
                         <ChevronRightIcon className="h-5 w-5 text-gray-400 sm:h-6 sm:w-6" />
                       </div>
                     </div>

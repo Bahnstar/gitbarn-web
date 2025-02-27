@@ -33,7 +33,7 @@ const ProductPage = ({ params }: { params: { productId: string } }) => {
             </div>
 
             <div className="mt-6 flex items-center">
-              <Check aria-hidden="true" className="h-5 w-5 flex-shrink-0 text-green-500" />
+              <Check aria-hidden="true" className="h-5 w-5 shrink-0 text-green-500" />
               <p className="ml-2 text-sm text-gray-500">In stock and ready to ship</p>
             </div>
           </div>

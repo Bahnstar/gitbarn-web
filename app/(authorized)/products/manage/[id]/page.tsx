@@ -12,7 +12,7 @@ const EditProductPage = async ({ params }: { params: { id: string } }) => {
         Edit Product
       </h1>
 
-      <div className="w-full max-w-5xl rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
+      <div className="w-full max-w-5xl rounded-xl bg-white shadow-xs ring-1 ring-gray-900/5">
         <ProductForm action={processProduct} product={products?.[0]} />
       </div>
     </div>

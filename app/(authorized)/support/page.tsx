@@ -36,11 +36,11 @@ const SupportPage = async () => {
 
   return (
     <div className="flex w-full flex-1 flex-col gap-6 p-4 sm:gap-10">
-      <h1 className="self-start text-4xl font-semibold leading-6 text-gray-900">Support</h1>
+      <h1 className="self-start text-4xl leading-6 font-semibold text-gray-900">Support</h1>
       <div className="mx-auto w-full">
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
-            <label className="input input-bordered flex w-full max-w-xs items-center gap-2">
+            <label className="input-bordered input flex w-full max-w-xs items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 16 16"
@@ -56,14 +56,14 @@ const SupportPage = async () => {
               <input type="text" className="grow" placeholder="Search Chats" />
             </label>
           </div>
-          <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+          <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
             <NewConversationButton user={userProfile} />
           </div>
         </div>
         <div className="mt-8 flow-root">
           <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-              <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+              <div className="/5 overflow-hidden shadow-sm ring-1 ring-black/5 sm:rounded-lg">
                 <table className="min-w-full divide-y divide-gray-300">
                   <thead className="bg-gray-50">
                     <tr>
@@ -91,7 +91,7 @@ const SupportPage = async () => {
                       >
                         Status
                       </th>
-                      <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                      <th scope="col" className="relative py-3.5 pr-4 pl-3 sm:pr-6">
                         <span className="sr-only">Actions</span>
                       </th>
                     </tr>
@@ -99,19 +99,19 @@ const SupportPage = async () => {
                   <tbody className="divide-y divide-gray-200 bg-white">
                     {data?.map((row) => (
                       <tr key={row.id}>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
                           {row.title}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
                           {row.profiles?.first_name ?? "Unclaimed"} {row.profiles?.last_name ?? ""}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
                           {row.created_at ? formatDate(row.created_at, "MM/DD/YYYY, h:MM A") : ""}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
                           {row.is_active ? "Open" : "Closed"}
                         </td>
-                        <td className="relative space-x-4 whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                        <td className="relative space-x-4 py-4 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-6">
                           {row.is_active ? (
                             <>
                               <EnterConversationButton conversationId={row.id!} />

@@ -9,7 +9,7 @@ const CartPreview = (props: { cart: CartWithTotal; SubmissionButton: React.React
   const { cart, SubmissionButton } = props
 
   return (
-    <div className="rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
+    <div className="rounded-xl bg-white shadow-xs ring-1 ring-gray-900/5">
       <h3 className="sr-only">Items in your cart</h3>
 
       {cart.items.length > 0 ? (
@@ -73,7 +73,7 @@ const CartPreview = (props: { cart: CartWithTotal; SubmissionButton: React.React
         ) : (
           <Link
             href="/products"
-            className="w-full rounded-md border border-transparent bg-green-600 px-4 py-3 text-center text-base font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+            className="w-full rounded-md border border-transparent bg-green-600 px-4 py-3 text-center text-base font-medium text-white shadow-xs hover:bg-green-700 focus:outline-hidden focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-50"
           >
             Add products
           </Link>

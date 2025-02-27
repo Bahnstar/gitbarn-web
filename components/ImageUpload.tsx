@@ -75,7 +75,7 @@ const ImageUpload = (props: Props) => {
         <div className="mt-4 flex text-sm leading-6 text-gray-600">
           <label
             htmlFor="image"
-            className="relative cursor-pointer rounded-md font-semibold text-green-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-green-600 focus-within:ring-offset-2 hover:text-green-500"
+            className="relative cursor-pointer rounded-md font-semibold text-green-600 focus-within:outline-hidden focus-within:ring-2 focus-within:ring-green-600 focus-within:ring-offset-2 hover:text-green-500"
           >
             <span>{buttonText}</span>
             <input

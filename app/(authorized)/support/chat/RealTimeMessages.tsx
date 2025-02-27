@@ -21,7 +21,7 @@ type Props = {
 }
 
 const RealTimeMessages = (props: Props) => {
-  const supabase = await createClient()
+  const supabase = createClient()
 
   const [messages, setMessages] = useState<MessageWithProfile[]>(props.messages)
   const [message, setMessage] = useState<string>("")
@@ -279,7 +279,7 @@ const RealTimeMessages = (props: Props) => {
         </div>
         <div className="sticky bottom-0 mx-auto flex w-full flex-row items-center justify-center rounded-lg bg-gray-100 pb-3">
           <form action={handleSubmit} className="w-full">
-            <label className="input input-bordered flex items-center gap-2">
+            <label className="input-bordered input flex w-full items-center gap-2">
               <PaperClipIcon className="h-6" />
               <input
                 value={message}

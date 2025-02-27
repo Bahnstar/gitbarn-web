@@ -73,7 +73,7 @@ const ProductsPage = () => {
           {products?.map((product, index) => (
             <div
               key={`${product.title}_${index}`}
-              className="aspect-h-7 aspect-w-10 group block w-full overflow-hidden rounded-md bg-base-100 shadow-sm"
+              className="aspect-h-7 aspect-w-10 group block w-full overflow-hidden rounded-md bg-base-100 shadow-xs"
             >
               <figure>
                 <Image

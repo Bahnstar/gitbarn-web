@@ -28,7 +28,7 @@ export default function CarouselPlugin(props: Readonly<{ data: SwiperData[] }>) 
               <Card className="flex h-full flex-col items-center justify-between rounded-md bg-gray-50 p-4 shadow-md">
                 <div className="h-full w-full overflow-hidden">
                   <img
-                    className="h-full w-full rounded-md object-cover shadow-sm"
+                    className="h-full w-full rounded-md object-cover shadow-xs"
                     src={slide.image}
                     alt={slide.title}
                   />

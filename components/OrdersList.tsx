@@ -84,7 +84,7 @@ const OrdersList = ({ initialOrders, role }: { initialOrders: Transaction[]; rol
           </div>
           <input
             type="text"
-            className="w-full rounded-xl border border-gray-200 bg-white py-3 pl-11 pr-4 text-base placeholder:text-gray-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+            className="w-full rounded-xl border border-gray-200 bg-white py-3 pl-11 pr-4 text-base placeholder:text-gray-500 focus:border-green-500 focus:outline-hidden focus:ring-1 focus:ring-green-500"
             placeholder="Search Orders"
           />
         </div>
@@ -98,7 +98,7 @@ const OrdersList = ({ initialOrders, role }: { initialOrders: Transaction[]; rol
               {orders.map((order) => (
                 <div
                   key={order.transaction_id}
-                  className="border-b border-t border-gray-200 bg-white shadow-sm sm:rounded-lg sm:border"
+                  className="border-t border-b border-gray-200 bg-white shadow-xs sm:rounded-lg sm:border"
                 >
                   <h3 className="sr-only">
                     Order placed on{" "}
@@ -137,13 +137,13 @@ const OrdersList = ({ initialOrders, role }: { initialOrders: Transaction[]; rol
 
                       <MenuItems
                         transition
-                        className="absolute right-0 z-10 mt-2 w-40 origin-bottom-right rounded-md bg-white shadow-lg ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                        className="/5 absolute right-0 z-10 mt-2 w-40 origin-bottom-right rounded-md bg-white shadow-lg ring-1 ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
                       >
                         <div className="py-1">
                           <MenuItem>
                             <a
                               href={`/orders/${order.transaction_id}`}
-                              className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none"
+                              className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
                             >
                               View
                             </a>
@@ -151,7 +151,7 @@ const OrdersList = ({ initialOrders, role }: { initialOrders: Transaction[]; rol
                           {/* <MenuItem>
                           <a
                             href="#"
-                            className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none"
+                            className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
                           >
                             Invoice
                           </a>
@@ -163,14 +163,14 @@ const OrdersList = ({ initialOrders, role }: { initialOrders: Transaction[]; rol
                     <div className="hidden lg:col-span-2 lg:flex lg:items-center lg:justify-end lg:space-x-4">
                       <a
                         href={`/orders/${order.transaction_id}`}
-                        className="flex items-center justify-center rounded-md border border-gray-300 bg-white px-2.5 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                        className="flex items-center justify-center rounded-md border border-gray-300 bg-white px-2.5 py-2 text-sm font-medium text-gray-700 shadow-xs hover:bg-gray-50 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:outline-hidden"
                       >
                         <span>View Order</span>
                         <span className="sr-only">{order.transaction_id}</span>
                       </a>
                       {/* <a
                       href="#"
-                      className="flex items-center justify-center rounded-md border border-gray-300 bg-white px-2.5 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                      className="flex items-center justify-center rounded-md border border-gray-300 bg-white px-2.5 py-2 text-sm font-medium text-gray-700 shadow-xs hover:bg-gray-50 focus:outline-hidden focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                     >
                       <span>View Invoice</span>
                       <span className="sr-only">for order {order.transaction_id}</span>
@@ -219,7 +219,7 @@ const OrdersList = ({ initialOrders, role }: { initialOrders: Transaction[]; rol
                             </p>
                           </div>
 
-                          <div className="mt-6 flex items-center space-x-4 divide-x divide-gray-200 border-t border-gray-200 pt-4 text-sm font-medium sm:ml-4 sm:mt-0 sm:border-none sm:pt-0">
+                          <div className="mt-6 flex items-center space-x-4 divide-x divide-gray-200 border-t border-gray-200 pt-4 text-sm font-medium sm:mt-0 sm:ml-4 sm:border-none sm:pt-0">
                             <div className="flex flex-1 justify-center">
                               <a
                                 href={`/products/${product.supabase?.id || product.tiger.sku}`}
@@ -249,7 +249,7 @@ const OrdersList = ({ initialOrders, role }: { initialOrders: Transaction[]; rol
             <div className="mx-auto mt-5 w-fit">
               {!loadedAll ? (
                 <button
-                  className="rounded-md border border-transparent bg-green-600 px-4 py-3 text-center text-base font-medium text-white shadow-sm hover:bg-green-700"
+                  className="rounded-md border border-transparent bg-green-600 px-4 py-3 text-center text-base font-medium text-white shadow-xs hover:bg-green-700"
                   onClick={getMoreOrders}
                 >
                   {loadingMore ? <LoaderCircle className="animate-spin" /> : "Load More"}

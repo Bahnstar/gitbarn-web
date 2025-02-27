@@ -50,7 +50,7 @@ const OrderDetailsPage = async ({ params }: { params: { orderId: string } }) => 
           {transaction.products.map((product) => (
             <div
               key={product.supabase?.id || product.tiger.sku}
-              className="border-b border-t border-gray-200 bg-white shadow-sm sm:rounded-lg sm:border"
+              className="border-b border-t border-gray-200 bg-white shadow-xs sm:rounded-lg sm:border"
             >
               <div className="px-4 py-6 sm:px-6 lg:grid lg:grid-cols-12 lg:gap-x-8 lg:p-8">
                 <div className="sm:flex lg:col-span-7">

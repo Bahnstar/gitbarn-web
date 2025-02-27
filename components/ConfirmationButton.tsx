@@ -44,7 +44,7 @@ const ConfirmationButton = ({
       </button>
 
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex w-screen items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 z-50 flex w-screen items-center justify-center bg-black/50">
           <div className="rounded-lg bg-white p-6 shadow-xl">
             <h3 className="mb-4 text-lg font-medium">{title}</h3>
             <p className="mb-6 text-gray-600">{description}</p>

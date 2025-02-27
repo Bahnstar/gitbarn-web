@@ -25,7 +25,7 @@ export default function MarkAllAsReadButton() {
     <button
       onClick={handleClick}
       disabled={isPending}
-      className="inline-flex items-center gap-2 rounded-xl border border-green-200 bg-white px-4 py-2.5 text-sm font-medium text-green-600 shadow-sm transition-all hover:bg-green-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-1 disabled:opacity-70"
+      className="inline-flex items-center gap-2 rounded-xl border border-green-200 bg-white px-4 py-2.5 text-sm font-medium text-green-600 shadow-xs transition-all hover:bg-green-50 hover:shadow-md focus:outline-hidden focus:ring-2 focus:ring-green-500 focus:ring-offset-1 disabled:opacity-70"
     >
       {isPending ? (
         <>

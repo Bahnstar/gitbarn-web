@@ -3,7 +3,7 @@ import { MailIcon } from "lucide-react"
 export default function Verify({ searchParams }: Readonly<{ searchParams: { message: string } }>) {
   return (
     <div className="mx-auto mt-[10%] max-w-md flex-1 px-4 md:px-0">
-      <div className="overflow-hidden rounded-lg bg-white shadow-sm">
+      <div className="overflow-hidden rounded-lg bg-white shadow-xs">
         <div className="p-6 text-center">
           <div className="flex items-center justify-center gap-2">
             <MailIcon className="h-8 w-8 text-green-500" />

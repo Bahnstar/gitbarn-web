@@ -120,7 +120,7 @@ export default function DocumentUpload(props: { action: any }) {
       </button>
 
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex w-screen items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 z-50 flex w-screen items-center justify-center bg-black/50">
           <div className="rounded-lg bg-white p-6 shadow-xl">
             <h3 className="mb-4 text-lg font-medium">Upload file</h3>
             <p className="mb-6 text-gray-600">Accepts only the following formats:</p>
@@ -177,7 +177,7 @@ export default function DocumentUpload(props: { action: any }) {
               <button
                 type="submit"
                 // disabled={!filePreview}
-                className=" mt-4 flex w-full justify-center rounded bg-blue-500 px-4 py-2 text-white disabled:bg-gray-300"
+                className="mt-4 flex w-full justify-center rounded-sm bg-blue-500 px-4 py-2 text-white disabled:bg-gray-300"
               >
                 {isLoading ? (
                   <>

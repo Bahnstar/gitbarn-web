@@ -30,7 +30,7 @@ export default async function Login({
         </h2>
       </div>
       <form className="space-y-6" action="#" method="POST">
-        <div className="relative -space-y-px rounded-md shadow-sm">
+        <div className="relative -space-y-px rounded-md shadow-xs">
           <div className="pointer-events-none absolute inset-0 z-10 rounded-md ring-1 ring-inset ring-gray-300" />
           <div>
             <label htmlFor="email-address" className="sr-only">
@@ -68,7 +68,7 @@ export default async function Login({
               id="remember-me"
               name="remember-me"
               type="checkbox"
-              className="h-4 w-4 rounded border-gray-300 text-green-700 focus:ring-green-700"
+              className="h-4 w-4 rounded-sm border-gray-300 text-green-700 focus:ring-green-700"
             />
             <label htmlFor="remember-me" className="ml-3 block text-sm leading-6 text-gray-900">
               Remember me

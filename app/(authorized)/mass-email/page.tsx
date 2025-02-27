@@ -77,7 +77,7 @@ export default function MassEmailPage() {
   return (
     <div className="flex w-full flex-1 flex-col gap-6 p-4 sm:gap-10">
       <h1 className="text-4xl font-semibold leading-6 text-gray-900">Mass Email</h1>
-      <div className=" min-w-4xl max-w-4xl rounded-lg bg-white p-6 shadow">
+      <div className=" min-w-4xl max-w-4xl rounded-lg bg-white p-6 shadow-sm">
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <h3 className="text-md block font-medium text-gray-700">Select Recipient Roles:</h3>
           <div className="mt-4 flex w-full justify-start gap-6">
@@ -91,7 +91,7 @@ export default function MassEmailPage() {
                     onChange={() => handleRoleToggle(role)}
                     className="peer sr-only"
                   />
-                  <div className="h-5 w-5 rounded border border-gray-300 bg-white transition-all peer-checked:border-green-600 peer-checked:bg-green-600 peer-focus:ring-2 peer-focus:ring-green-600 peer-focus:ring-offset-2">
+                  <div className="h-5 w-5 rounded-sm border border-gray-300 bg-white transition-all peer-checked:border-green-600 peer-checked:bg-green-600 peer-focus:ring-2 peer-focus:ring-green-600 peer-focus:ring-offset-2">
                     <svg
                       className="h-full w-full stroke-white stroke-2 opacity-0 peer-checked:opacity-100"
                       viewBox="0 0 16 16"
@@ -120,7 +120,7 @@ export default function MassEmailPage() {
               value={emailSubject}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmailSubject(e.target.value)}
               placeholder="Enter email subject"
-              className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6"
+              className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-xs ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6"
             />
           </div>
           <div className="flex flex-col gap-2">
@@ -133,14 +133,14 @@ export default function MassEmailPage() {
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setEmailBody(e.target.value)}
               placeholder="Enter email content"
               rows={8}
-              className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6"
+              className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-xs ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6"
             />
           </div>
 
           <div className="col-span-2 mt-4">
             <button
               type="submit"
-              className="w-full rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+              className="w-full rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
             >
               Send Email
             </button>
