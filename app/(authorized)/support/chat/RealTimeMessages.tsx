@@ -3,6 +3,7 @@
 import { updateConversation } from "@/server/handlers/conversations"
 import { sendUserNotification } from "@/server/handlers/emails"
 import { createMessage } from "@/server/handlers/messages"
+import { createNotification } from "@/server/handlers/notifications"
 import { getProfile } from "@/server/handlers/profiles"
 import { Conversation } from "@/types/conversation"
 import { MessageWithProfile } from "@/types/message"
@@ -47,12 +48,20 @@ const RealTimeMessages = (props: Props) => {
         : props.conversation.customer_id
 
       if (!connectedUsers.includes(recipientId!)) {
+        console.log("Sending new message email")
         await sendUserNotification(
           props.conversation.title!,
           props.conversation.id!,
           props.user.id,
           recipientId!,
           newMessage.text,
+        )
+
+        // Create in-app notification for the recipient
+        await createNotification(
+          recipientId!,
+          `New Message: ${props.conversation.title}`,
+          `${props.conversation} sent you a message: ${newMessage.text.substring(0, 50)}${newMessage.text.length > 50 ? "..." : ""}`,
         )
       }
     }
@@ -100,14 +109,32 @@ const RealTimeMessages = (props: Props) => {
     clientRevalidate("/support")
   }
 
-  const payloadWithProfileDetails = (payload: any) => {
+  const payloadWithProfileDetails = async (payload: any) => {
+    // If the message is from the current user, use their profile info
+    if (payload.user_id === props.user.id) {
+      return {
+        ...payload,
+        profiles: {
+          first_name: props.user.first_name,
+          last_name: props.user.last_name,
+          avatar_url: props.user.avatar_url,
+        },
+      }
+    }
+
+    // Otherwise, fetch the profile info for the message sender
+    const { data: profile, error } = await getProfile(payload.user_id)
+    if (error) console.error(error)
+
     return {
       ...payload,
-      profiles: {
-        first_name: props.user.first_name,
-        last_name: props.user.last_name,
-        avatar_url: props.user.avatar_url,
-      },
+      profiles: profile
+        ? {
+            first_name: profile.first_name,
+            last_name: profile.last_name,
+            avatar_url: profile.avatar_url,
+          }
+        : null,
     }
   }
 
@@ -137,8 +164,8 @@ const RealTimeMessages = (props: Props) => {
           table: "Messages",
           filter: `conversation_id=eq.${props.conversation.id}`,
         },
-        (payload) => {
-          const newPayload: MessageWithProfile = payloadWithProfileDetails(payload.new)
+        async (payload) => {
+          const newPayload: MessageWithProfile = await payloadWithProfileDetails(payload.new)
           setMessages((prev) => [...prev, newPayload])
           chatboxRef.current?.scrollIntoView({ behavior: "smooth", block: "end" })
         },
@@ -151,10 +178,11 @@ const RealTimeMessages = (props: Props) => {
           table: "Messages",
           filter: `conversation_id=eq.${props.conversation.id}`,
         },
-        (payload) => {
+        async (payload) => {
+          const updatedPayload = await payloadWithProfileDetails(payload.new)
           setMessages((prev) =>
             prev.map((message) =>
-              message.id === payload.new.id ? (payload.new as MessageWithProfile) : message,
+              message.id === payload.new.id ? (updatedPayload as MessageWithProfile) : message,
             ),
           )
         },
