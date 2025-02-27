@@ -3,6 +3,7 @@ import { getMonthOrderCounts, getCompletedTransactions } from "@/server/handlers
 import { getUserWithProfile } from "@/server/handlers/users"
 import Chart from "./Chart"
 import { getMonthlyStatsByYearAndType } from "@/server/handlers/monthlyStats"
+import { Role } from "@/types/profile"
 
 export default async function DashboardPage() {
   const [{ data: user }, recentOrders, { data: recentConversations }, { data: orderStats }] =
@@ -19,15 +20,17 @@ export default async function DashboardPage() {
         Welcome, {user?.first_name} {user?.last_name}
       </h1>
       <div className="container grid gap-8 px-4 md:px-6 lg:grid-cols-[1fr_1fr] lg:gap-8">
-        <div className="aspect-h-7 aspect-w-10 group block w-full space-y-6 overflow-hidden rounded-lg bg-base-100 p-6 shadow-lg">
-          <div className="grid gap-1">
-            <h2 className="text-lg font-semibold">Order Counts</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              View the number of orders placed per month.
-            </p>
-            <Chart orderStats={orderStats!} />
+        {user?.role === Role.ADMIN && (
+          <div className="aspect-h-7 aspect-w-10 group block w-full space-y-6 overflow-hidden rounded-lg bg-base-100 p-6 shadow-lg">
+            <div className="grid gap-1">
+              <h2 className="text-lg font-semibold">Order Counts</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                View the number of orders placed per month.
+              </p>
+              <Chart orderStats={orderStats!} />
+            </div>
           </div>
-        </div>
+        )}
       </div>
       <div className="container grid gap-8 px-4 md:px-6 lg:grid-cols-[1fr_1fr] lg:gap-8">
         <div className="aspect-h-7 aspect-w-10 group block w-full space-y-6 overflow-hidden rounded-lg bg-base-100 p-6 shadow-lg">
