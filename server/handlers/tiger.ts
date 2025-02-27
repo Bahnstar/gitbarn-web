@@ -36,16 +36,6 @@ export const manageTigerProduct = async (
   return response
 }
 
-export const getRecentOrders = async (): Promise<Transaction[]> => {
-  const params: TransactionQueryParams = {
-    result_order: "reverse",
-    result_limit: 5,
-    // condition: "complete",
-  }
-
-  return await fetchTransactions(params)
-}
-
 const getMonthBoundaryDates = () => {
   const currentDate = new Date()
   const currentYear = currentDate.getFullYear()
@@ -114,15 +104,15 @@ export const getMonthOrderCounts = async () => {
 }
 
 export const getCompletedTransactions = cache(
-  async (page: number, userId?: string): Promise<Transaction[]> => {
+  async (page: number, userId?: string, resultLimit?: number): Promise<Transaction[]> => {
     const { data: userData } = !userId ? await getUserWithProfile() : await getProfile(userId)
 
     const params: TransactionQueryParams = {
       result_order: "reverse",
-      result_limit: 10,
+      result_limit: resultLimit || 10,
       page_number: page,
       condition: "pendingsettlement,complete",
-      email: userData?.email || "",
+      email: userData?.role === Role.ADMIN ? "" : userData?.email,
     }
 
     return await fetchTransactions(params)

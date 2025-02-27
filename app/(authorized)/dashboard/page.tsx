@@ -1,5 +1,5 @@
 import { getRecentConversations } from "@/server/handlers/conversations"
-import { getMonthOrderCounts, getRecentOrders } from "@/server/handlers/tiger"
+import { getMonthOrderCounts, getCompletedTransactions } from "@/server/handlers/tiger"
 import { getUserWithProfile } from "@/server/handlers/users"
 import Chart from "./Chart"
 import { getMonthlyStatsByYearAndType } from "@/server/handlers/monthlyStats"
@@ -8,7 +8,7 @@ export default async function DashboardPage() {
   const [{ data: user }, recentOrders, { data: recentConversations }, { data: orderStats }] =
     await Promise.all([
       getUserWithProfile(),
-      getRecentOrders(),
+      getCompletedTransactions(0, undefined, 5),
       getRecentConversations(5),
       getMonthlyStatsByYearAndType(new Date().getFullYear(), "orders"),
     ])
