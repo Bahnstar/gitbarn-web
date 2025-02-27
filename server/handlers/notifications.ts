@@ -29,12 +29,12 @@ export const getUnreadNotificationCount = async (userId: string): Promise<number
     .eq("user_id", userId)
     .eq("status", NotificationStatus.UNREAD)
 
-  if (error || !count) {
+  if (error) {
     console.error("Error fetching notifications:", error)
     return 0
   }
 
-  return count
+  return count ?? 0
 }
 
 export const batchCreateNotifications = async (
@@ -42,7 +42,7 @@ export const batchCreateNotifications = async (
   title: string,
   message: string,
 ) => {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data, error } = await supabase.from("Notifications").insert(
     userIds.map((userId) => ({
       user_id: userId,
@@ -58,7 +58,7 @@ export const batchCreateNotifications = async (
 }
 
 export const createNotification = async (userId: string, title: string, message: string) => {
-  const supabase = createClient()
+  const supabase = await createClient()
   return await supabase.from("Notifications").insert({
     user_id: userId,
     title,
