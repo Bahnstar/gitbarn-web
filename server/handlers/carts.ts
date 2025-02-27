@@ -35,12 +35,12 @@ export const getCartsCount = async (userId: string): Promise<number> => {
     .select("*", { count: "exact", head: true })
     .eq("user_id", userId)
 
-  if (error || !count) {
+  if (error) {
     console.error("Error fetching cart count:", error)
     return 0
   }
 
-  return count
+  return count ?? 0
 }
 
 export const createCart = async (Cart: Cart): Promise<PostgrestSingleResponse<Cart>> => {
