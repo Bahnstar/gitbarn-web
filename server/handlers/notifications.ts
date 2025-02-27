@@ -37,6 +37,36 @@ export const getUnreadNotificationCount = async (userId: string): Promise<number
   return count
 }
 
+export const batchCreateNotifications = async (
+  userIds: string[],
+  title: string,
+  message: string,
+) => {
+  const supabase = createClient()
+  const { data, error } = await supabase.from("Notifications").insert(
+    userIds.map((userId) => ({
+      user_id: userId,
+      title,
+      message,
+      status: NotificationStatus.UNREAD,
+    })),
+  )
+
+  if (error) {
+    console.error(error)
+  }
+}
+
+export const createNotification = async (userId: string, title: string, message: string) => {
+  const supabase = createClient()
+  return await supabase.from("Notifications").insert({
+    user_id: userId,
+    title,
+    message,
+    status: NotificationStatus.UNREAD,
+  })
+}
+
 export const updateNotification = async (
   notification: Partial<NotificationType>,
 ): Promise<PostgrestSingleResponse<NotificationType>> => {
