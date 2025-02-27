@@ -3,18 +3,32 @@
 import { sendMassEmail } from "@/server/handlers/massEmails"
 import { getUserWithProfile } from "@/server/handlers/users"
 import { Role } from "@/types/profile"
-import { redirect } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
-export default async function MassEmailPage() {
+export default function MassEmailPage() {
+  const router = useRouter()
   const [selectedRoles, setSelectedRoles] = useState<Role[]>([])
   const [subject, setSubject] = useState("")
   const [emailBody, setEmailBody] = useState("")
+  const [isLoading, setIsLoading] = useState(true)
 
-  const { data: user, error } = await getUserWithProfile()
-  if (user!.role !== Role.ADMIN) {
-    redirect("/users")
-  }
+  useEffect(() => {
+    const checkUserRole = async () => {
+      try {
+        const { data: user, error } = await getUserWithProfile()
+        if (error || user?.role !== Role.ADMIN) {
+          router.push("/users")
+        }
+        setIsLoading(false)
+      } catch (error) {
+        console.error("Error checking user role:", error)
+        router.push("/users")
+      }
+    }
+
+    checkUserRole()
+  }, [router])
 
   const handleRoleToggle = (role: Role) => {
     setSelectedRoles((prev) =>
@@ -43,7 +57,20 @@ export default async function MassEmailPage() {
       return
     }
 
-    sendMassEmail(subject, emailBody, selectedRoles)
+    try {
+      await sendMassEmail(subject, emailBody, selectedRoles)
+      alert("Emails sent successfully!")
+      setSubject("")
+      setEmailBody("")
+      setSelectedRoles([])
+    } catch (error) {
+      console.error("Error sending emails:", error)
+      alert("Failed to send emails. Please try again.")
+    }
+  }
+
+  if (isLoading) {
+    return <div className="flex w-full flex-1 items-center justify-center">Loading...</div>
   }
 
   return (
