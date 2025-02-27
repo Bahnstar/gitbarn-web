@@ -6,14 +6,14 @@ import { PostgrestSingleResponse } from "@supabase/supabase-js"
 import { revalidatePath } from "next/cache"
 
 export const getNotifications = async (): Promise<PostgrestSingleResponse<NotificationType[]>> => {
-  const supabase = createClient()
+  const supabase = await createClient()
   return await supabase.from("Notifications").select("*").order("created_at", { ascending: false })
 }
 
 export const getNotificationsByUserId = async (
   userId: string,
 ): Promise<PostgrestSingleResponse<NotificationType[]>> => {
-  const supabase = createClient()
+  const supabase = await createClient()
   return await supabase
     .from("Notifications")
     .select("*")
@@ -22,7 +22,7 @@ export const getNotificationsByUserId = async (
 }
 
 export const getUnreadNotificationCount = async (userId: string): Promise<number> => {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { count, error } = await supabase
     .from("Notifications")
     .select("*", { count: "exact", head: true })
@@ -40,7 +40,7 @@ export const getUnreadNotificationCount = async (userId: string): Promise<number
 export const updateNotification = async (
   notification: Partial<NotificationType>,
 ): Promise<PostgrestSingleResponse<NotificationType>> => {
-  const supabase = createClient()
+  const supabase = await createClient()
   return await supabase
     .from("Notifications")
     .update(notification)

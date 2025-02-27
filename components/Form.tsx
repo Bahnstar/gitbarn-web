@@ -1,11 +1,10 @@
 "use client"
-import { PropsWithChildren } from "react"
-import { useFormState, useFormStatus } from "react-dom"
+import { PropsWithChildren, useActionState } from "react"
+import { useFormStatus } from "react-dom"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 
 import Toaster from "@/components/Toaster"
-import { revalidatePath } from "next/cache"
 
 export type FormResponse = {
   message: string
@@ -56,7 +55,7 @@ const Form = (
     status: "unknown",
   }
 
-  const [state, formAction] = useFormState(props.action, initialState)
+  const [state, formAction] = useActionState(props.action, initialState)
 
   return (
     <form

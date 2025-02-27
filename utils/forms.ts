@@ -15,7 +15,7 @@ type FormResult = {
 }
 
 const processDocument = async (prevState: any, formData: any): Promise<FormResult> => {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const {
     data: { user },
@@ -133,7 +133,7 @@ const uploadImage = async (
   image: File,
   uploadPath: string,
 ): Promise<{ message: string; status: string; path?: string }> => {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   if (image.size > 0) {
     const { data: imageData, error } = await supabase.storage

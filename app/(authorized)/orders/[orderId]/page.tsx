@@ -13,6 +13,8 @@ const OrderDetailsPage = async ({ params }: { params: { orderId: string } }) => 
     return `${first}••••${last}${end}`
   }
 
+  console.log(transaction.products)
+
   return (
     <div className="mx-auto max-w-2xl pt-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
       <div className="space-y-2 px-4 sm:flex sm:items-baseline sm:justify-between sm:space-y-0 sm:px-0">
@@ -47,27 +49,31 @@ const OrderDetailsPage = async ({ params }: { params: { orderId: string } }) => 
         <div className="space-y-8">
           {transaction.products.map((product) => (
             <div
-              key={product.supabase.id}
+              key={product.supabase?.id || product.tiger.sku}
               className="border-b border-t border-gray-200 bg-white shadow-sm sm:rounded-lg sm:border"
             >
               <div className="px-4 py-6 sm:px-6 lg:grid lg:grid-cols-12 lg:gap-x-8 lg:p-8">
                 <div className="sm:flex lg:col-span-7">
                   <img
-                    alt={product.supabase.title}
-                    src={`${process.env.NEXT_PUBLIC_SUPABASE_BUCKETS}${product.supabase.image}`}
+                    alt={product.supabase?.title || product.tiger.description}
+                    src={`${process.env.NEXT_PUBLIC_SUPABASE_BUCKETS}${product.supabase?.image || "/images/products/default.png"}`}
                     className="aspect-square w-full shrink-0 rounded-lg object-cover sm:size-40"
                   />
 
                   <div className="mt-6 sm:ml-6 sm:mt-0">
                     <h3 className="text-base font-medium text-gray-900">
-                      <a href={`/products/${product.supabase.id}`}>{product.supabase.title}</a>
+                      <a href={`/products/${product.supabase?.id || product.tiger.sku}`}>
+                        {product.supabase?.title || product.tiger.description}
+                      </a>
                     </h3>
                     <p className="mt-2 text-sm font-medium text-gray-900">
-                      ${product.supabase.amount}
+                      ${product.supabase?.amount || product.tiger.amount}
                       <span className="text-xs text-gray-800">/ea</span> <br /> Qty:{" "}
                       {Number(product.tiger.quantity).toFixed(0)}
                     </p>
-                    <p className="mt-3 text-sm text-gray-500">{product.supabase.description}</p>
+                    <p className="mt-3 text-sm text-gray-500">
+                      {product.supabase?.description || "This product is no longer available"}
+                    </p>
                   </div>
                 </div>
 

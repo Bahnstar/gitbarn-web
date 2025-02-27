@@ -181,82 +181,66 @@ const OrdersList = ({ initialOrders, role }: { initialOrders: Transaction[]; rol
                   {/* Products */}
                   <h4 className="sr-only">Items</h4>
                   <ul role="list" className="divide-y divide-gray-200">
-                    {order.products.map((product, pIndex) =>
-                      product?.supabase?.id ? (
-                        <li key={product.supabase.id} className="p-4 sm:p-6">
-                          <div className="flex items-center sm:items-start">
-                            <div className="size-20 shrink-0 overflow-hidden rounded-lg bg-gray-200 sm:size-40">
-                              <img
-                                alt={product.supabase.title}
-                                src={`${process.env.NEXT_PUBLIC_SUPABASE_BUCKETS}${product.supabase.image}`}
-                                className="size-full object-cover"
-                              />
-                            </div>
-                            <div className="ml-6 flex-1 text-sm">
-                              <div className="font-medium text-gray-900 sm:flex sm:justify-between">
-                                <h5>{product.supabase.title}</h5>
-                                <p className="mt-2 sm:mt-0">
-                                  ${Number(product.tiger.amount).toFixed(2)}
-                                  <span className="text-xs text-gray-800">/ea</span> <br /> Qty:{" "}
-                                  {Number(product.tiger.quantity).toFixed(0)}
-                                </p>
-                              </div>
-                              <p className="hidden text-gray-500 sm:mt-2 sm:block">
-                                {product.supabase.description}
+                    {order.products.map((product, pIndex) => (
+                      <li key={product.supabase?.id || product.tiger.sku} className="p-4 sm:p-6">
+                        <div className="flex items-center sm:items-start">
+                          <div className="size-20 shrink-0 overflow-hidden rounded-lg bg-gray-200 sm:size-40">
+                            <img
+                              alt={product.supabase?.title || product.tiger.description}
+                              src={`${process.env.NEXT_PUBLIC_SUPABASE_BUCKETS}${product.supabase?.image || "/images/products/default.png"}`}
+                              className="size-full object-cover"
+                            />
+                          </div>
+                          <div className="ml-6 flex-1 text-sm">
+                            <div className="font-medium text-gray-900 sm:flex sm:justify-between">
+                              <h5>{product.supabase?.title || product.tiger.description}</h5>
+                              <p className="mt-2 sm:mt-0">
+                                ${Number(product.tiger.amount).toFixed(2)}
+                                <span className="text-xs text-gray-800">/ea</span> <br /> Qty:{" "}
+                                {Number(product.tiger.quantity).toFixed(0)}
                               </p>
                             </div>
+                            <p className="hidden text-gray-500 sm:mt-2 sm:block">
+                              {product.supabase?.description ||
+                                "This product is no longer available"}
+                            </p>
                           </div>
+                        </div>
 
-                          <div className="mt-6 sm:flex sm:justify-between">
-                            <div className="flex items-center">
-                              {/* <CheckCircleIcon aria-hidden="true" className="size-5 text-green-500" /> */}
-                              <p className="ml-2 text-sm font-medium text-gray-500">
-                                {/* Delivered on{" "}
+                        <div className="mt-6 sm:flex sm:justify-between">
+                          <div className="flex items-center">
+                            {/* <CheckCircleIcon aria-hidden="true" className="size-5 text-green-500" /> */}
+                            <p className="ml-2 text-sm font-medium text-gray-500">
+                              {/* Delivered on{" "}
                               <time dateTime={order.actions[0].date}>
                                 {formatDate(order.actions[0].date, "MMMM DD, YYYY")}
                               </time> */}
-                                SKU: {product.supabase.sku}
-                              </p>
-                            </div>
+                              SKU: {product.supabase?.sku || product.tiger.sku}
+                            </p>
+                          </div>
 
-                            <div className="mt-6 flex items-center space-x-4 divide-x divide-gray-200 border-t border-gray-200 pt-4 text-sm font-medium sm:ml-4 sm:mt-0 sm:border-none sm:pt-0">
-                              <div className="flex flex-1 justify-center">
-                                <a
-                                  href={`/products/${product.supabase.id}`}
-                                  className="whitespace-nowrap text-green-600 hover:text-green-500"
-                                >
-                                  View product
-                                </a>
-                              </div>
-                              <div className="flex flex-1 justify-center pl-4">
-                                <AddToCartButton
-                                  className="whitespace-nowrap text-green-600 hover:text-green-500"
-                                  productId={product.supabase.id}
-                                  productTitle={product.supabase.title}
-                                >
-                                  Buy again
-                                </AddToCartButton>
-                              </div>
+                          <div className="mt-6 flex items-center space-x-4 divide-x divide-gray-200 border-t border-gray-200 pt-4 text-sm font-medium sm:ml-4 sm:mt-0 sm:border-none sm:pt-0">
+                            <div className="flex flex-1 justify-center">
+                              <a
+                                href={`/products/${product.supabase?.id || product.tiger.sku}`}
+                                className="whitespace-nowrap text-green-600 hover:text-green-500"
+                              >
+                                View product
+                              </a>
+                            </div>
+                            <div className="flex flex-1 justify-center pl-4">
+                              <AddToCartButton
+                                className="whitespace-nowrap text-green-600 hover:text-green-500"
+                                productId={product.supabase?.id || product.tiger.sku}
+                                productTitle={product.supabase?.title || product.tiger.description}
+                              >
+                                Buy again
+                              </AddToCartButton>
                             </div>
                           </div>
-                        </li>
-                      ) : (
-                        <div
-                          key={`product_empty_${pIndex}`}
-                          className=" hidden p-5 text-gray-500 sm:mt-2 sm:block"
-                        >
-                          Uh oh, this product has been removed. If you believe this was a mistake,
-                          please{" "}
-                          <Link
-                            href="/support"
-                            className="font-bold text-green-600 hover:text-green-500"
-                          >
-                            contact support
-                          </Link>
-                          .
                         </div>
-                      ),
-                    )}
+                      </li>
+                    ))}
                   </ul>
                 </div>
               ))}

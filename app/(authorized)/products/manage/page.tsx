@@ -1,11 +1,25 @@
 import { Product } from "@/types/product"
-import { getProducts } from "@/server/handlers/products"
+import { Trash2Icon } from "lucide-react"
+import { getProducts, deleteProduct } from "@/server/handlers/products"
 import Link from "next/link"
-import CloseConversationButton from "@/components/CloseConversationButton"
+import ConfirmationButton from "@/components/ConfirmationButton"
+import { revalidatePath } from "next/cache"
 
 const ManageProductsPage = async () => {
   // "true" gets all products regardless of status
   const { data: products, error } = await getProducts(true)
+
+  const handleDelete = async (ids: any[]) => {
+    "use server"
+
+    const res = await deleteProduct(ids[0], ids[1])
+    revalidatePath("/products")
+
+    return {
+      status: res,
+      message: res === "sucess" ? "Product successfully deleted" : "Product deletion failed",
+    }
+  }
 
   return (
     <div className="px-4 sm:px-6 lg:px-8">
@@ -84,6 +98,20 @@ const ManageProductsPage = async () => {
                         >
                           Edit<span className="sr-only">, {product.title}</span>
                         </Link>
+                        <ConfirmationButton
+                          title="Delete Product"
+                          description={`Are you sure you want to delete ${product.title}?`}
+                          action={handleDelete}
+                          actionParams={[product.id!, product.tiger_id]}
+                          actionTitle="Delete"
+                          actionPending={`Deleting ${product.title}...`}
+                          ActionButton={
+                            <span className="inline-flex items-center gap-1.5 rounded-md bg-red-50 px-3 py-1.5 text-sm text-red-600 transition-colors hover:bg-red-100">
+                              Delete
+                              <Trash2Icon className="h-4 w-4" />
+                            </span>
+                          }
+                        />
                       </td>
                     </tr>
                   ))}

@@ -7,7 +7,7 @@ import { Message, MessageWithProfile } from "@/types/message"
 export const getConversationMessages = async (
   conversationId: string,
 ): Promise<PostgrestSingleResponse<MessageWithProfile[]>> => {
-  const supabase = createClient()
+  const supabase = await createClient()
   return await supabase
     .from("Messages")
     .select("*, profiles (id, avatar_url, first_name, last_name)")
@@ -20,7 +20,7 @@ export const createMessage = async (
   userId: string,
   text: string,
 ): Promise<PostgrestSingleResponse<Message>> => {
-  const supabase = createClient()
+  const supabase = await createClient()
   return await supabase
     .from("Messages")
     .insert({

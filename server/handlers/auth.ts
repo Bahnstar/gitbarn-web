@@ -14,7 +14,7 @@ type FormResult = {
 }
 
 export async function login(formData: FormData) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   // type-casting here for convenience
   // in practice, you should validate your inputs
@@ -34,7 +34,7 @@ export async function login(formData: FormData) {
 }
 
 export async function logout() {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { error } = await supabase.auth.signOut() //signOut({ scope: 'local }) to sign out of current session only
 
@@ -86,7 +86,7 @@ const signupConstraints = {
 }
 
 export async function signup(prevState: any, formData: FormData): Promise<FormResult> {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const data = {
     email: formData.get("email") as string,

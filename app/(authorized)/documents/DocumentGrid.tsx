@@ -81,7 +81,7 @@ export default function DocumentGrid({ documents }: { documents: DocumentFile[] 
 
   useEffect(() => {
     const getSession = async () => {
-      const supabase = createClient()
+      const supabase = await createClient()
       const { data } = await supabase.auth.getSession()
       setSession(data.session?.access_token || "")
     }
