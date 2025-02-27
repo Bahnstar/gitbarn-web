@@ -19,7 +19,7 @@ const OrdersList = ({ initialOrders, role }: { initialOrders: Transaction[]; rol
   const [orders, setOrders] = useState<Transaction[]>(initialOrders)
   const [loadingMore, setLoadingMore] = useState(false)
   const [loadingInitial, setLoadingInitial] = useState(false)
-  const [loadedAll, setLoadedAll] = useState(false)
+  const [loadedAll, setLoadedAll] = useState(orders.length === 0)
 
   const getNextPage = async () => {
     const orders = await getCompletedTransactions(currentPage + 1)

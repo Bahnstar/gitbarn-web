@@ -1,8 +1,9 @@
 import { SubmitButton } from "./submit-button"
-import { login, signup } from "../../server/handlers/auth"
+import { login } from "../../server/handlers/auth"
 import { getCurrentUser } from "@/server/handlers/users"
 import { redirect } from "next/navigation"
 import Toaster from "@/components/Toaster"
+import Link from "next/link"
 
 export default async function Login({
   searchParams,
@@ -89,13 +90,13 @@ export default async function Login({
           >
             Sign in
           </SubmitButton>
-          <SubmitButton
-            formAction={signup}
+
+          <Link
             className="border-1 flex w-full justify-center rounded-md border border-green-700 px-3 py-1.5 text-sm font-semibold leading-6 text-green-700 hover:bg-green-600 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-700"
-            pendingText="Signing up..."
+            href="/signup"
           >
-            Sign up
-          </SubmitButton>
+            Sign Up
+          </Link>
         </div>
       </form>
     </div>

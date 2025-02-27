@@ -9,6 +9,7 @@
 - [ ] Connect the profile page to supabase
 - [ ] Add a page to manage/send mass emails for admins
 - [ ] User management page
+- [X] Proper signup page
 - [ ] Notifications should be created everywhere that an email is sent
 - [ ] Delete products
 - [ ] Cart/Notifications in sidebar should have an indicator if there are things inside
@@ -30,9 +31,9 @@
 # Bugs
 
 - [ ] Support Chat shows incorrect names
-- [ ] Support Chat Online indicator sometimes has 3 names (duplicates)
+- [X] Support Chat Online indicator sometimes has 3 names (duplicates)
 - [ ] Client gives error when no avatar url is set for a user
-- [ ] Login button on the home page on mobile needs to be visible
+- [X] Login button on the home page on mobile needs to be visible
 - [ ] Mobile responsiveness (Maybe swap out tables?)
 
 # Security Questions

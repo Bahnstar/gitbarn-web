@@ -71,10 +71,7 @@ const SidebarContent = ({ user }: { user: Profile }) => (
           >
             <Image
               className="h-8 w-8 rounded-full bg-gray-50"
-              src={
-                `${process.env.NEXT_PUBLIC_SUPABASE_BUCKETS}${user.avatar_url}` ??
-                "https://png.pngtree.com/png-vector/20210604/ourmid/pngtree-gray-avatar-placeholder-png-image_3416697.jpg"
-              }
+              src={`${process.env.NEXT_PUBLIC_SUPABASE_BUCKETS}${user.avatar_url}`}
               alt=""
               width={649}
               height={649}
