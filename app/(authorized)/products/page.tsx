@@ -8,16 +8,14 @@ import { getProducts } from "@/server/handlers/products"
 import { getUserWithProfile } from "@/server/handlers/users"
 import { Product } from "@/types/product"
 import AddToCartButton from "@/components/AddToCartButton"
-import { ShoppingCartIcon, PencilIcon } from "lucide-react"
+import { ShoppingCartIcon, PencilIcon, MinusIcon, PlusIcon } from "lucide-react"
 
-type CartLoading = {
-  loading: boolean
-  productTitle: string
-}
+type CartLoading = { loading: boolean; productTitle: string }
 
 const ProductsPage = () => {
   const [role, setRole] = useState("user")
   const [products, setProducts] = useState<Product[]>([])
+  const [quantities, setQuantities] = useState<{ [key: string]: number }>({})
 
   useEffect(() => {
     getPublicProducts()
@@ -36,7 +34,23 @@ const ProductsPage = () => {
       console.log(error)
       return
     }
+
+    // Initialize quantities
+    const initialQuantities: { [productId: string]: number } = {}
+    products?.forEach((product) => {
+      initialQuantities[product.id!] = 1
+    })
+    setQuantities(initialQuantities)
+
     setProducts(products!)
+  }
+
+  const incrementQuantity = (productId: string) => {
+    setQuantities((prev) => ({ ...prev, [productId]: (prev[productId] || 1) + 1 }))
+  }
+
+  const decrementQuantity = (productId: string) => {
+    setQuantities((prev) => ({ ...prev, [productId]: Math.max(1, (prev[productId] || 1) - 1) }))
   }
 
   return (
@@ -44,7 +58,7 @@ const ProductsPage = () => {
       <h1 className="self-start text-4xl font-semibold leading-6 text-gray-900">View Products</h1>
       <div className="flex w-full flex-col gap-10 px-4 sm:px-6 lg:px-8">
         <div className="flex flex-row  items-center gap-x-4">
-          <label className="input input-bordered flex w-full max-w-xs items-center gap-2">
+          {/* <label className="input input-bordered flex w-full max-w-xs items-center gap-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 16 16"
@@ -58,42 +72,62 @@ const ProductsPage = () => {
               />
             </svg>
             <input type="text" className="grow" placeholder="Search Products" />
-          </label>
+          </label> */}
           {role === "admin" && (
-            <Link
-              href="/products/manage"
-              className="btn-primary self-stretch"
-            >
+            <Link href="/products/manage" className="btn-primary self-stretch">
               <PencilIcon className="h-4 w-4" />
               Manage Products
             </Link>
           )}
         </div>
-        <div className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 xl:gap-x-8 2xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8 2xl:grid-cols-4">
           {products?.map((product, index) => (
             <div
               key={`${product.title}_${index}`}
-              className="aspect-h-7 aspect-w-10 group block w-full overflow-hidden rounded-md bg-base-100 shadow-xs"
+              className="group relative flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:shadow-md"
             >
-              <figure>
+              <div className="aspect-h-1 aspect-w-1 relative overflow-hidden bg-gray-200">
                 <Image
                   src={`${process.env.NEXT_PUBLIC_SUPABASE_BUCKETS}${product.image}`}
                   alt={product.title}
                   width={800}
-                  height={600}
-                  className="h-64 w-full object-cover"
+                  height={800}
+                  className="h-60 w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
                 />
-              </figure>
-              <div className="card-body">
-                <h2 className="card-title">{product.title}</h2>
-                <p className="line-clamp-1">{product.description}</p>
-                <div className="card-actions justify-end">
+              </div>
+              <div className="flex flex-1 flex-col space-y-2 p-4">
+                <h3 className="text-lg font-medium text-gray-900">{product.title}</h3>
+                <p className="line-clamp-2 text-sm text-gray-500">{product.description}</p>
+                <div className="mt-auto pt-3">
+                  <div className="mb-3 flex items-center justify-between">
+                    <span className="text-xl font-semibold text-emerald-600">
+                      ${parseFloat(product.amount || "0").toFixed(2)}
+                    </span>
+                    <div className="flex items-center rounded-md border border-gray-300">
+                      <button
+                        type="button"
+                        onClick={() => decrementQuantity(product.id!)}
+                        className="rounded-l-md p-1 hover:bg-gray-100"
+                      >
+                        <MinusIcon className="h-4 w-4" />
+                      </button>
+                      <span className="px-3 py-1 text-sm">{quantities[product.id!] || 1}</span>
+                      <button
+                        type="button"
+                        onClick={() => incrementQuantity(product.id!)}
+                        className="rounded-r-md p-1 hover:bg-gray-100"
+                      >
+                        <PlusIcon className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
                   <AddToCartButton
-                    className="btn-primary"
+                    className="btn-primary w-full justify-center gap-2 rounded-md py-2.5 text-sm font-medium transition-colors hover:bg-emerald-600"
                     productId={product.id!}
                     productTitle={product.title}
+                    quantity={quantities[product.id!] || 1}
                   >
-                    <ShoppingCartIcon /> Add to Cart
+                    <ShoppingCartIcon className="h-4 w-4" /> Add to Cart
                   </AddToCartButton>
                 </div>
               </div>

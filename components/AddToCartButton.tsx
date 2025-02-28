@@ -10,9 +10,14 @@ import { Cart } from "@/types/cart"
 import { LoaderCircle } from "lucide-react"
 
 const AddToCartButton = (
-  props: PropsWithChildren<{ productId: string; productTitle: string; className?: string }>,
+  props: PropsWithChildren<{
+    productId: string
+    productTitle: string
+    className?: string
+    quantity?: number
+  }>,
 ) => {
-  const { productId: id, productTitle: title, className, children } = props
+  const { productId: id, productTitle: title, className, children, quantity = 1 } = props
 
   const [loading, setLoading] = useState(false)
 
@@ -23,18 +28,14 @@ const AddToCartButton = (
 
     const { data: carts, error: cError } = await getCartsById(id, true)
 
-    const cartItem: Cart = {
-      user_id: user!.id,
-      product_id: id,
-      quantity: 1,
-    }
+    const cartItem: Cart = { user_id: user!.id, product_id: id, quantity: quantity }
 
     setLoading(true)
 
     let error: any
     if (carts && carts?.length > 0) {
       const { data, error: err } = await updateCart(carts[0].id!, {
-        quantity: carts[0].quantity + 1,
+        quantity: carts[0].quantity + quantity,
       })
       error = err
     } else {
@@ -49,7 +50,9 @@ const AddToCartButton = (
 
     setLoading(false)
     clientRevalidate("/cart")
-    toast.success(`${title} was successfully added to your cart`)
+    quantity != 1
+      ? toast.success(`${quantity} ${title}'s were successfully added to your cart`)
+      : toast.success(`${title} was successfully added to your cart`)
   }
 
   return (
