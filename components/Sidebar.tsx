@@ -10,6 +10,7 @@ import { Profile } from "@/types/profile"
 import { getUnreadNotificationCount } from "@/server/handlers/notifications"
 import { toast } from "sonner"
 import { getCartsCount } from "@/server/handlers/carts"
+import { LogOutIcon } from "lucide-react"
 
 const Sidebar = async ({ children }: Readonly<{ children: React.ReactNode }>) => {
   const { data: user } = await getUserWithProfile()
@@ -81,8 +82,9 @@ const SidebarContent = ({ user }: { user: Profile }) => (
           </Link>
           <div className="mx-4 mb-3">
             <form action={logout}>
-              <button className="w-full rounded-md bg-green-600 px-4 py-2 text-white no-underline duration-200 hover:bg-green-700">
-                Logout
+              <button className="btn-primary w-full">
+                <LogOutIcon className="h-4 w-4" />
+                <span>Logout</span>
               </button>
             </form>
           </div>

@@ -112,11 +112,11 @@ export default function DocumentUpload(props: { action: any }) {
     <div>
       <button
         onClick={() => setIsModalOpen(true)}
-        className="inline-flex items-center gap-1.5 rounded-md bg-green-50 px-3 py-1.5 text-sm text-green-600 transition-colors hover:bg-green-100"
+        className="btn-primary"
         disabled={isLoading}
       >
-        Upload
         <UploadIcon className="h-4 w-4" />
+        <span>Upload</span>
       </button>
 
       {isModalOpen && (

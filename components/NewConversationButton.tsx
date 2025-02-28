@@ -6,7 +6,7 @@ import { createConversation } from "@/server/handlers/conversations"
 import { Conversation } from "@/types/conversation"
 import clientRevalidate from "@/utils/clientRevalidate"
 import { toast } from "sonner"
-import { LoaderCircle } from "lucide-react"
+import { LoaderCircle, MessageSquarePlusIcon } from "lucide-react"
 import PersonAutocomplete from "./PersonAutocomplete"
 import { Profile, Role } from "@/types/profile"
 
@@ -52,9 +52,10 @@ const NewConversationButton = (props: Props) => {
     <>
       <button
         onClick={() => setIsModalOpen(true)}
-        className="block rounded-md bg-green-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        className="btn-primary"
       >
-        Start New Support Chat
+        <MessageSquarePlusIcon className="h-4 w-4" />
+        <span>Start New Support Chat</span>
       </button>
 
       {isModalOpen && (

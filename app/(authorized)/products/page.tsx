@@ -8,7 +8,7 @@ import { getProducts } from "@/server/handlers/products"
 import { getUserWithProfile } from "@/server/handlers/users"
 import { Product } from "@/types/product"
 import AddToCartButton from "@/components/AddToCartButton"
-import { ShoppingCartIcon } from "lucide-react"
+import { ShoppingCartIcon, PencilIcon } from "lucide-react"
 
 type CartLoading = {
   loading: boolean
@@ -62,9 +62,9 @@ const ProductsPage = () => {
           {role === "admin" && (
             <Link
               href="/products/manage"
-              type="button"
-              className="btn bg-green-600 text-white hover:bg-green-700"
+              className="btn-primary self-stretch"
             >
+              <PencilIcon className="h-4 w-4" />
               Manage Products
             </Link>
           )}

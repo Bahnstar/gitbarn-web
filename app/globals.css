@@ -106,4 +106,8 @@ input {
   @apply rounded-md ring-1 ring-green-500;
 }
 
+.btn-primary {
+  @apply inline-flex items-center justify-center gap-1.5 rounded-md bg-green-50 px-3 py-2.5 text-sm text-green-600 transition-colors hover:bg-green-100 border border-green-200;
+}
+
 @custom-variant dark (&:where(.dark, .dark *));

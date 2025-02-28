@@ -4,6 +4,7 @@ import Image from "next/image"
 import UpdateCart from "./UpdateCart"
 import { CartWithTotal } from "@/types/cart"
 import Link from "next/link"
+import { ShoppingCartIcon } from "lucide-react"
 
 const CartPreview = (props: { cart: CartWithTotal; SubmissionButton: React.ReactNode }) => {
   const { cart, SubmissionButton } = props
@@ -73,9 +74,10 @@ const CartPreview = (props: { cart: CartWithTotal; SubmissionButton: React.React
         ) : (
           <Link
             href="/products"
-            className="w-full rounded-md border border-transparent bg-green-600 px-4 py-3 text-center text-base font-medium text-white shadow-xs hover:bg-green-700 focus:outline-hidden focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+            className="btn-primary w-full"
           >
-            Add products
+            <ShoppingCartIcon className="h-4 w-4" />
+            <span>Add Products</span>
           </Link>
         )}
       </div>

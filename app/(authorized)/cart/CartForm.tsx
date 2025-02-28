@@ -2,7 +2,7 @@
 import { useState, useEffect, FormEvent } from "react"
 import Script from "next/script"
 import { useRouter } from "next/navigation"
-import { LoaderCircle } from "lucide-react"
+import { LoaderCircle, CheckCircleIcon } from "lucide-react"
 import { toast } from "sonner"
 
 import { User } from "@supabase/supabase-js"
@@ -24,15 +24,18 @@ const CartButton = (props: { isSubmitting: boolean }) => (
   <button
     type="submit"
     disabled={props.isSubmitting}
-    className="w-full rounded-md border border-transparent bg-green-600 px-4 py-3 text-base font-medium text-white shadow-xs hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-50 focus:outline-hidden"
+    className="btn-primary w-full"
   >
     {!props.isSubmitting ? (
-      "Confirm order"
+      <>
+        <CheckCircleIcon className="h-4 w-4" />
+        <span>Confirm Order</span>
+      </>
     ) : (
-      <span>
-        <LoaderCircle className="absolute animate-spin" />
-        Placing Order
-      </span>
+      <>
+        <LoaderCircle className="h-4 w-4 animate-spin" />
+        <span>Placing Order</span>
+      </>
     )}
   </button>
 )
