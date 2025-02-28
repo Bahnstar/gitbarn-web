@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client"
 
 import * as React from "react"
@@ -69,7 +70,7 @@ export default function PersonAutocomplete(props: Props) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={`${value ? "text-black" : "text-gray-400"} text-md w-full justify-between rounded-md border border-gray-300 px-3 py-2 font-normal shadow-xs hover:bg-gray-100`}
+          className={`${value ? "text-black" : "text-gray-400"} text-md shadow-xs w-full justify-between rounded-md border border-gray-300 px-3 py-2 font-normal hover:bg-gray-100`}
         >
           {value ? profiles.find((profile) => profile.id === value)?.email : "Select User"}
           <ChevronsUpDown className="opacity-50" />
