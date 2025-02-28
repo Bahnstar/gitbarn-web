@@ -76,11 +76,11 @@ export default function PersonAutocomplete(props: Props) {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-full border border-gray-300 bg-white p-0 shadow-md dark:bg-slate-950">
-        <Command shouldFilter={false}>
+        <Command>
           <CommandInput
             placeholder="Search Email..."
             value={inputValue}
-            onValueChange={(search) => {
+            onValueChange={(search: string) => {
               setInputValue(search)
               debouncedSearch(search)
             }}
