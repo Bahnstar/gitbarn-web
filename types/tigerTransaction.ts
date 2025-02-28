@@ -1,3 +1,5 @@
+import { Product } from "./product"
+
 export interface Transaction {
   transaction_id: string
   transaction_type: string
@@ -6,6 +8,7 @@ export interface Transaction {
   customer: {
     first_name: string
     last_name: string
+    company: string
     city: string
     state: string
     postal_code: string
@@ -13,8 +16,41 @@ export interface Transaction {
     email: string
     id: string
   }
+  billing: {
+    address1: string
+    address2: string
+    city: string
+    state: string
+    zip: string
+  }
+  shipping: {
+    first_name: string
+    last_name: string
+    company: string
+    address1: string
+    address2: string
+    city: string
+    state: string
+    zip: string
+  }
   cc_type: string
+  cc_bin: string
+  cc_exp: string
+  tax: string
+  products: TigerSupabaseProduct[]
   actions: Action[]
+}
+
+export interface TigerProduct {
+  sku: string
+  description: string
+  quantity: string
+  amount: string
+}
+
+export interface TigerSupabaseProduct {
+  tiger: TigerProduct
+  supabase: Product
 }
 
 export interface Action {

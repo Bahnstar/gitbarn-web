@@ -6,14 +6,16 @@ import { revalidatePath } from "next/cache"
 import { DocumentFile } from "@/types/documentFile"
 import { createDocument, deleteDocument, updateDocument } from "@/server/handlers/documents"
 import { getCurrentUser } from "@/server/handlers/users"
+import { Profile } from "@/types/profile"
+import { updateProfile } from "@/server/handlers/profiles"
 
 type FormResult = {
   message: string
-  status?: string
+  status: string
 }
 
 const processDocument = async (prevState: any, formData: any): Promise<FormResult> => {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const {
     data: { user },
@@ -29,7 +31,7 @@ const processDocument = async (prevState: any, formData: any): Promise<FormResul
   if (fileError || userError) {
     return {
       message: fileError?.message || "There was an error uploading the document",
-      status: fileError?.hint || "",
+      status: fileError?.hint || "unknown",
     }
   }
 
@@ -52,9 +54,10 @@ const processDocument = async (prevState: any, formData: any): Promise<FormResul
     const { data: updateData, error: updateError } = await updateDocument(fileData.id, {
       path: `${documentData.fullPath}`,
     })
-    if (updateError) return { message: "There was an error uploading the document" }
+    if (updateError)
+      return { message: "There was an error uploading the document", status: "error" }
   } else {
-    return { message: "No document provided" }
+    return { message: "No document provided", status: "error" }
   }
 
   revalidatePath("/documents")
@@ -62,8 +65,6 @@ const processDocument = async (prevState: any, formData: any): Promise<FormResul
 }
 
 const processProduct = async (prevState: any, formData: FormData): Promise<FormResult> => {
-  const supabase = createClient()
-
   const product: Product = {
     title: formData.get("title") as string,
     description: formData.get("description") as string,
@@ -79,24 +80,84 @@ const processProduct = async (prevState: any, formData: FormData): Promise<FormR
     ? await updateProduct(id, product)
     : await createProduct(product)
 
-  if (productError) return { message: "There was an error creating the product " }
+  if (productError) return { message: "There was an error creating the product", status: "error" }
 
   const image = formData.get("image") as File
-  if (image.size > 0 && productData.id) {
-    const { data: imageData, error: imageError } = await supabase.storage
-      .from("images")
-      .upload(`products/${productData.id}`, image, {
-        cacheControl: "3600",
-        upsert: true,
+  console.log("image", image)
+  if (productData.id) {
+    const res = await uploadImage(image, `products/${productData.id}`)
+    if (res.status === "error") return res
+
+    if (res.path) {
+      const { data, error } = await updateProduct(productData.id!, {
+        image: `${res.path}?v=${Date.now().toString()}`,
       })
-
-    if (imageError) return { message: "There was an error uploading the provided image" }
-
-    updateProduct(productData.id, { image: `${imageData.fullPath}?v=${Date.now().toString()}` })
+      if (error)
+        return { message: "There was an error linking product image to product", status: "error" }
+    }
   }
 
   revalidatePath("/products")
   return { message: "Product successfully created", status: "success" }
 }
 
-export { processProduct, processDocument }
+const processProfile = async (prevState: any, formData: FormData): Promise<FormResult> => {
+  const profile: Partial<Profile> = {
+    first_name: formData.get("first_name") as string,
+    last_name: formData.get("last_name") as string,
+  }
+
+  const id = formData.get("id") as string
+  const image = formData.get("image") as File
+  if (id) {
+    updateProfile(id, profile)
+    const res = await uploadImage(image, `avatars/${id}`)
+
+    if (res.status === "error") return res
+
+    if (res.path) {
+      const { data, error } = await updateProfile(id, {
+        avatar_url: res.path && `${res.path}?v=${Date.now().toString()}`,
+      })
+
+      if (error)
+        return { message: "There was an error linking new avatar to profile", status: "error" }
+    }
+  }
+
+  revalidatePath("/profile")
+  return { message: "Profile successfully updated", status: "success" }
+}
+
+const uploadImage = async (
+  image: File,
+  uploadPath: string,
+): Promise<{ message: string; status: string; path?: string }> => {
+  const supabase = await createClient()
+
+  if (image.size > 0) {
+    const { data: imageData, error } = await supabase.storage
+      .from("images")
+      .upload(uploadPath, image, {
+        cacheControl: "3600",
+        upsert: true,
+      })
+
+    if (error) {
+      return {
+        message: `There was an error uploading ${image.name} to ${uploadPath}`,
+        status: "error",
+      }
+    }
+
+    return {
+      message: `Image ${image.name} successfully uploaded to ${uploadPath}`,
+      status: "success",
+      path: imageData.fullPath,
+    }
+  }
+
+  return { message: `No image provided`, status: "unknown" }
+}
+
+export { processProduct, processDocument, processProfile }

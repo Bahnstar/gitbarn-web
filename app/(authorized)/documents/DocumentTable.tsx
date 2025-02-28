@@ -3,17 +3,28 @@
 import { useState, useEffect } from "react"
 import { toast } from "sonner"
 import { DownloadIcon } from "lucide-react"
+import { LoaderCircle } from "lucide-react"
 
 import { DocumentFile } from "@/types/documentFile"
 import { createClient } from "@/utils/supabase/client"
-import DeleteDocumentButton from "./DeleteDocumentButton"
-import { deleteDocument } from "@/server/handlers/documents"
+
+import { deleteDocument, getDocumentsByUserId } from "@/server/handlers/documents"
 import revalidateTag from "@/utils/clientRevalidate"
 import { formatDate } from "@/utils/utils"
 
-const DocumentTable = ({ documents }: { documents: DocumentFile[] }) => {
+import DeleteDocumentButton from "./DeleteDocumentButton"
+import PersonAutocomplete from "@/components/PersonAutocomplete"
+
+const DocumentTable = ({
+  initialDocuments,
+  role,
+}: {
+  initialDocuments: DocumentFile[]
+  role: string
+}) => {
   const [session, setSession] = useState("")
-  const [role, setRole] = useState("")
+  const [loadingInitial, setLoadingInitial] = useState(false)
+  const [documents, setDocuments] = useState(initialDocuments)
 
   const handleDownload = async (doc: DocumentFile) => {
     const sourceURL = `${process.env.NEXT_PUBLIC_SUPABASE_BUCKETS_AUTHENTICATED}${doc.path}`
@@ -44,6 +55,15 @@ const DocumentTable = ({ documents }: { documents: DocumentFile[] }) => {
     revalidateTag("/documents")
   }
 
+  const setFilterUser = async (u: string) => {
+    setLoadingInitial(true)
+    const { data: documentData, error } = await getDocumentsByUserId(u)
+    console.log(documentData)
+    if (!documentData) setDocuments([])
+    else setDocuments(documentData)
+    setLoadingInitial(false)
+  }
+
   useEffect(() => {
     const supabase = createClient()
 
@@ -55,78 +75,70 @@ const DocumentTable = ({ documents }: { documents: DocumentFile[] }) => {
     getSession()
   }, [])
 
-  if (documents.length === 0) {
-    return (
-      <div className="w-full">
-        <h1 className="text-2xl font-semibold text-gray-800">
-          It appears you have not uploaded any documents yet.
-        </h1>
-      </div>
-    )
-  }
-
   return (
     <div className="mt-8 flow-root">
-      <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-          <div className="overflow-hidden shadow ring-1 ring-black/5 sm:rounded-lg">
-            <table className="min-w-full divide-y divide-gray-300">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th
-                    scope="col"
-                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                  >
-                    Name
-                  </th>
-                  <th
-                    scope="col"
-                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                  >
-                    User
-                  </th>
-                  <th
-                    scope="col"
-                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                  >
-                    Uploaded
-                  </th>
-                  <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                    <span className="sr-only">Edit</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
-                {documents.map((document) => (
-                  <tr key={document.path}>
-                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                      {document.name}
-                    </td>
-                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                      {document.profiles?.email}
-                    </td>
-                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                      {document.created_at
-                        ? formatDate(document?.created_at, "MM/d/YY [at] h:mm A")
-                        : "Unknown"}
-                    </td>
-                    <td className="relative space-x-2 whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                      <button
-                        onClick={() => handleDownload(document)}
-                        className="inline-flex items-center gap-1.5 rounded-md bg-green-50 px-3 py-1.5 text-sm text-green-600 transition-colors hover:bg-green-100"
-                      >
-                        Download<span className="sr-only">, {document.path}</span>{" "}
-                        <DownloadIcon className="h-4 w-4" />
-                      </button>
-                      <DeleteDocumentButton documentId={document.id} onClose={handleDelete} />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+      {(role === "admin" || role === "support") && (
+        <div className="mb-5 flex items-center gap-5">
+          Viewing as{" "}
+          <span className="w-80">
+            <PersonAutocomplete setCustomerId={setFilterUser} autoInitialCustomer={true} />
+          </span>
         </div>
-      </div>
+      )}
+
+      {loadingInitial ? (
+        <LoaderCircle className="mx-auto mt-5 h-28 w-28 animate-spin text-green-600" />
+      ) : documents.length !== 0 ? (
+        <ul role="list" className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {documents.map((document) => (
+            <li
+              key={document.id}
+              className="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow"
+            >
+              <div className="flex w-full items-center justify-between p-6 pb-4">
+                <div className="flex-1 truncate">
+                  <div className="flex items-center space-x-3">
+                    <h3 className="truncate text-sm font-medium text-gray-900">
+                      {document.name.split(".")[0]}
+                    </h3>
+                    <span className="inline-flex shrink-0 items-center rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset">
+                      {document.name.split(".")[1].toUpperCase()}
+                    </span>
+                  </div>
+                  <p className="mt-1 truncate text-sm text-gray-500">
+                    Uploaded{" "}
+                    {document.created_at
+                      ? formatDate(document?.created_at, "MM/d/YY [at] h:mm A")
+                      : "Unknown"}
+                    <br />
+                    {document.profiles?.email}
+                  </p>
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-center gap-3 py-4">
+                  <div>
+                    <button
+                      onClick={() => handleDownload(document)}
+                      className="inline-flex items-center gap-1.5 rounded-md bg-green-50 px-3 py-1.5 text-sm text-green-600 transition-colors hover:bg-green-100"
+                    >
+                      Download<span className="sr-only">, {document.path}</span>{" "}
+                      <DownloadIcon className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <div>
+                    <DeleteDocumentButton documentId={document.id} onClose={handleDelete} />
+                  </div>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div className="text-center text-lg font-medium text-gray-600">
+          No further documents found
+        </div>
+      )}
     </div>
   )
 }

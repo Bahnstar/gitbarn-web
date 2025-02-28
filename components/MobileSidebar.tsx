@@ -65,7 +65,7 @@ const MobileSidebar = ({
         </Dialog>
       </Transition.Root>
 
-      <div className="sticky top-0 z-40 flex items-center gap-x-6 bg-white px-4 py-4 shadow-sm sm:px-6 lg:hidden">
+      <div className="sticky top-0 z-40 flex items-center gap-x-6 bg-white px-4 py-4 shadow-xs sm:px-6 lg:hidden">
         <button
           type="button"
           className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
@@ -79,7 +79,7 @@ const MobileSidebar = ({
           <span className="sr-only">Your profile</span>
           <Image
             className="h-8 w-8 rounded-full bg-gray-50"
-            src={avatar_url}
+            src={`${process.env.NEXT_PUBLIC_SUPABASE_BUCKETS}${avatar_url}`}
             alt="Profile picture"
             width={649}
             height={649}

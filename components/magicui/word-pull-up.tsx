@@ -1,15 +1,15 @@
-"use client";
+"use client"
 
-import { motion, Variants } from "framer-motion";
+import { motion, Variants } from "framer-motion"
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
 interface WordPullUpProps {
-  words: string;
-  delayMultiple?: number;
-  wrapperFramerProps?: Variants;
-  framerProps?: Variants;
-  className?: string;
+  words: string
+  delayMultiple?: number
+  wrapperFramerProps?: Variants
+  framerProps?: Variants
+  className?: string
 }
 
 export default function WordPullUp({
@@ -35,7 +35,7 @@ export default function WordPullUp({
       initial="hidden"
       animate="show"
       className={cn(
-        "font-display text-center text-4xl font-bold leading-[5rem] tracking-[-0.02em] drop-shadow-sm",
+        "font-display text-center text-4xl font-bold leading-[5rem] tracking-[-0.02em] drop-shadow-xs",
         className,
       )}
     >
@@ -49,5 +49,5 @@ export default function WordPullUp({
         </motion.span>
       ))}
     </motion.h1>
-  );
+  )
 }

@@ -10,13 +10,14 @@ import {
 } from "@/types/tigerTransaction"
 import { fetchTransactions, postTransactions } from "@/utils/tigerUtils"
 import { deleteAllCarts, getCartWithTotal } from "./carts"
-import { getCurrentUser } from "@/server/handlers/users"
+import { getCurrentUser, getUserWithProfile } from "@/server/handlers/users"
 import { revalidatePath } from "next/cache"
 import { getProfile } from "./profiles"
 import { Role } from "@/types/profile"
 import { MonthlyStat } from "@/types/monthlyStat"
 import { sendAdminNotificationOnOrder } from "./emails"
 import { Product } from "@/types/product"
+import { cache } from "react"
 
 export const manageTigerProduct = async (
   product: Partial<Product>,
@@ -33,16 +34,6 @@ export const manageTigerProduct = async (
 
   const response = await postTransactions(params)
   return response
-}
-
-export const getRecentOrders = async (): Promise<Transaction[]> => {
-  const params: TransactionQueryParams = {
-    result_order: "reverse",
-    result_limit: 5,
-    // condition: "complete",
-  }
-
-  return await fetchTransactions(params)
 }
 
 const getMonthBoundaryDates = () => {
@@ -112,28 +103,30 @@ export const getMonthOrderCounts = async () => {
   return res
 }
 
-export const getCompletedTransactions = async (page: number): Promise<Transaction[]> => {
-  const { data: userData } = await getCurrentUser()
+export const getCompletedTransactions = cache(
+  async (page: number, userId?: string, resultLimit?: number): Promise<Transaction[]> => {
+    const { data: userData } = !userId ? await getUserWithProfile() : await getProfile(userId)
 
-  const params: TransactionQueryParams = {
-    result_order: "reverse",
-    result_limit: 10,
-    page_number: page,
-    condition: "pendingsettlement,complete",
-    email: userData.user?.email || "",
-  }
+    const params: TransactionQueryParams = {
+      result_order: "reverse",
+      result_limit: resultLimit || 10,
+      page_number: page,
+      condition: "pendingsettlement,complete",
+      email: userData?.role === Role.ADMIN ? "" : userData?.email,
+    }
 
-  return await fetchTransactions(params)
-}
+    return await fetchTransactions(params)
+  },
+)
 
-export const getTransaction = async (id: string): Promise<Transaction> => {
+export const getTransaction = cache(async (id: string): Promise<Transaction> => {
   const params: TransactionQueryParams = {
     transaction_id: id,
   }
 
   const res = await fetchTransactions(params)
   return res[0]
-}
+})
 
 export const testTiger = async (): Promise<Transaction[]> => {
   return await fetchTransactions()
@@ -188,7 +181,7 @@ export const makeTransaction = async (order: OrderSubmission, token: string): Pr
 
   cart.items.forEach((item, i) => {
     ;(orderWProducts[`item_product_code_${i + 1}`] = item.sku),
-      (orderWProducts[`item_description_${i + 1}`] = item.description),
+      (orderWProducts[`item_description_${i + 1}`] = item.title),
       (orderWProducts[`item_quantity_${i + 1}`] = item.quantity),
       (orderWProducts[`item_unit_cost_${i + 1}`] = item.amount)
   })

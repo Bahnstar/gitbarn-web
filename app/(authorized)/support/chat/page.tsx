@@ -4,14 +4,16 @@ import { getUserWithProfile } from "@/server/handlers/users"
 import RealTimeMessages from "./RealTimeMessages"
 import Toaster from "@/components/Toaster"
 
-const SupportChatPage = async ({ searchParams }: { searchParams: { id: string } }) => {
+type SearchParams = Promise<{ id: string }>
+
+const SupportChatPage = async ({ searchParams }: { searchParams: SearchParams }) => {
   const { data: user } = await getUserWithProfile()
 
   if (!user) {
     return <div>Error</div>
   }
 
-  const id = searchParams.id
+  const { id } = await searchParams
   const { data: conversation, error: convError } = await getConversationById(id)
 
   if (convError) {

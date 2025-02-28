@@ -1,23 +1,55 @@
-import { getNotifications } from "@/server/handlers/notifications"
-import { getCurrentUser } from "@/server/handlers/users"
+import { getNotificationsByUserId, updateNotification } from "@/server/handlers/notifications"
 import { NotificationStatus } from "@/types/notification"
 import { formatDate } from "@/utils/utils"
 import { BellIcon, ChevronRightIcon } from "lucide-react"
-import Link from "next/link"
 import { toast } from "sonner"
+import { revalidatePath } from "next/cache"
+import NotificationActions from "./NotificationActions"
+import MarkAllAsReadButton from "./MarkAllAsReadButton"
+import { getUserWithProfile } from "@/server/handlers/users"
+import { redirect } from "next/navigation"
 
 export default async function NotificationsPage() {
-  const { data: notifications, error } = await getNotifications()
+  const { data: user, error: userError } = await getUserWithProfile()
+  if (!user || userError) {
+    toast.error("Error fetching user")
+    redirect("/login")
+  }
+  const { data, error } = await getNotificationsByUserId(user?.id)
+  const notifications = data || []
+
   if (error) {
     console.error(error)
     toast.error("Error fetching notifications")
     return <div>Error fetching notifications</div>
   }
 
+  const changeStatus = async (notificationId: number, status: NotificationStatus) => {
+    "use server"
+    const { error } = await updateNotification({
+      id: notificationId,
+      status: status,
+    })
+    if (error) {
+      console.error(error)
+      toast.error("Error updating notification status")
+    }
+
+    revalidatePath("/notifications")
+  }
+
+  const hasUnreadNotifications = notifications.some(
+    (notification) => notification.status === NotificationStatus.UNREAD,
+  )
+
   return (
-    <div className="flex w-full flex-1 flex-col gap-6 p-4 sm:gap-10 ">
-      <h1 className="text-4xl font-semibold leading-6 text-gray-900">Notifications</h1>
-      {notifications.length === 0 ? (
+    <div className="px-4 sm:px-6 lg:px-8">
+      <div className="flex flex-wrap items-center justify-between">
+        <h1 className="self-start text-4xl leading-6 font-semibold text-gray-900">Notifications</h1>
+      </div>
+
+      {notifications.filter((notification) => notification.status !== NotificationStatus.DISMISSED)
+        .length === 0 ? (
         <p className="mt-6 text-center text-lg text-gray-500">
           Hooray! You have caught up on all of your notifications!
         </p>
@@ -41,64 +73,67 @@ export default async function NotificationsPage() {
               </div>
               <input
                 type="text"
-                className="w-full rounded-xl border border-gray-200 bg-white py-3 pl-11 pr-4 text-base placeholder:text-gray-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+                className="w-full rounded-xl border border-gray-200 bg-white py-3 pr-4 pl-11 text-base placeholder:text-gray-500 focus:border-green-500 focus:ring-1 focus:ring-green-500 focus:outline-hidden"
                 placeholder="Search Notifications"
               />
             </div>
 
-            <button
-              type="button"
-              className="inline-flex items-center justify-center rounded-xl bg-green-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
-            >
-              Mark All as Read
-            </button>
+            {hasUnreadNotifications && <MarkAllAsReadButton />}
           </div>
 
-          <div className="mt-6 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-gray-900/5 sm:mt-8">
+          <div className="mt-6 overflow-hidden rounded-2xl bg-white shadow-xs ring-1 ring-gray-900/5 sm:mt-8">
             <ul className="divide-y divide-gray-100">
-              {notifications.map((notification, index) => (
-                <li key={notification.id}>
-                  <Link
-                    href="#"
-                    className={`flex items-start gap-4 p-4 transition-colors duration-150 hover:bg-gray-50 sm:gap-6 sm:p-6 ${
-                      notification.status === NotificationStatus.UNREAD ? "bg-green-50" : ""
-                    }`}
-                  >
-                    <div className="flex-shrink-0 pt-1">
-                      <BellIcon
-                        className={`h-6 w-6 sm:h-7 sm:w-7 ${
-                          notification.status === NotificationStatus.READ
-                            ? "text-gray-400"
-                            : "text-green-500"
-                        }`}
-                      />
-                    </div>
-                    <div className="min-w-0 flex-grow">
-                      <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-                        <p
-                          className={`sm:text-md text-base font-medium ${
+              {notifications
+                .filter((notification) => notification.status !== NotificationStatus.DISMISSED)
+                .map((notification) => (
+                  <li key={notification.id}>
+                    <div
+                      className={`flex items-start gap-4 p-4 transition-colors duration-150 hover:bg-gray-50 sm:gap-6 sm:p-6 ${
+                        notification.status === NotificationStatus.UNREAD ? "bg-green-50" : ""
+                      }`}
+                    >
+                      <div className="shrink-0 pt-1">
+                        <BellIcon
+                          className={`h-6 w-6 sm:h-7 sm:w-7 ${
                             notification.status === NotificationStatus.READ
-                              ? "text-gray-900"
-                              : "text-green-900"
+                              ? "text-gray-400"
+                              : "text-green-500"
                           }`}
-                        >
-                          {notification.title}
-                        </p>
-                        <span className="text-sm text-gray-500 sm:text-base">
-                          {formatDate(notification.created_at)}
-                        </span>
+                        />
                       </div>
-                      <p className="mt-1 line-clamp-1 text-base text-gray-600 sm:mt-2">
-                        {notification.message}
-                      </p>
-                    </div>
+                      <div className="min-w-0 grow">
+                        <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                          <p
+                            className={`sm:text-md text-base font-medium ${
+                              notification.status === NotificationStatus.READ
+                                ? "text-gray-900"
+                                : "text-green-900"
+                            }`}
+                          >
+                            {notification.title}
+                          </p>
+                          <span className="text-sm text-gray-500 sm:text-base">
+                            {formatDate(notification.created_at)}
+                          </span>
+                        </div>
+                        <p className="mt-1 line-clamp-1 text-base text-gray-600 sm:mt-2">
+                          {notification.message}
+                        </p>
+                        <div className="mt-4">
+                          <NotificationActions
+                            notificationId={notification.id}
+                            notificationStatus={notification.status}
+                            changeStatus={changeStatus}
+                          />
+                        </div>
+                      </div>
 
-                    <div className="flex-shrink-0 self-center">
-                      <ChevronRightIcon className="h-5 w-5 text-gray-400 sm:h-6 sm:w-6" />
+                      <div className="shrink-0 self-center">
+                        <ChevronRightIcon className="h-5 w-5 text-gray-400 sm:h-6 sm:w-6" />
+                      </div>
                     </div>
-                  </Link>
-                </li>
-              ))}
+                  </li>
+                ))}
             </ul>
           </div>
         </div>

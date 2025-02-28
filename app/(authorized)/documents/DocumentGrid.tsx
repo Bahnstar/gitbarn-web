@@ -81,7 +81,7 @@ export default function DocumentGrid({ documents }: { documents: DocumentFile[] 
 
   useEffect(() => {
     const getSession = async () => {
-      const supabase = createClient()
+      const supabase = await createClient()
       const { data } = await supabase.auth.getSession()
       setSession(data.session?.access_token || "")
     }
@@ -93,7 +93,7 @@ export default function DocumentGrid({ documents }: { documents: DocumentFile[] 
       {documents.map((doc) => (
         <div
           key={doc.id}
-          className="flex flex-col overflow-hidden rounded-lg bg-white shadow-sm transition-shadow hover:shadow-md"
+          className="flex flex-col overflow-hidden rounded-lg bg-white shadow-xs transition-shadow hover:shadow-md"
         >
           <div className="relative flex h-32 w-full items-center justify-center rounded-t-md border-2 border-gray-200 bg-gray-100">
             <FileIcon className="h-16 w-16 text-gray-400" />

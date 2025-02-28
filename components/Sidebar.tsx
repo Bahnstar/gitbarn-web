@@ -10,6 +10,7 @@ import { Profile } from "@/types/profile"
 import { getUnreadNotificationCount } from "@/server/handlers/notifications"
 import { toast } from "sonner"
 import { getCartsCount } from "@/server/handlers/carts"
+import { LogOutIcon, UserPenIcon } from "lucide-react"
 
 const Sidebar = async ({ children }: Readonly<{ children: React.ReactNode }>) => {
   const { data: user } = await getUserWithProfile()
@@ -62,30 +63,31 @@ const SidebarContent = ({ user }: { user: Profile }) => (
     </div>
     <nav className="flex flex-1 flex-col">
       <ul className="flex flex-1 flex-col gap-y-7">
-        <NavButtons />
+        <NavButtons role={user.role} />
 
         <li className="-mx-6 mt-auto">
           <Link
             href="/profile"
-            className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50"
+            className="flex w-full items-center justify-between gap-x-4 px-6 py-3 text-sm leading-6 font-semibold text-gray-900 hover:bg-gray-50"
           >
-            <Image
-              className="h-8 w-8 rounded-full bg-gray-50"
-              src={
-                user.avatar_url ??
-                "https://png.pngtree.com/png-vector/20210604/ourmid/pngtree-gray-avatar-placeholder-png-image_3416697.jpg"
-              }
-              alt=""
-              width={649}
-              height={649}
-            />
-            <span className="sr-only">Your profile</span>
-            {user.first_name} {user.last_name}
+            <div className="flex items-center gap-3">
+              <Image
+                className="h-8 w-8 rounded-full bg-gray-50"
+                src={`${process.env.NEXT_PUBLIC_SUPABASE_BUCKETS}${user.avatar_url}`}
+                alt=""
+                width={649}
+                height={649}
+              />
+              <span className="sr-only">Your profile</span>
+              {user.first_name} {user.last_name}
+            </div>
+            <UserPenIcon />
           </Link>
           <div className="mx-4 mb-3">
             <form action={logout}>
-              <button className="w-full rounded-md bg-green-600 px-4 py-2 text-white no-underline duration-200 hover:bg-green-700">
-                Logout
+              <button className="w-full btn-primary">
+                <LogOutIcon className="h-4 w-4" />
+                <span>Logout</span>
               </button>
             </form>
           </div>

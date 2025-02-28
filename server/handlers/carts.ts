@@ -5,12 +5,12 @@ import { createClient } from "@/utils/supabase/server"
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
 
 export const getCarts = async (userId: string): Promise<PostgrestSingleResponse<Cart[]>> => {
-  const supabase = createClient()
+  const supabase = await createClient()
   return await supabase.from("Carts").select("*").eq("user_id", userId)
 }
 
 export const getCartsWithProducts = async (): Promise<PostgrestSingleResponse<Cart[]>> => {
-  const supabase = createClient()
+  const supabase = await createClient()
   return await supabase.from("Carts").select("*, Products(*)")
 }
 
@@ -18,33 +18,33 @@ export const getCartsById = async (
   id: string,
   isProductId?: boolean,
 ): Promise<PostgrestSingleResponse<Cart[]>> => {
-  const supabase = createClient()
+  const supabase = await createClient()
   if (isProductId) return await supabase.from("Carts").select("*").eq("product_id", id)
   return await supabase.from("Carts").select("*").eq("id", id)
 }
 
 export const getCartsByTitle = async (title: string): Promise<PostgrestSingleResponse<Cart[]>> => {
-  const supabase = createClient()
+  const supabase = await createClient()
   return await supabase.from("Carts").select("*").eq("title", title)
 }
 
 export const getCartsCount = async (userId: string): Promise<number> => {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { count, error } = await supabase
     .from("Carts")
     .select("*", { count: "exact", head: true })
     .eq("user_id", userId)
 
-  if (error || !count) {
+  if (error) {
     console.error("Error fetching cart count:", error)
     return 0
   }
 
-  return count
+  return count ?? 0
 }
 
 export const createCart = async (Cart: Cart): Promise<PostgrestSingleResponse<Cart>> => {
-  const supabase = createClient()
+  const supabase = await createClient()
   return await supabase.from("Carts").insert([Cart]).select().limit(1).single()
 }
 
@@ -52,17 +52,17 @@ export const updateCart = async (
   id: string,
   Cart: Partial<Cart>,
 ): Promise<PostgrestSingleResponse<Cart>> => {
-  const supabase = createClient()
+  const supabase = await createClient()
   return await supabase.from("Carts").update(Cart).eq("id", id).select().single()
 }
 
 export const deleteCart = async (id: string): Promise<void> => {
-  const supabase = createClient()
+  const supabase = await createClient()
   await supabase.from("Carts").delete().eq("id", id)
 }
 
 export const deleteAllCarts = async (user_id: string): Promise<void> => {
-  const supabase = createClient()
+  const supabase = await createClient()
   await supabase.from("Carts").delete().eq("user_id", user_id)
 }
 

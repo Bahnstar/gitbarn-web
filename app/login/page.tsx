@@ -1,15 +1,18 @@
 import { SubmitButton } from "./submit-button"
-import { login, signup } from "../../server/handlers/auth"
+import { login } from "../../server/handlers/auth"
 import { getCurrentUser } from "@/server/handlers/users"
 import { redirect } from "next/navigation"
 import Toaster from "@/components/Toaster"
+import Link from "next/link"
 
-export default async function Login({
-  searchParams,
-}: Readonly<{ searchParams: { message: string } }>) {
+type SearchParams = Promise<{ message: string }>
+
+export default async function Login({ searchParams }: { searchParams: SearchParams }) {
   const {
     data: { user },
   } = await getCurrentUser()
+
+  const { message } = await searchParams
 
   if (user) {
     redirect("/dashboard")
@@ -17,7 +20,7 @@ export default async function Login({
 
   return (
     <div className="mx-auto mt-[30%] max-w-sm flex-1 space-y-10 px-4 md:mt-[10%] md:px-0">
-      {searchParams?.message && <Toaster message={searchParams.message} />}
+      {message && <Toaster message={message} />}
       <div>
         <img
           className="mx-auto h-10 w-auto"
@@ -29,7 +32,7 @@ export default async function Login({
         </h2>
       </div>
       <form className="space-y-6" action="#" method="POST">
-        <div className="relative -space-y-px rounded-md shadow-sm">
+        <div className="shadow-xs relative -space-y-px rounded-md">
           <div className="pointer-events-none absolute inset-0 z-10 rounded-md ring-1 ring-inset ring-gray-300" />
           <div>
             <label htmlFor="email-address" className="sr-only">
@@ -67,7 +70,7 @@ export default async function Login({
               id="remember-me"
               name="remember-me"
               type="checkbox"
-              className="h-4 w-4 rounded border-gray-300 text-green-700 focus:ring-green-700"
+              className="h-4 w-4 rounded-sm border-gray-300 text-green-700 focus:ring-green-700"
             />
             <label htmlFor="remember-me" className="ml-3 block text-sm leading-6 text-gray-900">
               Remember me
@@ -89,13 +92,13 @@ export default async function Login({
           >
             Sign in
           </SubmitButton>
-          <SubmitButton
-            formAction={signup}
+
+          <Link
             className="border-1 flex w-full justify-center rounded-md border border-green-700 px-3 py-1.5 text-sm font-semibold leading-6 text-green-700 hover:bg-green-600 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-700"
-            pendingText="Signing up..."
+            href="/signup"
           >
-            Sign up
-          </SubmitButton>
+            Sign Up
+          </Link>
         </div>
       </form>
     </div>

@@ -6,29 +6,34 @@
 
 # TO DO
 
+- [ ] Connect the profile page to supabase
 - [ ] Add a page to manage/send mass emails for admins
+- [ ] User management page
+- [X] Proper signup page
+- [ ] Notifications should be created everywhere that an email is sent
+- [ ] Delete products
+- [ ] Cart/Notifications in sidebar should have an indicator if there are things inside
+- [ ] Integrate pulling customer data from Tiger on sign-up
+- [ ] Add "drops per month" analytic to the dashboard (Low priority)
+- [ ] Think about removing all tables
 - [x] Allow admins to upload documents for other users
 - [x] Send a notification to admins on order submission
-- [ ] Connect the profile page to supabase
-- [ ] Integrate pulling customer data from Tiger on sign-up
 - [x] Allow support to open a new chat with a specific user
-- [ ] Order details page
-- [ ] Order page should implement proper filtering
+- [x] Order details page
+- [x] Order page should implement proper filtering
 - [x] Move products to use Tiger instead of supabase
-- [ ] Delete products
 - [x] Allow support users to claim a chat
-- [ ] Cart/Notifications in sidebar should have an indicator if there are things inside
-- [ ] Add "drops per month" analytic to the dashboard (Low priority)
 - [x] Chats should show avatar URL and name
 - [x] Chat list should show who's claimed it (To both client/user)
-- [ ] Support/Admins should be able to see order details for all orders
-- [ ] User management page
+- [x] Support/Admins should be able to see order details for all orders
 - [x] Only Admins can manage products
 
 # Bugs
 
+- [ ] Support Chat shows incorrect names
+- [X] Support Chat Online indicator sometimes has 3 names (duplicates)
 - [ ] Client gives error when no avatar url is set for a user
-- [ ] Login button on the home page on mobile needs to be visible
+- [X] Login button on the home page on mobile needs to be visible
 - [ ] Mobile responsiveness (Maybe swap out tables?)
 
 # Security Questions

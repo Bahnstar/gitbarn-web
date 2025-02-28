@@ -1,21 +1,17 @@
-import OrdersSearch from "@/components/OrdersSearch"
-import OrdersTable from "@/components/OrdersTable"
+import OrdersList from "@/components/OrdersList"
 import { getCompletedTransactions } from "@/server/handlers/tiger"
+import { getUserWithProfile } from "@/server/handlers/users"
 
-export default async function DashboardPage() {
+export default async function OrdersPage() {
+  const { data, error } = await getUserWithProfile()
   const orders = await getCompletedTransactions(0)
 
   return (
-    <div className="flex w-full flex-1 flex-col items-center gap-20">
-      <h1 className="self-start text-4xl font-semibold leading-6 text-gray-900">Your Orders</h1>
-      <div className="w-full px-4 sm:px-6 lg:px-0">
-        <div className="sm:flex sm:items-center">
-          <div className="mt-4 flex w-full justify-between gap-4 sm:mt-0">
-            <OrdersSearch />
-          </div>
-        </div>
+    <div className="px-4 sm:px-6 lg:px-8">
+      <div className="flex flex-wrap items-center justify-between">
+        <h1 className="self-start text-4xl leading-6 font-semibold text-gray-900">Order History</h1>
       </div>
-      <OrdersTable initialOrders={orders} />
+      <OrdersList initialOrders={orders} role={data!.role} />
     </div>
   )
 }

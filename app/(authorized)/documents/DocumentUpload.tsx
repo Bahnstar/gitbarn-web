@@ -112,15 +112,15 @@ export default function DocumentUpload(props: { action: any }) {
     <div>
       <button
         onClick={() => setIsModalOpen(true)}
-        className="inline-flex items-center gap-1.5 rounded-md bg-green-50 px-3 py-1.5 text-sm text-green-600 transition-colors hover:bg-green-100"
+        className="btn-primary"
         disabled={isLoading}
       >
-        Upload
         <UploadIcon className="h-4 w-4" />
+        <span>Upload</span>
       </button>
 
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex w-screen items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 z-50 flex w-screen items-center justify-center bg-black/50">
           <div className="rounded-lg bg-white p-6 shadow-xl">
             <h3 className="mb-4 text-lg font-medium">Upload file</h3>
             <p className="mb-6 text-gray-600">Accepts only the following formats:</p>
@@ -177,7 +177,7 @@ export default function DocumentUpload(props: { action: any }) {
               <button
                 type="submit"
                 // disabled={!filePreview}
-                className=" mt-4 flex w-full justify-center rounded bg-blue-500 px-4 py-2 text-white disabled:bg-gray-300"
+                className="mt-4 flex w-full justify-center rounded-sm bg-blue-500 px-4 py-2 text-white disabled:bg-gray-300"
               >
                 {isLoading ? (
                   <>

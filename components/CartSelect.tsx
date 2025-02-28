@@ -30,7 +30,7 @@ export default function CartSelect(props: Props) {
       name={`quantity-${props.productIdx}`}
       value={quantity}
       onChange={handleChange}
-      className="max-w-full rounded-md border border-gray-300 p-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 sm:text-sm"
+      className="max-w-full rounded-md border border-gray-300 p-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-xs focus:border-green-500 focus:outline-hidden focus:ring-1 focus:ring-green-500 sm:text-sm"
     >
       {[...Array(8)].map((_, i) => (
         <option key={i + 1} value={i + 1}>

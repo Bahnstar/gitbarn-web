@@ -5,9 +5,10 @@ import WordRotate from "@/components/magicui/word-rotate"
 import Swiper, { SwiperData } from "@/components/Swiper"
 import MarqueeDemo from "@/components/Marquee"
 import HeroVideoDialog from "@/components/magicui/hero-video-dialog"
+import Link from "next/link"
 
 export default function Index() {
-  const serviceStyle = "bg-gray-50 p-2 rounded-md shadow-sm text-center"
+  const serviceStyle = "bg-gray-50 p-2 rounded-md shadow-xs text-center"
   const swiperData: SwiperData[] = [
     {
       title: "Online Orders",
@@ -39,15 +40,21 @@ export default function Index() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <main className="flex flex-col gap-16 md:gap-28">
-        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <main className="flex flex-col gap-16 bg-background md:gap-20 2xl:gap-28">
+        <header className="sticky top-0 z-50 w-full border border-gray-300 bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60">
           <div className="container flex h-14 items-center">
-            <div className="mx-6 flex items-center gap-2">
+            <div className="mx-6 flex w-full items-center justify-between gap-2 md:w-auto">
               <img
                 src="https://gitbarn.com/wp-content/uploads/2018/06/gitbarn-logo.png"
                 alt="Git Barn Logo"
                 className="h-8"
               />
+              <Link
+                className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 md:hidden"
+                href="login"
+              >
+                Login
+              </Link>
             </div>
             <div className="mr-4 hidden md:flex">
               <nav className="flex items-center space-x-6 text-sm font-medium">
@@ -69,12 +76,12 @@ export default function Index() {
                 >
                   Contact
                 </a>
-                <a
+                <Link
                   className="text-foreground/60 transition-colors hover:text-foreground/80"
                   href="login"
                 >
                   Login
-                </a>
+                </Link>
               </nav>
             </div>
           </div>
@@ -92,7 +99,7 @@ export default function Index() {
             </BlurFade>
           </div>
         </section>
-        <section className="m-auto h-[50vh] w-full md:w-4/6">
+        <section className="m-auto w-full md:w-5/6 2xl:w-4/6">
           <BlurFade delay={1.5} className="flex h-full flex-col items-center">
             <Swiper data={swiperData} />
           </BlurFade>

@@ -9,7 +9,7 @@ import { Role } from "@/types/profile"
 import { getUserWithProfile } from "./users"
 
 export const getConversations = async (): Promise<PostgrestSingleResponse<Conversation[]>> => {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: user } = await getUserWithProfile()
 
   if (!user) throw Error("Could not load user")
@@ -21,7 +21,7 @@ export const getConversations = async (): Promise<PostgrestSingleResponse<Conver
 }
 
 export const getConversationsWithSupportAgent = async () => {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: user } = await getUserWithProfile()
 
   if (!user) throw Error("Could not load user")
@@ -41,7 +41,7 @@ export const getConversationsWithSupportAgent = async () => {
 export const getRecentConversations = async (
   n: number,
 ): Promise<PostgrestSingleResponse<Conversation[]>> => {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data: user } = await getUserWithProfile()
 
@@ -65,7 +65,7 @@ export const getRecentConversations = async (
 export const getConversationsByCustomerId = async (
   userId: string,
 ): Promise<PostgrestSingleResponse<Conversation[]>> => {
-  const supabase = createClient()
+  const supabase = await createClient()
   return await supabase
     .from("Conversations")
     .select("*")
@@ -76,14 +76,14 @@ export const getConversationsByCustomerId = async (
 export const getConversationsBySupportId = async (
   userId: string,
 ): Promise<PostgrestSingleResponse<Conversation[]>> => {
-  const supabase = createClient()
+  const supabase = await createClient()
   return await supabase.from("Conversations").select("*").eq("support_id", userId)
 }
 
 export const getLastActiveConversationByCustomerId = async (
   userId: string,
 ): Promise<PostgrestSingleResponse<Conversation>> => {
-  const supabase = createClient()
+  const supabase = await createClient()
   return await supabase
     .from("Conversations")
     .select("*")
@@ -96,7 +96,7 @@ export const getLastActiveConversationByCustomerId = async (
 export const getLastActiveConversationBySupportId = async (
   userId: string,
 ): Promise<PostgrestSingleResponse<Conversation>> => {
-  const supabase = createClient()
+  const supabase = await createClient()
   return await supabase
     .from("Conversations")
     .select("*")
@@ -109,14 +109,14 @@ export const getLastActiveConversationBySupportId = async (
 export const getConversationById = async (
   id: string,
 ): Promise<PostgrestSingleResponse<Conversation>> => {
-  const supabase = createClient()
+  const supabase = await createClient()
   return await supabase.from("Conversations").select("*").eq("id", id).limit(1).single()
 }
 
 export const createConversation = async (
   conversation: Partial<Conversation>,
 ): Promise<PostgrestSingleResponse<Conversation>> => {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const newConversation = await supabase
     .from("Conversations")
@@ -147,11 +147,11 @@ export const updateConversation = async (
   id: string,
   conversation: Partial<Conversation>,
 ): Promise<PostgrestSingleResponse<Conversation>> => {
-  const supabase = createClient()
+  const supabase = await createClient()
   return await supabase.from("Conversations").update(conversation).eq("id", id).select().single()
 }
 
 export const deleteConversation = async (id: string): Promise<void> => {
-  const supabase = createClient()
+  const supabase = await createClient()
   await supabase.from("Conversations").delete().eq("id", id)
 }

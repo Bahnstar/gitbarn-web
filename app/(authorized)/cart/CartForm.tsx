@@ -2,7 +2,7 @@
 import { useState, useEffect, FormEvent } from "react"
 import Script from "next/script"
 import { useRouter } from "next/navigation"
-import { LoaderCircle } from "lucide-react"
+import { LoaderCircle, CheckCircleIcon } from "lucide-react"
 import { toast } from "sonner"
 
 import { User } from "@supabase/supabase-js"
@@ -21,18 +21,17 @@ declare var CollectJS: {
 }
 
 const CartButton = (props: { isSubmitting: boolean }) => (
-  <button
-    type="submit"
-    disabled={props.isSubmitting}
-    className="w-full rounded-md border border-transparent bg-green-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-50"
-  >
+  <button type="submit" disabled={props.isSubmitting} className="w-full btn-primary">
     {!props.isSubmitting ? (
-      "Confirm order"
+      <>
+        <CheckCircleIcon className="h-4 w-4" />
+        <span>Confirm Order</span>
+      </>
     ) : (
-      <span>
-        <LoaderCircle className="absolute animate-spin" />
-        Placing Order
-      </span>
+      <>
+        <LoaderCircle className="h-4 w-4 animate-spin" />
+        <span>Placing Order</span>
+      </>
     )}
   </button>
 )
@@ -110,7 +109,10 @@ const CartForm = (props: { user: User; cart: CartWithTotal }) => {
   }, [])
 
   return (
-    <form onSubmit={handleSubmit} className="flex w-full max-w-7xl flex-col gap-6 md:flex-row">
+    <form
+      onSubmit={handleSubmit}
+      className="mt-10 flex w-full max-w-7xl flex-col gap-6 md:flex-row"
+    >
       <Script
         src="https://secure.safewebservices.com/token/Collect.js"
         data-tokenization-key={process.env.NEXT_PUBLIC_COLLECTJS_KEY}
