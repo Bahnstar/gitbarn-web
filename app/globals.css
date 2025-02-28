@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./tailwindcss-animate.css";
 @plugin "daisyui" {
   themes: light --default;
 }
@@ -107,15 +108,15 @@ input {
 }
 
 .btn-primary {
-  @apply inline-flex items-center justify-center gap-1.5 rounded-md bg-green-50 px-3 py-2.5 text-sm text-green-600 transition-colors hover:bg-green-100 border border-green-200 whitespace-nowrap;
+  @apply inline-flex items-center justify-center gap-1.5 rounded-md border border-green-200 bg-green-50 px-3 py-2.5 text-sm whitespace-nowrap text-green-600 transition-colors hover:bg-green-100;
 }
 
 .btn-secondary {
-  @apply inline-flex items-center justify-center gap-1.5 rounded-md bg-blue-50 px-3 py-2.5 text-sm text-blue-600 transition-colors hover:bg-blue-100 border border-blue-200 whitespace-nowrap;
+  @apply inline-flex items-center justify-center gap-1.5 rounded-md border border-blue-200 bg-blue-50 px-3 py-2.5 text-sm whitespace-nowrap text-blue-600 transition-colors hover:bg-blue-100;
 }
 
 .btn-accent {
-  @apply inline-flex items-center justify-center gap-1.5 rounded-md bg-amber-50 px-3 py-2.5 text-sm text-amber-600 transition-colors hover:bg-amber-100 border border-amber-200 whitespace-nowrap;
+  @apply inline-flex items-center justify-center gap-1.5 rounded-md border border-amber-200 bg-amber-50 px-3 py-2.5 text-sm whitespace-nowrap text-amber-600 transition-colors hover:bg-amber-100;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));

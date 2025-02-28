@@ -16,8 +16,6 @@ const OrderDetailsPage = async ({ params }: { params: Params }) => {
     return `${first}••••${last}${end}`
   }
 
-  console.log(transaction.products)
-
   return (
     <div className="mx-auto max-w-2xl pt-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
       <div className="space-y-2 px-4 sm:flex sm:items-baseline sm:justify-between sm:space-y-0 sm:px-0">
@@ -53,7 +51,7 @@ const OrderDetailsPage = async ({ params }: { params: Params }) => {
           {transaction.products.map((product) => (
             <div
               key={product.supabase?.id || product.tiger.sku}
-              className="shadow-xs border-b border-t border-gray-200 bg-white sm:rounded-lg sm:border"
+              className="border-t border-b border-gray-200 bg-white shadow-xs sm:rounded-lg sm:border"
             >
               <div className="px-4 py-6 sm:px-6 lg:grid lg:grid-cols-12 lg:gap-x-8 lg:p-8">
                 <div className="sm:flex lg:col-span-7">
@@ -63,14 +61,14 @@ const OrderDetailsPage = async ({ params }: { params: Params }) => {
                     className="aspect-square w-full shrink-0 rounded-lg object-cover sm:size-40"
                   />
 
-                  <div className="mt-6 sm:ml-6 sm:mt-0">
+                  <div className="mt-6 sm:mt-0 sm:ml-6">
                     <h3 className="text-base font-medium text-gray-900">
                       {product.supabase?.title || product.tiger.description}
                     </h3>
                     <div className="mt-2">
                       <a
                         href={`/products/${product.supabase?.id || product.tiger.sku}`}
-                        className="btn-secondary whitespace-nowrap"
+                        className="whitespace-nowrap btn-secondary"
                       >
                         <span>View product</span>
                       </a>
@@ -143,12 +141,12 @@ const OrderDetailsPage = async ({ params }: { params: Params }) => {
             </div>
             <div>
               <dt className="font-medium text-gray-900">Payment information</dt>
-              <dd className="-ml-4 -mt-1 flex flex-wrap">
-                <div className="ml-4 mt-4 shrink-0">
+              <dd className="-mt-1 -ml-4 flex flex-wrap">
+                <div className="mt-4 ml-4 shrink-0">
                   <PaymentIcon type={transaction.cc_type as any} format="flatRounded" />
                   <p className="sr-only">{transaction.cc_type}</p>
                 </div>
-                <div className="ml-4 mt-4">
+                <div className="mt-4 ml-4">
                   <p className="text-gray-900">Ending with {transaction.cc_bin.substring(2)}</p>
                   <p className="text-gray-600">
                     Expires {transaction.cc_exp.substring(0, 2)}/{transaction.cc_exp.substring(2)}

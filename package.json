@@ -52,5 +52,8 @@
   },
   "trustedDependencies": [
     "tree-sitter-javascript"
-  ]
+  ],
+  "overrides": {
+    "react-is": "^19.0.0"
+  }
 }
