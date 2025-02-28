@@ -10,6 +10,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog"
 
 interface CommandProps extends React.ComponentPropsWithoutRef<typeof CommandPrimitive> {
   shouldFilter?: boolean
+  children?: React.ReactNode
 }
 
 const Command = React.forwardRef<React.ElementRef<typeof CommandPrimitive>, CommandProps>(
