@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react"
-import { LoaderCircle } from "lucide-react"
+import { LoaderCircle, ShoppingCartIcon, EyeIcon } from "lucide-react"
 
 import { getCompletedTransactions } from "@/server/handlers/tiger"
 import { Transaction } from "@/types/tigerTransaction"
@@ -163,7 +163,7 @@ const OrdersList = ({ initialOrders, role }: { initialOrders: Transaction[]; rol
                     <div className="hidden lg:col-span-2 lg:flex lg:items-center lg:justify-end lg:space-x-4">
                       <a
                         href={`/orders/${order.transaction_id}`}
-                        className="flex items-center justify-center rounded-md border border-gray-300 bg-white px-2.5 py-2 text-sm font-medium text-gray-700 shadow-xs hover:bg-gray-50 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:outline-hidden"
+                        className="btn-primary"
                       >
                         <span>View Order</span>
                         <span className="sr-only">{order.transaction_id}</span>
@@ -223,18 +223,20 @@ const OrdersList = ({ initialOrders, role }: { initialOrders: Transaction[]; rol
                             <div className="flex flex-1 justify-center">
                               <a
                                 href={`/products/${product.supabase?.id || product.tiger.sku}`}
-                                className="whitespace-nowrap text-green-600 hover:text-green-500"
+                                className="btn-secondary whitespace-nowrap"
                               >
-                                View product
+                                <EyeIcon className="h-4 w-4" />
+                                <span>View product</span>
                               </a>
                             </div>
                             <div className="flex flex-1 justify-center pl-4">
                               <AddToCartButton
-                                className="whitespace-nowrap text-green-600 hover:text-green-500"
+                                className="btn-accent whitespace-nowrap"
                                 productId={product.supabase?.id || product.tiger.sku}
                                 productTitle={product.supabase?.title || product.tiger.description}
                               >
-                                Buy again
+                                <ShoppingCartIcon className="h-4 w-4" />
+                                <span>Buy again</span>
                               </AddToCartButton>
                             </div>
                           </div>
@@ -249,7 +251,7 @@ const OrdersList = ({ initialOrders, role }: { initialOrders: Transaction[]; rol
             <div className="mx-auto mt-5 w-fit">
               {!loadedAll ? (
                 <button
-                  className="rounded-md border border-transparent bg-green-600 px-4 py-3 text-center text-base font-medium text-white shadow-xs hover:bg-green-700"
+                  className="btn-primary"
                   onClick={getMoreOrders}
                 >
                   {loadingMore ? <LoaderCircle className="animate-spin" /> : "Load More"}

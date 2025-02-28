@@ -36,7 +36,7 @@ const OrderDetailsPage = async ({ params }: { params: { orderId: string } }) => 
             {formatDate(transaction.actions[0].date, "MMMM DD, YYYY")}
           </time>
         </p>
-        <a href="#" className="text-sm font-medium text-green-600 hover:text-green-500 sm:hidden">
+        <a href="#" className="btn-primary sm:hidden">
           View invoice
           <span aria-hidden="true"> &rarr;</span>
         </a>
@@ -62,10 +62,13 @@ const OrderDetailsPage = async ({ params }: { params: { orderId: string } }) => 
 
                   <div className="mt-6 sm:ml-6 sm:mt-0">
                     <h3 className="text-base font-medium text-gray-900">
-                      <a href={`/products/${product.supabase?.id || product.tiger.sku}`}>
-                        {product.supabase?.title || product.tiger.description}
-                      </a>
+                      {product.supabase?.title || product.tiger.description}
                     </h3>
+                    <div className="mt-2">
+                      <a href={`/products/${product.supabase?.id || product.tiger.sku}`} className="btn-secondary whitespace-nowrap">
+                        <span>View product</span>
+                      </a>
+                    </div>
                     <p className="mt-2 text-sm font-medium text-gray-900">
                       ${product.supabase?.amount || product.tiger.amount}
                       <span className="text-xs text-gray-800">/ea</span> <br /> Qty:{" "}
@@ -101,7 +104,7 @@ const OrderDetailsPage = async ({ params }: { params: { orderId: string } }) => 
                         <Link
                           type="button"
                           href="/profile"
-                          className="font-medium text-green-600 hover:text-green-500"
+                          className="btn-primary"
                         >
                           Edit
                         </Link>

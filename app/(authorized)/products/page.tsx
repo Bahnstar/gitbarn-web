@@ -89,7 +89,7 @@ const ProductsPage = () => {
                 <p className="line-clamp-1">{product.description}</p>
                 <div className="card-actions justify-end">
                   <AddToCartButton
-                    className="inline-flex items-center gap-1.5 rounded-md bg-green-50 px-3 py-3 text-sm text-green-600 transition-colors hover:bg-green-100"
+                    className="btn-primary"
                     productId={product.id!}
                     productTitle={product.title}
                   >
