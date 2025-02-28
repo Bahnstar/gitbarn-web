@@ -10,7 +10,7 @@ import { Profile } from "@/types/profile"
 import { getUnreadNotificationCount } from "@/server/handlers/notifications"
 import { toast } from "sonner"
 import { getCartsCount } from "@/server/handlers/carts"
-import { LogOutIcon } from "lucide-react"
+import { LogOutIcon, UserPenIcon } from "lucide-react"
 
 const Sidebar = async ({ children }: Readonly<{ children: React.ReactNode }>) => {
   const { data: user } = await getUserWithProfile()
@@ -68,21 +68,24 @@ const SidebarContent = ({ user }: { user: Profile }) => (
         <li className="-mx-6 mt-auto">
           <Link
             href="/profile"
-            className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50"
+            className="flex w-full items-center justify-between gap-x-4 px-6 py-3 text-sm leading-6 font-semibold text-gray-900 hover:bg-gray-50"
           >
-            <Image
-              className="h-8 w-8 rounded-full bg-gray-50"
-              src={`${process.env.NEXT_PUBLIC_SUPABASE_BUCKETS}${user.avatar_url}`}
-              alt=""
-              width={649}
-              height={649}
-            />
-            <span className="sr-only">Your profile</span>
-            {user.first_name} {user.last_name}
+            <div className="flex items-center gap-3">
+              <Image
+                className="h-8 w-8 rounded-full bg-gray-50"
+                src={`${process.env.NEXT_PUBLIC_SUPABASE_BUCKETS}${user.avatar_url}`}
+                alt=""
+                width={649}
+                height={649}
+              />
+              <span className="sr-only">Your profile</span>
+              {user.first_name} {user.last_name}
+            </div>
+            <UserPenIcon />
           </Link>
           <div className="mx-4 mb-3">
             <form action={logout}>
-              <button className="btn-primary w-full">
+              <button className="w-full btn-primary">
                 <LogOutIcon className="h-4 w-4" />
                 <span>Logout</span>
               </button>

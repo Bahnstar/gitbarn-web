@@ -9,6 +9,7 @@ type Props = {
   actionTitle: string
   actionPending: string
   actionParams: any
+  actionStyle: string
   ActionButton: React.ReactNode
   title: string
   description?: string
@@ -19,6 +20,7 @@ const ConfirmationButton = ({
   actionTitle,
   actionPending,
   actionParams,
+  actionStyle,
   ActionButton,
   title,
   description,
@@ -39,7 +41,7 @@ const ConfirmationButton = ({
 
   return (
     <>
-      <button onClick={() => setIsModalOpen(true)} disabled={isLoading}>
+      <button className={actionStyle} onClick={() => setIsModalOpen(true)} disabled={isLoading}>
         {ActionButton}
       </button>
 
@@ -47,7 +49,7 @@ const ConfirmationButton = ({
         <div className="fixed inset-0 z-50 flex w-screen items-center justify-center bg-black/50">
           <div className="rounded-lg bg-white p-6 shadow-xl">
             <h3 className="mb-4 text-lg font-medium">{title}</h3>
-            <p className="mb-6 text-gray-600">{description}</p>
+            <p className="mb-6 whitespace-pre-line text-gray-600">{description}</p>
             <div className="flex justify-end space-x-4">
               <button
                 onClick={() => setIsModalOpen(false)}

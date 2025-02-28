@@ -21,11 +21,7 @@ declare var CollectJS: {
 }
 
 const CartButton = (props: { isSubmitting: boolean }) => (
-  <button
-    type="submit"
-    disabled={props.isSubmitting}
-    className="btn-primary w-full"
-  >
+  <button type="submit" disabled={props.isSubmitting} className="w-full btn-primary">
     {!props.isSubmitting ? (
       <>
         <CheckCircleIcon className="h-4 w-4" />
@@ -113,7 +109,10 @@ const CartForm = (props: { user: User; cart: CartWithTotal }) => {
   }, [])
 
   return (
-    <form onSubmit={handleSubmit} className="flex w-full max-w-7xl flex-col gap-6 md:flex-row">
+    <form
+      onSubmit={handleSubmit}
+      className="mt-10 flex w-full max-w-7xl flex-col gap-6 md:flex-row"
+    >
       <Script
         src="https://secure.safewebservices.com/token/Collect.js"
         data-tokenization-key={process.env.NEXT_PUBLIC_COLLECTJS_KEY}

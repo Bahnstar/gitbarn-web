@@ -60,17 +60,12 @@ export const updateProduct = async (
 export const deleteProduct = async (id: string, tiger_id: number): Promise<string> => {
   const supabase = await createClient()
 
-  console.log("ids", id, tiger_id)
-
   const res = await Promise.allSettled([
     manageTigerProduct({ tiger_id: tiger_id }, "delete_product"),
     supabase.from("Products").delete().eq("id", id),
   ])
 
-  console.log(res)
-
   const badResults = res.filter((r) => r.status === "rejected")
-
   if (badResults.length > 0) return "error"
 
   return "success"

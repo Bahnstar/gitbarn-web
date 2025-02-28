@@ -18,20 +18,20 @@ const SubmitButton = () => {
   return (
     <div className="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
       {pending ? (
-        <span className="loading loading-spinner loading-md"></span>
+        <span className="loading loading-md loading-spinner"></span>
       ) : (
         (() => (
           <>
             <Link
               href="/products/manage"
               type="button"
-              className="text-sm font-semibold leading-6 text-gray-900"
+              className="text-sm leading-6 font-semibold text-gray-900"
             >
               Cancel
             </Link>
             <button
               type="submit"
-              className="rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Save
             </button>

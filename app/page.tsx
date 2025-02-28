@@ -40,8 +40,8 @@ export default function Index() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <main className="flex flex-col gap-16 md:gap-20 2xl:gap-28 bg-background">
-        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60">
+      <main className="flex flex-col gap-16 bg-background md:gap-20 2xl:gap-28">
+        <header className="sticky top-0 z-50 w-full border border-gray-300 bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60">
           <div className="container flex h-14 items-center">
             <div className="mx-6 flex w-full items-center justify-between gap-2 md:w-auto">
               <img
@@ -50,7 +50,7 @@ export default function Index() {
                 className="h-8"
               />
               <Link
-                className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 hover:bg-gray-50 md:hidden"
+                className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 md:hidden"
                 href="login"
               >
                 Login

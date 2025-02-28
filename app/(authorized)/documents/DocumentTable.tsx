@@ -78,7 +78,7 @@ const DocumentTable = ({
   return (
     <div className="mt-8 flow-root">
       {(role === "admin" || role === "support") && (
-        <div className="mb-5 flex items-center justify-end gap-5">
+        <div className="mb-5 flex items-center gap-5">
           Viewing as{" "}
           <span className="w-80">
             <PersonAutocomplete setCustomerId={setFilterUser} autoInitialCustomer={true} />
@@ -89,66 +89,51 @@ const DocumentTable = ({
       {loadingInitial ? (
         <LoaderCircle className="mx-auto mt-5 h-28 w-28 animate-spin text-green-600" />
       ) : documents.length !== 0 ? (
-        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-            <div className="/5 overflow-hidden shadow-sm ring-1 ring-black/5 sm:rounded-lg">
-              <table className="min-w-full divide-y divide-gray-300">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th
-                      scope="col"
-                      className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+        <ul role="list" className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {documents.map((document) => (
+            <li
+              key={document.id}
+              className="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow"
+            >
+              <div className="flex w-full items-center justify-between p-6 pb-4">
+                <div className="flex-1 truncate">
+                  <div className="flex items-center space-x-3">
+                    <h3 className="truncate text-sm font-medium text-gray-900">
+                      {document.name.split(".")[0]}
+                    </h3>
+                    <span className="inline-flex shrink-0 items-center rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset">
+                      {document.name.split(".")[1].toUpperCase()}
+                    </span>
+                  </div>
+                  <p className="mt-1 truncate text-sm text-gray-500">
+                    Uploaded{" "}
+                    {document.created_at
+                      ? formatDate(document?.created_at, "MM/d/YY [at] h:mm A")
+                      : "Unknown"}
+                    <br />
+                    {document.profiles?.email}
+                  </p>
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-center gap-3 py-4">
+                  <div>
+                    <button
+                      onClick={() => handleDownload(document)}
+                      className="inline-flex items-center gap-1.5 rounded-md bg-green-50 px-3 py-1.5 text-sm text-green-600 transition-colors hover:bg-green-100"
                     >
-                      Name
-                    </th>
-                    <th
-                      scope="col"
-                      className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                    >
-                      User
-                    </th>
-                    <th
-                      scope="col"
-                      className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                    >
-                      Uploaded
-                    </th>
-                    <th scope="col" className="relative py-3.5 pr-4 pl-3 sm:pr-6">
-                      <span className="sr-only">Edit</span>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
-                  {documents.map((document) => (
-                    <tr key={document.path}>
-                      <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">
-                        {document.name}
-                      </td>
-                      <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">
-                        {document.profiles?.email}
-                      </td>
-                      <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">
-                        {document.created_at
-                          ? formatDate(document?.created_at, "MM/d/YY [at] h:mm A")
-                          : "Unknown"}
-                      </td>
-                      <td className="relative space-x-2 py-4 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-6">
-                        <button
-                          onClick={() => handleDownload(document)}
-                          className="inline-flex items-center gap-1.5 rounded-md bg-green-50 px-3 py-1.5 text-sm text-green-600 transition-colors hover:bg-green-100"
-                        >
-                          Download<span className="sr-only">, {document.path}</span>{" "}
-                          <DownloadIcon className="h-4 w-4" />
-                        </button>
-                        <DeleteDocumentButton documentId={document.id} onClose={handleDelete} />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+                      Download<span className="sr-only">, {document.path}</span>{" "}
+                      <DownloadIcon className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <div>
+                    <DeleteDocumentButton documentId={document.id} onClose={handleDelete} />
+                  </div>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
       ) : (
         <div className="text-center text-lg font-medium text-gray-600">
           No further documents found

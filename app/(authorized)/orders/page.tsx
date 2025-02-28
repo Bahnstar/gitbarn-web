@@ -7,8 +7,10 @@ export default async function OrdersPage() {
   const orders = await getCompletedTransactions(0)
 
   return (
-    <div className="flex w-full flex-1 flex-col gap-6 p-4 sm:gap-10">
-      <h1 className="text-4xl font-semibold leading-6 text-gray-900">Order History</h1>
+    <div className="px-4 sm:px-6 lg:px-8">
+      <div className="flex flex-wrap items-center justify-between">
+        <h1 className="self-start text-4xl leading-6 font-semibold text-gray-900">Order History</h1>
+      </div>
       <OrdersList initialOrders={orders} role={data!.role} />
     </div>
   )

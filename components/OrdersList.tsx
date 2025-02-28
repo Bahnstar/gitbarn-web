@@ -59,7 +59,7 @@ const OrdersList = ({ initialOrders, role }: { initialOrders: Transaction[]; rol
   return (
     <div className="mx-auto w-full max-w-6xl">
       {(role === "admin" || role === "support") && (
-        <div className="mx-auto mb-5 flex max-w-7xl items-center justify-end gap-5 sm:px-2 lg:px-8">
+        <div className="mx-auto mb-5 flex max-w-7xl items-center justify-center gap-5 sm:px-2 lg:px-8">
           Viewing as{" "}
           <span className="w-80">
             <PersonAutocomplete setCustomerId={setFilterUser} autoInitialCustomer={true} />
@@ -161,10 +161,7 @@ const OrdersList = ({ initialOrders, role }: { initialOrders: Transaction[]; rol
                     </Menu>
 
                     <div className="hidden lg:col-span-2 lg:flex lg:items-center lg:justify-end lg:space-x-4">
-                      <a
-                        href={`/orders/${order.transaction_id}`}
-                        className="btn-primary"
-                      >
+                      <a href={`/orders/${order.transaction_id}`} className="btn-primary">
                         <span>View Order</span>
                         <span className="sr-only">{order.transaction_id}</span>
                       </a>
@@ -219,26 +216,32 @@ const OrdersList = ({ initialOrders, role }: { initialOrders: Transaction[]; rol
                             </p>
                           </div>
 
-                          <div className="mt-6 flex items-center space-x-4 divide-x divide-gray-200 border-t border-gray-200 pt-4 text-sm font-medium sm:mt-0 sm:ml-4 sm:border-none sm:pt-0">
-                            <div className="flex flex-1 justify-center">
-                              <a
-                                href={`/products/${product.supabase?.id || product.tiger.sku}`}
-                                className="btn-secondary whitespace-nowrap"
-                              >
-                                <EyeIcon className="h-4 w-4" />
-                                <span>View product</span>
-                              </a>
-                            </div>
-                            <div className="flex flex-1 justify-center pl-4">
-                              <AddToCartButton
-                                className="btn-accent whitespace-nowrap"
-                                productId={product.supabase?.id || product.tiger.sku}
-                                productTitle={product.supabase?.title || product.tiger.description}
-                              >
-                                <ShoppingCartIcon className="h-4 w-4" />
-                                <span>Buy again</span>
-                              </AddToCartButton>
-                            </div>
+                          <div className="mt-6 flex items-center border-t border-gray-200 pt-4 text-sm font-medium sm:mt-0 sm:ml-4 sm:border-none sm:pt-0">
+                            {product.supabase?.id && (
+                              <>
+                                <div className="flex flex-1 justify-center">
+                                  <Link
+                                    href={`/products/${product.supabase?.id || product.tiger.sku}`}
+                                    className="whitespace-nowrap btn-secondary"
+                                  >
+                                    <EyeIcon className="h-4 w-4" />
+                                    <span>View product</span>
+                                  </Link>
+                                </div>
+                                <div className="flex flex-1 justify-center pl-4">
+                                  <AddToCartButton
+                                    className="whitespace-nowrap btn-accent"
+                                    productId={product.supabase?.id || product.tiger.sku}
+                                    productTitle={
+                                      product.supabase?.title || product.tiger.description
+                                    }
+                                  >
+                                    <ShoppingCartIcon className="h-4 w-4" />
+                                    <span>Buy again</span>
+                                  </AddToCartButton>
+                                </div>
+                              </>
+                            )}
                           </div>
                         </div>
                       </li>
@@ -250,10 +253,7 @@ const OrdersList = ({ initialOrders, role }: { initialOrders: Transaction[]; rol
 
             <div className="mx-auto mt-5 w-fit">
               {!loadedAll ? (
-                <button
-                  className="btn-primary"
-                  onClick={getMoreOrders}
-                >
+                <button className="btn-primary" onClick={getMoreOrders}>
                   {loadingMore ? <LoaderCircle className="animate-spin" /> : "Load More"}
                 </button>
               ) : (

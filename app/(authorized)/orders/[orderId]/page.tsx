@@ -1,6 +1,7 @@
 import { getTransaction } from "@/server/handlers/tiger"
 import { formatDate } from "@/utils/utils"
 import Link from "next/link"
+import { redirect } from "next/navigation"
 import { PaymentIcon } from "react-svg-credit-card-payment-icons"
 
 type Params = Promise<{ orderId: string }>
@@ -8,6 +9,8 @@ type Params = Promise<{ orderId: string }>
 const OrderDetailsPage = async ({ params }: { params: Params }) => {
   const { orderId } = await params
   const transaction = await getTransaction(orderId)
+
+  if (!transaction) redirect("/orders")
 
   const hideString = (str: string): string => {
     const first = str[0]
@@ -66,12 +69,14 @@ const OrderDetailsPage = async ({ params }: { params: Params }) => {
                       {product.supabase?.title || product.tiger.description}
                     </h3>
                     <div className="mt-2">
-                      <a
-                        href={`/products/${product.supabase?.id || product.tiger.sku}`}
-                        className="whitespace-nowrap btn-secondary"
-                      >
-                        <span>View product</span>
-                      </a>
+                      {product.supabase?.id && (
+                        <Link
+                          href={`/products/${product.supabase?.id || product.tiger.sku}`}
+                          className="whitespace-nowrap btn-secondary"
+                        >
+                          <span>View product</span>
+                        </Link>
+                      )}
                     </div>
                     <p className="mt-2 text-sm font-medium text-gray-900">
                       ${product.supabase?.amount || product.tiger.amount}

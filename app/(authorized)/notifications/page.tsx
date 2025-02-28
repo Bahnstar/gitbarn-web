@@ -43,8 +43,11 @@ export default async function NotificationsPage() {
   )
 
   return (
-    <div className="flex w-full flex-1 flex-col gap-6 p-4 sm:gap-10">
-      <h1 className="text-4xl font-semibold leading-6 text-gray-900">Notifications</h1>
+    <div className="px-4 sm:px-6 lg:px-8">
+      <div className="flex flex-wrap items-center justify-between">
+        <h1 className="self-start text-4xl leading-6 font-semibold text-gray-900">Notifications</h1>
+      </div>
+
       {notifications.filter((notification) => notification.status !== NotificationStatus.DISMISSED)
         .length === 0 ? (
         <p className="mt-6 text-center text-lg text-gray-500">
@@ -70,7 +73,7 @@ export default async function NotificationsPage() {
               </div>
               <input
                 type="text"
-                className="w-full rounded-xl border border-gray-200 bg-white py-3 pl-11 pr-4 text-base placeholder:text-gray-500 focus:border-green-500 focus:outline-hidden focus:ring-1 focus:ring-green-500"
+                className="w-full rounded-xl border border-gray-200 bg-white py-3 pr-4 pl-11 text-base placeholder:text-gray-500 focus:border-green-500 focus:ring-1 focus:ring-green-500 focus:outline-hidden"
                 placeholder="Search Notifications"
               />
             </div>

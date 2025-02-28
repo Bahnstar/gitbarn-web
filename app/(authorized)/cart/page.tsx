@@ -10,8 +10,10 @@ const CartPage = async () => {
   const { user } = userData
 
   return (
-    <div className="flex w-full flex-1 flex-col gap-6 p-4 sm:gap-10">
-      <h1 className="self-start text-4xl font-semibold leading-6 text-gray-900">Cart</h1>
+    <div className="px-4 sm:px-6 lg:px-8">
+      <div className="flex flex-wrap items-center justify-between">
+        <h1 className="self-start text-4xl leading-6 font-semibold text-gray-900">Cart</h1>
+      </div>
 
       <CartForm user={user!} cart={cart!} />
     </div>
