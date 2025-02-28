@@ -19,10 +19,7 @@ import { getProfilesByEmail } from "@/server/handlers/profiles"
 import { Profile } from "@/types/profile"
 import { getUserWithProfile } from "@/server/handlers/users"
 
-type Props = {
-  setCustomerId: (customerId: string) => void
-  autoInitialCustomer?: boolean
-}
+type Props = { setCustomerId: (customerId: string) => void; autoInitialCustomer?: boolean }
 
 export default function PersonAutocomplete(props: Props) {
   const [open, setOpen] = React.useState(false)
@@ -72,14 +69,14 @@ export default function PersonAutocomplete(props: Props) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={`${value ? "text-black" : "text-gray-400"} text-md w-full justify-between rounded-md border border-gray-300 px-3 py-2 font-normal shadow-xs hover:bg-gray-100`}
+          className={`${value ? "text-black" : "text-gray-400"} text-md shadow-xs w-full justify-between rounded-md border border-gray-300 px-3 py-2 font-normal hover:bg-gray-100`}
         >
           {value ? profiles.find((profile) => profile.id === value)?.email : "Select User"}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-full border bg-white p-0 shadow-md dark:bg-slate-950">
-        <Command shouldFilter={false}>
+        <Command shouldFilter={false} className="w-full">
           <CommandInput
             placeholder="Search Email..."
             value={inputValue}
