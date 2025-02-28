@@ -3,8 +3,11 @@ import { formatDate } from "@/utils/utils"
 import Link from "next/link"
 import { PaymentIcon } from "react-svg-credit-card-payment-icons"
 
-const OrderDetailsPage = async ({ params }: { params: { orderId: string } }) => {
-  const transaction = await getTransaction(params.orderId)
+type Params = Promise<{ orderId: string }>
+
+const OrderDetailsPage = async ({ params }: { params: Params }) => {
+  const { orderId } = await params
+  const transaction = await getTransaction(orderId)
 
   const hideString = (str: string): string => {
     const first = str[0]
@@ -50,7 +53,7 @@ const OrderDetailsPage = async ({ params }: { params: { orderId: string } }) => 
           {transaction.products.map((product) => (
             <div
               key={product.supabase?.id || product.tiger.sku}
-              className="border-b border-t border-gray-200 bg-white shadow-xs sm:rounded-lg sm:border"
+              className="shadow-xs border-b border-t border-gray-200 bg-white sm:rounded-lg sm:border"
             >
               <div className="px-4 py-6 sm:px-6 lg:grid lg:grid-cols-12 lg:gap-x-8 lg:p-8">
                 <div className="sm:flex lg:col-span-7">
@@ -65,7 +68,10 @@ const OrderDetailsPage = async ({ params }: { params: { orderId: string } }) => 
                       {product.supabase?.title || product.tiger.description}
                     </h3>
                     <div className="mt-2">
-                      <a href={`/products/${product.supabase?.id || product.tiger.sku}`} className="btn-secondary whitespace-nowrap">
+                      <a
+                        href={`/products/${product.supabase?.id || product.tiger.sku}`}
+                        className="btn-secondary whitespace-nowrap"
+                      >
                         <span>View product</span>
                       </a>
                     </div>
@@ -101,11 +107,7 @@ const OrderDetailsPage = async ({ params }: { params: { orderId: string } }) => 
                       <dt className="font-medium text-gray-900">Shipping updates</dt>
                       <dd className="mt-3 space-y-3 text-gray-500">
                         <p>{hideString(transaction.customer.email)}</p>
-                        <Link
-                          type="button"
-                          href="/profile"
-                          className="btn-primary"
-                        >
+                        <Link type="button" href="/profile" className="btn-primary">
                           Edit
                         </Link>
                       </dd>

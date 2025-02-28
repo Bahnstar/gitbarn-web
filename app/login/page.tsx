@@ -5,12 +5,14 @@ import { redirect } from "next/navigation"
 import Toaster from "@/components/Toaster"
 import Link from "next/link"
 
-export default async function Login({
-  searchParams,
-}: Readonly<{ searchParams: { message: string } }>) {
+type SearchParams = Promise<{ message: string }>
+
+export default async function Login({ searchParams }: { searchParams: SearchParams }) {
   const {
     data: { user },
   } = await getCurrentUser()
+
+  const { message } = await searchParams
 
   if (user) {
     redirect("/dashboard")
@@ -18,7 +20,7 @@ export default async function Login({
 
   return (
     <div className="mx-auto mt-[30%] max-w-sm flex-1 space-y-10 px-4 md:mt-[10%] md:px-0">
-      {searchParams?.message && <Toaster message={searchParams.message} />}
+      {message && <Toaster message={message} />}
       <div>
         <img
           className="mx-auto h-10 w-auto"
@@ -30,7 +32,7 @@ export default async function Login({
         </h2>
       </div>
       <form className="space-y-6" action="#" method="POST">
-        <div className="relative -space-y-px rounded-md shadow-xs">
+        <div className="shadow-xs relative -space-y-px rounded-md">
           <div className="pointer-events-none absolute inset-0 z-10 rounded-md ring-1 ring-inset ring-gray-300" />
           <div>
             <label htmlFor="email-address" className="sr-only">

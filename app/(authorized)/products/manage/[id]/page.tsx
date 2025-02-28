@@ -3,8 +3,11 @@ import { processProduct } from "@/utils/forms"
 
 import ProductForm from "@/components/ProductForm"
 
-const EditProductPage = async ({ params }: { params: { id: string } }) => {
-  const { data: products, error } = await getProductsById(params.id)
+type Params = Promise<{ id: string }>
+
+const EditProductPage = async ({ params }: { params: Params }) => {
+  const { id } = await params
+  const { data: products, error } = await getProductsById(id)
 
   return (
     <div className="flex w-full flex-1 flex-col items-center gap-20">
@@ -12,7 +15,7 @@ const EditProductPage = async ({ params }: { params: { id: string } }) => {
         Edit Product
       </h1>
 
-      <div className="w-full max-w-5xl rounded-xl bg-white shadow-xs ring-1 ring-gray-900/5">
+      <div className="shadow-xs w-full max-w-5xl rounded-xl bg-white ring-1 ring-gray-900/5">
         <ProductForm action={processProduct} product={products?.[0]} />
       </div>
     </div>

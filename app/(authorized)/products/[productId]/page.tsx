@@ -1,7 +1,9 @@
 import { Check } from "lucide-react"
 
-const ProductPage = ({ params }: { params: { productId: string } }) => {
-  const { productId } = params
+type Params = Promise<{ productId: string }>
+
+const ProductPage = async ({ params }: { params: Params }) => {
+  const { productId } = await params
 
   const product = {
     name: "Some product",
