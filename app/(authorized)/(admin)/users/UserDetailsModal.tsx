@@ -20,9 +20,6 @@ export default function UserDetailsModal({ user, isOpen, onClose }: UserDetailsM
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between">
             <span>User Details</span>
-            <button onClick={onClose} className="rounded-full p-1 hover:bg-gray-100">
-              <X className="h-4 w-4" />
-            </button>
           </DialogTitle>
         </DialogHeader>
 
@@ -51,17 +48,17 @@ export default function UserDetailsModal({ user, isOpen, onClose }: UserDetailsM
             </div>
             <div>
               <h4 className="text-sm font-medium text-gray-500">Customer ID</h4>
-              <p className="truncate">{user.customer_id}</p>
+              <p className="truncate">{user.customer_id ?? "Not linked"}</p>
             </div>
             <div>
               <h4 className="text-sm font-medium text-gray-500">Last Updated</h4>
-              <p>{formatDate(user.updated_at, "MM/dd/yyyy HH:mm")}</p>
+              <p>{user.updated_at ? (user.updated_at, "MM/dd/yyyy HH:mm") : "N/A"}</p>
             </div>
           </div>
 
           <div className="border-t pt-4">
             <h4 className="mb-2 text-sm font-medium text-gray-500">User ID</h4>
-            <p className="break-all text-xs text-gray-500">{user.id}</p>
+            <p className="text-xs break-all text-gray-500">{user.id}</p>
           </div>
         </div>
       </DialogContent>

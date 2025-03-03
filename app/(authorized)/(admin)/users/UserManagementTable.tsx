@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Profile, Role } from "@/types/profile"
 import { updateProfile } from "@/server/handlers/profiles"
 import { toast } from "sonner"
-import { Search, Filter, Edit, UserCheck, UserX, RefreshCw, Eye } from "lucide-react"
+import { Search, Filter, Edit, UserCheck, UserX, RefreshCw, Eye, X } from "lucide-react"
 import { formatDate } from "@/utils/utils"
 import UserDetailsModal from "./UserDetailsModal"
 
@@ -28,10 +28,10 @@ export default function UserManagementTable({ initialUsers }: { initialUsers: Pr
       const term = searchTerm.toLowerCase()
       result = result.filter(
         (user) =>
-          user.email.toLowerCase().includes(term) ||
-          user.first_name.toLowerCase().includes(term) ||
-          user.last_name.toLowerCase().includes(term) ||
-          user.username.toLowerCase().includes(term),
+          user.email?.toLowerCase().includes(term) ||
+          user.first_name?.toLowerCase().includes(term) ||
+          user.last_name?.toLowerCase().includes(term) ||
+          user.username?.toLowerCase().includes(term),
       )
     }
 
@@ -98,7 +98,7 @@ export default function UserManagementTable({ initialUsers }: { initialUsers: Pr
           </div>
           <input
             type="text"
-            className="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            className="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-gray-300 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 focus:ring-inset sm:text-sm sm:leading-6"
             placeholder="Search users..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -108,7 +108,7 @@ export default function UserManagementTable({ initialUsers }: { initialUsers: Pr
         <div className="flex items-center gap-2">
           <Filter className="h-4 w-4 text-gray-400" />
           <select
-            className="rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            className="rounded-md border-0 py-1.5 pr-10 pl-3 text-gray-900 ring-1 ring-gray-300 ring-inset focus:ring-2 focus:ring-indigo-600 focus:ring-inset sm:text-sm sm:leading-6"
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value as Role | "all")}
           >
@@ -129,7 +129,7 @@ export default function UserManagementTable({ initialUsers }: { initialUsers: Pr
                 <tr>
                   <th
                     scope="col"
-                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                   >
                     Name
                   </th>
@@ -157,7 +157,7 @@ export default function UserManagementTable({ initialUsers }: { initialUsers: Pr
                   >
                     Last Updated
                   </th>
-                  <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                  <th scope="col" className="relative py-3.5 pr-4 pl-3 sm:pr-6">
                     <span className="sr-only">Actions</span>
                   </th>
                 </tr>
@@ -166,20 +166,20 @@ export default function UserManagementTable({ initialUsers }: { initialUsers: Pr
                 {filteredUsers.length > 0 ? (
                   filteredUsers.map((user) => (
                     <tr key={user.id} className="hover:bg-gray-50">
-                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                      <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">
                         {user.first_name} {user.last_name}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
                         {user.email}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
                         {user.username}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm">
+                      <td className="px-3 py-4 text-sm whitespace-nowrap">
                         {editingUser === user.id ? (
                           <div className="flex items-center gap-2">
                             <select
-                              className="rounded-md border-0 py-1 pl-2 pr-7 text-sm text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
+                              className="rounded-md border-0 py-1 pr-7 pl-2 text-sm text-gray-900 ring-1 ring-gray-300 ring-inset focus:ring-2 focus:ring-indigo-600 focus:ring-inset"
                               value={selectedRole}
                               onChange={(e) => setSelectedRole(e.target.value as Role)}
                             >
@@ -203,7 +203,7 @@ export default function UserManagementTable({ initialUsers }: { initialUsers: Pr
                               className="rounded-full p-1 text-red-600 hover:bg-red-100"
                               disabled={isLoading}
                             >
-                              <UserX className="h-4 w-4" />
+                              <X className="h-4 w-4" />
                             </button>
                           </div>
                         ) : (
@@ -214,16 +214,16 @@ export default function UserManagementTable({ initialUsers }: { initialUsers: Pr
                           </span>
                         )}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {formatDate(user.updated_at, "MM/dd/yyyy")}
+                      <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
+                        {user.updated_at ? formatDate(user.updated_at, "MM/dd/yyyy") : "N/A"}
                       </td>
-                      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                      <td className="relative py-4 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-6">
                         <div className="flex items-center justify-end space-x-3">
                           <button
                             onClick={() => openUserDetails(user)}
                             className="text-gray-600 hover:text-gray-900"
                           >
-                            <Eye className="h-4 w-4" />
+                            <Eye className="h-4 w-4 text-blue-500" />
                             <span className="sr-only">View details for {user.first_name}</span>
                           </button>
 
@@ -235,7 +235,7 @@ export default function UserManagementTable({ initialUsers }: { initialUsers: Pr
                               }}
                               className="text-indigo-600 hover:text-indigo-900"
                             >
-                              <Edit className="h-4 w-4" />
+                              <Edit className="h-4 w-4 text-green-600" />
                               <span className="sr-only">Edit {user.first_name}</span>
                             </button>
                           )}

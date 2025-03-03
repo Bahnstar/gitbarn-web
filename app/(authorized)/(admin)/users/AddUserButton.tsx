@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Plus, X } from "lucide-react"
+import { UserPlusIcon, X } from "lucide-react"
 import { Role } from "@/types/profile"
 import { toast } from "sonner"
 
@@ -61,8 +61,8 @@ export default function AddUserButton() {
   return (
     <>
       <button type="button" onClick={() => setIsOpen(true)} className="btn-primary">
-        <Plus className="h-4 w-4" />
-        <span>Add User</span>
+        Add User
+        <UserPlusIcon className="h-4 w-4" />
       </button>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -85,7 +85,7 @@ export default function AddUserButton() {
                     required
                     value={formData.first_name}
                     onChange={handleChange}
-                    className="shadow-xs block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-xs ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-green-500 focus:ring-inset disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6"
                   />
                 </div>
               </div>
@@ -101,7 +101,7 @@ export default function AddUserButton() {
                     required
                     value={formData.last_name}
                     onChange={handleChange}
-                    className="shadow-xs block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-xs ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-green-500 focus:ring-inset disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6"
                   />
                 </div>
               </div>
@@ -119,7 +119,7 @@ export default function AddUserButton() {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="shadow-xs block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-xs ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-green-500 focus:ring-inset disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -134,7 +134,7 @@ export default function AddUserButton() {
                   id="role"
                   value={formData.role}
                   onChange={handleChange}
-                  className="shadow-xs block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-xs ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-green-500 focus:ring-inset disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6"
                 >
                   <option value={Role.USER}>User</option>
                   <option value={Role.SUPPORT}>Support</option>
@@ -155,7 +155,7 @@ export default function AddUserButton() {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="shadow-xs block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-xs ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-green-500 focus:ring-inset disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -172,7 +172,7 @@ export default function AddUserButton() {
                   required
                   value={formData.confirm_password}
                   onChange={handleChange}
-                  className="shadow-xs block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-xs ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-green-500 focus:ring-inset disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -181,7 +181,7 @@ export default function AddUserButton() {
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="mr-3 inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                className="mr-3 inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
               >
                 Cancel
               </button>
