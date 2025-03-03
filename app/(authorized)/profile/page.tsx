@@ -113,7 +113,7 @@ export default async function ProfilePage() {
             </Form>
           </div>
 
-          <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 overflow-x-hidden rounded-lg border border-gray-200 bg-white px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8">
+          {/* <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 overflow-x-hidden rounded-lg border border-gray-200 bg-white px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8">
             <div>
               <h2 className="text-base leading-7 font-semibold">Change password</h2>
               <p className="mt-1 text-sm leading-6 text-gray-400">
@@ -128,7 +128,7 @@ export default async function ProfilePage() {
                 </button>
               </div>
             </Form>
-          </div>
+          </div> */}
 
           {/* <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 overflow-x-hidden rounded-lg border border-gray-200 bg-white px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8">
             <div>

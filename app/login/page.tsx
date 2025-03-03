@@ -27,13 +27,13 @@ export default async function Login({ searchParams }: { searchParams: SearchPara
           src="https://gitbarn.com/wp-content/uploads/2018/06/gitbarn-logo.png"
           alt="GitBarn"
         />
-        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+        <h2 className="mt-10 text-center text-2xl leading-9 font-bold tracking-tight text-gray-900">
           Sign in to your account
         </h2>
       </div>
       <form className="space-y-6" action="#" method="POST">
-        <div className="shadow-xs relative -space-y-px rounded-md">
-          <div className="pointer-events-none absolute inset-0 z-10 rounded-md ring-1 ring-inset ring-gray-300" />
+        <div className="relative -space-y-px rounded-md shadow-xs">
+          <div className="pointer-events-none absolute inset-0 z-10 rounded-md ring-1 ring-gray-300 ring-inset" />
           <div>
             <label htmlFor="email-address" className="sr-only">
               Email address
@@ -44,7 +44,7 @@ export default async function Login({ searchParams }: { searchParams: SearchPara
               type="email"
               autoComplete="email"
               required
-              className="relative block w-full rounded-t-md border-0 px-3 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-100 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-green-700 sm:text-sm sm:leading-6"
+              className="relative block w-full rounded-t-md border-0 px-3 py-1.5 text-gray-900 ring-1 ring-gray-100 ring-inset placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-green-700 focus:ring-inset sm:text-sm sm:leading-6"
               placeholder="Email address"
             />
           </div>
@@ -58,7 +58,7 @@ export default async function Login({ searchParams }: { searchParams: SearchPara
               type="password"
               autoComplete="current-password"
               required
-              className="relative block w-full rounded-b-md border-0 px-3 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-100 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-green-700 sm:text-sm sm:leading-6"
+              className="relative block w-full rounded-b-md border-0 px-3 py-1.5 text-gray-900 ring-1 ring-gray-100 ring-inset placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-green-700 focus:ring-inset sm:text-sm sm:leading-6"
               placeholder="Password"
             />
           </div>
@@ -77,24 +77,24 @@ export default async function Login({ searchParams }: { searchParams: SearchPara
             </label>
           </div>
 
-          <div className="text-sm leading-6">
+          {/* <div className="text-sm leading-6">
             <a href="#" className="font-semibold text-green-700 hover:text-indigo-500">
               Forgot password?
             </a>
-          </div>
+          </div> */}
         </div>
 
         <div className="flex flex-col gap-2">
           <SubmitButton
             formAction={login}
-            className="flex w-full justify-center rounded-md bg-green-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white hover:bg-green-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-700"
+            className="flex w-full justify-center rounded-md bg-green-700 px-3 py-1.5 text-sm leading-6 font-semibold text-white hover:bg-green-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-700"
             pendingText="Signing in..."
           >
             Sign in
           </SubmitButton>
 
           <Link
-            className="border-1 flex w-full justify-center rounded-md border border-green-700 px-3 py-1.5 text-sm font-semibold leading-6 text-green-700 hover:bg-green-600 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-700"
+            className="flex w-full justify-center rounded-md border border-1 border-green-700 px-3 py-1.5 text-sm leading-6 font-semibold text-green-700 hover:bg-green-600 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-700"
             href="/signup"
           >
             Sign Up
