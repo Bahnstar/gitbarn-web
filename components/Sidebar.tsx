@@ -18,7 +18,7 @@ const Sidebar = async ({ children }: Readonly<{ children: React.ReactNode }>) =>
     toast.error("You must be logged in to view this page")
     redirect("/login")
   }
-  const [notificationCount, cartCount] = await Promise.all([
+  const [unreadNotificationCount, cartCount] = await Promise.all([
     getUnreadNotificationCount(user.id),
     getCartsCount(user.id),
   ])
@@ -32,7 +32,11 @@ const Sidebar = async ({ children }: Readonly<{ children: React.ReactNode }>) =>
       <MobileSidebar avatar_url={user.avatar_url}>
         {/* Sidebar component, swap this element with another sidebar if you like */}
         <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white">
-          <SidebarContent user={user} />
+          <SidebarContent
+            user={user}
+            unreadNotificationCount={unreadNotificationCount}
+            cartCount={cartCount}
+          />
         </div>
       </MobileSidebar>
 
@@ -40,7 +44,11 @@ const Sidebar = async ({ children }: Readonly<{ children: React.ReactNode }>) =>
       <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
         {/* Sidebar component, swap this element with another sidebar if you like */}
 
-        <SidebarContent user={user} />
+        <SidebarContent
+          user={user}
+          unreadNotificationCount={unreadNotificationCount}
+          cartCount={cartCount}
+        />
       </div>
 
       <main className="flex flex-1 flex-col py-10 lg:pl-72">
@@ -50,7 +58,15 @@ const Sidebar = async ({ children }: Readonly<{ children: React.ReactNode }>) =>
   )
 }
 
-const SidebarContent = ({ user }: { user: Profile }) => (
+const SidebarContent = ({
+  user,
+  unreadNotificationCount,
+  cartCount,
+}: {
+  user: Profile
+  unreadNotificationCount: number
+  cartCount: number
+}) => (
   <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6">
     <div className="flex h-16 shrink-0 items-center">
       <Image
@@ -63,7 +79,11 @@ const SidebarContent = ({ user }: { user: Profile }) => (
     </div>
     <nav className="flex flex-1 flex-col">
       <ul className="flex flex-1 flex-col gap-y-7">
-        <NavButtons role={user.role} />
+        <NavButtons
+          role={user.role}
+          unreadNotificationCount={unreadNotificationCount}
+          cartCount={cartCount}
+        />
 
         <li className="-mx-6 mt-auto">
           <Link

@@ -3,6 +3,7 @@ import { FormResponse } from "@/components/Form"
 import { getUserWithProfile } from "@/server/handlers/users"
 import { processProfile } from "@/utils/forms"
 import ImageUpload from "@/components/ImageUpload"
+import { changePassword, resetPassowrdByEmail } from "@/server/handlers/auth"
 
 export default async function ProfilePage() {
   const { data: profile, error: profileError } = await getUserWithProfile()
@@ -105,17 +106,14 @@ export default async function ProfilePage() {
               </div>
 
               <div className="mt-8 flex">
-                <button
-                  type="submit"
-                  className="rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
-                >
+                <button type="submit" className="btn-primary">
                   Save
                 </button>
               </div>
             </Form>
           </div>
 
-          <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 overflow-x-hidden rounded-lg border border-gray-200 bg-white px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8">
+          {/* <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 overflow-x-hidden rounded-lg border border-gray-200 bg-white px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8">
             <div>
               <h2 className="text-base leading-7 font-semibold">Change password</h2>
               <p className="mt-1 text-sm leading-6 text-gray-400">
@@ -123,66 +121,16 @@ export default async function ProfilePage() {
               </p>
             </div>
 
-            <form className="md:col-span-2">
-              <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:max-w-xl sm:grid-cols-6">
-                <div className="col-span-full">
-                  <label htmlFor="current-password" className="block text-sm leading-6 font-medium">
-                    Current password
-                  </label>
-                  <div className="mt-2">
-                    <input
-                      id="current-password"
-                      name="current_password"
-                      type="password"
-                      autoComplete="current-password"
-                      className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-green-500 focus:ring-inset sm:text-sm sm:leading-6"
-                    />
-                  </div>
-                </div>
-
-                <div className="col-span-full">
-                  <label htmlFor="new-password" className="block text-sm leading-6 font-medium">
-                    New password
-                  </label>
-                  <div className="mt-2">
-                    <input
-                      id="new-password"
-                      name="new_password"
-                      type="password"
-                      autoComplete="new-password"
-                      className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-green-500 focus:ring-inset sm:text-sm sm:leading-6"
-                    />
-                  </div>
-                </div>
-
-                <div className="col-span-full">
-                  <label htmlFor="confirm-password" className="block text-sm leading-6 font-medium">
-                    Confirm password
-                  </label>
-                  <div className="mt-2">
-                    <input
-                      id="confirm-password"
-                      name="confirm_password"
-                      type="password"
-                      autoComplete="new-password"
-                      className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-green-500 focus:ring-inset sm:text-sm sm:leading-6"
-                    />
-                  </div>
-                </div>
-              </div>
-
+            <Form className="md:col-span-2" action={resetPassowrdByEmail} showSubmitButton={false}>
               <div className="mt-8 flex">
-                <button
-                  type="submit"
-                  className="rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
-                >
-                  Save
+                <button type="submit" className="btn-primary">
+                  Click here to reset password
                 </button>
               </div>
-            </form>
-          </div>
+            </Form>
+          </div> */}
 
-          <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 overflow-x-hidden rounded-lg border border-gray-200 bg-white px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8">
+          {/* <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 overflow-x-hidden rounded-lg border border-gray-200 bg-white px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8">
             <div>
               <h2 className="text-base leading-7 font-semibold">Log out other sessions</h2>
               <p className="mt-1 text-sm leading-6 text-gray-400">
@@ -218,8 +166,8 @@ export default async function ProfilePage() {
                 </button>
               </div>
             </form>
-          </div>
-
+          </div> */}
+          {/*
           <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 overflow-x-hidden rounded-lg border border-gray-200 bg-gray-600 px-4 py-16 text-white sm:px-6 md:grid-cols-3 lg:px-8">
             <div>
               <h2 className="text-base leading-7 font-semibold">Delete account</h2>
@@ -230,14 +178,11 @@ export default async function ProfilePage() {
             </div>
 
             <form className="flex items-start md:col-span-2">
-              <button
-                type="submit"
-                className="rounded-md bg-red-500 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-400"
-              >
+              <button type="submit" className="btn-primary">
                 Yes, delete my account
               </button>
             </form>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

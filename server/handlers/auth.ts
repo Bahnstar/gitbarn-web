@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { updateProfile, getProfilesByEmail } from "./profiles"
+import { getCurrentUser } from "./users"
 import Toaster from "@/components/Toaster"
 
 import { createClient } from "@/utils/supabase/server"
@@ -85,7 +86,11 @@ const signupConstraints = {
   },
 }
 
-export async function signup(prevState: any, formData: FormData): Promise<FormResult> {
+export async function signup(
+  prevState: any,
+  formData: FormData,
+  noRedirect?: boolean,
+): Promise<FormResult> {
   const supabase = await createClient()
 
   const data = {
@@ -122,13 +127,7 @@ export async function signup(prevState: any, formData: FormData): Promise<FormRe
       },
     },
   })
-  // console.log(userData)
-  // const res = await updateProfile(userData.user!.id, {
-  //   first_name: data.first_name,
-  //   last_name: data.last_name,
-  // })
 
-  // console.log("Update", res)
   console.log(error)
 
   if (error) {
@@ -136,10 +135,76 @@ export async function signup(prevState: any, formData: FormData): Promise<FormRe
   }
 
   revalidatePath("/", "layout")
-  redirect("/signup/verify")
+
+  if (!noRedirect) redirect("/signup/verify")
 
   return {
     status: "Success",
     message: "Registration successful",
+  }
+}
+
+const passwordConstraints = {
+  new: {
+    presence: true,
+    length: {
+      minimum: 6,
+      tooShort: "Password must be at least %{count} characters long",
+    },
+  },
+  confirm: {
+    presence: true,
+    equality: {
+      attribute: "new",
+      message: "Passwords do not match",
+    },
+  },
+}
+
+export async function resetPassowrdByEmail(): Promise<FormResult> {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await getCurrentUser()
+
+  if (!user)
+    return {
+      status: "error",
+      message: "No user found",
+    }
+
+  await supabase.auth.resetPasswordForEmail(user.email!, {
+    redirectTo: `${process.env.URL}/reset`,
+  })
+
+  return {
+    status: "success",
+    message: "A password reset email has been sent",
+  }
+}
+
+export async function changePassword(_prevstate: any, formData: FormData): Promise<FormResult> {
+  const supabase = await createClient()
+
+  const data = {
+    new: formData.get("new_password") as string,
+    confirm: formData.get("confirm_password") as string,
+  }
+
+  const validationResult = validate(data, passwordConstraints)
+  if (validationResult) {
+    return {
+      status: "VALIDATION_ERROR",
+      message: Object.values(validationResult)[0] as string,
+    }
+  }
+
+  await supabase.auth.updateUser({ password: data.new })
+
+  redirect("/profile")
+
+  return {
+    status: "success",
+    message: "Password successfully modified",
   }
 }
