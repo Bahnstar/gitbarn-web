@@ -77,11 +77,11 @@ export default async function Login({ searchParams }: { searchParams: SearchPara
             </label>
           </div>
 
-          {/* <div className="text-sm leading-6">
-            <a href="#" className="font-semibold text-green-700 hover:text-indigo-500">
+          <div className="text-sm leading-6">
+            <Link href="/forgot" className="font-semibold text-green-700 hover:text-green-500">
               Forgot password?
-            </a>
-          </div> */}
+            </Link>
+          </div>
         </div>
 
         <div className="flex flex-col gap-2">

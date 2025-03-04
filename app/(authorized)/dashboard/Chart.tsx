@@ -1,6 +1,6 @@
 "use client"
 
-import { Bar, BarChart, XAxis } from "recharts"
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts"
 import {
   ChartConfig,
   ChartContainer,
@@ -44,18 +44,39 @@ export default function Chart(props: Props) {
     .filter((item) => item.desktop > 0)
 
   return (
-    <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
-      <BarChart accessibilityLayer data={chartData}>
+    <ResponsiveContainer width="100%" height="100%">
+      <BarChart data={chartData} margin={{ top: 10, right: 25, bottom: 20, left: 25 }}>
         <XAxis
           dataKey="month"
           tickLine={false}
-          tickMargin={10}
           axisLine={false}
           tickFormatter={(value) => value.slice(0, 3)}
+          fontSize={12}
+          tickMargin={8}
         />
-        <ChartTooltip content={<ChartTooltipContent />} />
-        <Bar dataKey="desktop" fill="#16a34a" radius={4} />
+        <YAxis
+          tickLine={false}
+          axisLine={false}
+          fontSize={12}
+          tickMargin={8}
+          tickFormatter={(value) => value.toLocaleString()}
+        />
+        <Tooltip
+          content={({ active, payload }) => {
+            if (!active || !payload?.length) return null
+            const data = payload[0].payload
+            return (
+              <div className="ring-opacity-5 rounded-lg bg-white p-2 shadow-md ring-1 ring-black">
+                <p className="font-medium">{data.month}</p>
+                <p className="mt-1 text-sm">
+                  <span className="font-medium">{data.desktop.toLocaleString()}</span> orders
+                </p>
+              </div>
+            )
+          }}
+        />
+        <Bar dataKey="desktop" fill="#16a34a" radius={[4, 4, 0, 0]} maxBarSize={50} />
       </BarChart>
-    </ChartContainer>
+    </ResponsiveContainer>
   )
 }
