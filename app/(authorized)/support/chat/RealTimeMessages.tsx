@@ -32,6 +32,13 @@ const RealTimeMessages = (props: Props) => {
 
   const handleSubmit = async () => {
     if (!message) return
+
+    if (!props.conversation.support_id && props.user.role !== Role.USER) {
+      await updateConversation(props.conversation.id!, {
+        support_id: props.user.id,
+      })
+    }
+
     const { data: newMessage, error } = await createMessage(
       props.conversation.id!,
       props.user.id,
@@ -48,21 +55,20 @@ const RealTimeMessages = (props: Props) => {
         : props.conversation.customer_id
 
       if (!connectedUsers.includes(recipientId!)) {
-        console.log("Sending new message email")
-        await sendUserNotification(
-          props.conversation.title!,
-          props.conversation.id!,
-          props.user.id,
-          recipientId!,
-          newMessage.text,
-        )
-
-        // Create in-app notification for the recipient
-        await createNotification(
-          recipientId!,
-          `New Message: ${props.conversation.title}`,
-          `${props.conversation} sent you a message: ${newMessage.text.substring(0, 50)}${newMessage.text.length > 50 ? "..." : ""}`,
-        )
+        await Promise.all([
+          sendUserNotification(
+            props.conversation.title!,
+            props.conversation.id!,
+            props.user.id,
+            recipientId!,
+            newMessage.text,
+          ),
+          createNotification(
+            recipientId!,
+            `New Message in Chat: ${props.conversation.title}`,
+            `${props.user.first_name} ${props.user.last_name} sent you a message: ${newMessage.text.substring(0, 50)}${newMessage.text.length > 50 ? "..." : ""}`,
+          ),
+        ])
       }
     }
   }
@@ -238,21 +244,13 @@ const RealTimeMessages = (props: Props) => {
         ) : (
           <div className="flex items-center gap-2">
             <button
-              onClick={handleRemoveSupportClaim}
-              disabled={isLoading}
+              disabled
               className="inline-flex items-center gap-1.5 rounded-md bg-green-50 px-3 py-1.5 text-sm text-green-600 transition-colors hover:bg-green-100"
             >
-              {isLoading ? (
-                <div className="flex items-center gap-2">
-                  Removing...
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                </div>
-              ) : (
-                <div className="flex items-center gap-2" onClick={handleRemoveSupportClaim}>
-                  Claimed
-                  <SquareX className="h-4 w-4 transform duration-100 hover:scale-110 hover:text-red-600" />
-                </div>
-              )}
+              <div className="flex items-center gap-2" onClick={handleRemoveSupportClaim}>
+                Claimed
+                <SquareX className="h-4 w-4 transform duration-100 hover:scale-110 hover:text-red-600" />
+              </div>
             </button>
           </div>
         )}

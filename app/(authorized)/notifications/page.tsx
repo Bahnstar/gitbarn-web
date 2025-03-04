@@ -1,13 +1,18 @@
 import { getNotificationsByUserId, updateNotification } from "@/server/handlers/notifications"
 import { NotificationStatus } from "@/types/notification"
 import { formatDate } from "@/utils/utils"
-import { BellIcon, ChevronRightIcon } from "lucide-react"
 import { toast } from "sonner"
 import { revalidatePath } from "next/cache"
 import NotificationActions from "./NotificationActions"
 import MarkAllAsReadButton from "./MarkAllAsReadButton"
 import { getUserWithProfile } from "@/server/handlers/users"
 import { redirect } from "next/navigation"
+import { clsx } from "clsx"
+
+const statuses = {
+  unread: "text-green-700 bg-green-50 ring-green-600/20",
+  read: "text-gray-600 bg-gray-50 ring-gray-500/10",
+}
 
 export default async function NotificationsPage() {
   const { data: user, error: userError } = await getUserWithProfile()
@@ -46,6 +51,11 @@ export default async function NotificationsPage() {
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="flex flex-wrap items-center justify-between">
         <h1 className="self-start text-4xl leading-6 font-semibold text-gray-900">Notifications</h1>
+        {hasUnreadNotifications && (
+          <div className="mt-4 sm:mt-0">
+            <MarkAllAsReadButton />
+          </div>
+        )}
       </div>
 
       {notifications.filter((notification) => notification.status !== NotificationStatus.DISMISSED)
@@ -54,88 +64,55 @@ export default async function NotificationsPage() {
           Hooray! You have caught up on all of your notifications!
         </p>
       ) : (
-        <div className="mx-auto w-full max-w-6xl">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="relative w-full max-w-md">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 16 16"
-                  fill="currentColor"
-                  className="h-5 w-5 text-gray-400"
+        <div className="mt-10">
+          <div className="relative mb-6">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4"></div>
+          </div>
+          <ul
+            role="list"
+            className="divide-y divide-gray-100 overflow-hidden bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl"
+          >
+            {notifications
+              .filter((notification) => notification.status !== NotificationStatus.DISMISSED)
+              .map((notification) => (
+                <li
+                  key={notification.id}
+                  className="flex items-center justify-between gap-x-6 px-2 py-5 md:px-6"
                 >
-                  <path
-                    fillRule="evenodd"
-                    d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-              <input
-                type="text"
-                className="w-full rounded-xl border border-gray-200 bg-white py-3 pr-4 pl-11 text-base placeholder:text-gray-500 focus:border-green-500 focus:ring-1 focus:ring-green-500 focus:outline-hidden"
-                placeholder="Search Notifications"
-              />
-            </div>
-
-            {hasUnreadNotifications && <MarkAllAsReadButton />}
-          </div>
-
-          <div className="mt-6 overflow-hidden rounded-2xl bg-white shadow-xs ring-1 ring-gray-900/5 sm:mt-8">
-            <ul className="divide-y divide-gray-100">
-              {notifications
-                .filter((notification) => notification.status !== NotificationStatus.DISMISSED)
-                .map((notification) => (
-                  <li key={notification.id}>
-                    <div
-                      className={`flex items-start gap-4 p-4 transition-colors duration-150 hover:bg-gray-50 sm:gap-6 sm:p-6 ${
-                        notification.status === NotificationStatus.UNREAD ? "bg-green-50" : ""
-                      }`}
-                    >
-                      <div className="shrink-0 pt-1">
-                        <BellIcon
-                          className={`h-6 w-6 sm:h-7 sm:w-7 ${
-                            notification.status === NotificationStatus.READ
-                              ? "text-gray-400"
-                              : "text-green-500"
-                          }`}
-                        />
-                      </div>
-                      <div className="min-w-0 grow">
-                        <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-                          <p
-                            className={`sm:text-md text-base font-medium ${
-                              notification.status === NotificationStatus.READ
-                                ? "text-gray-900"
-                                : "text-green-900"
-                            }`}
-                          >
-                            {notification.title}
-                          </p>
-                          <span className="text-sm text-gray-500 sm:text-base">
-                            {formatDate(notification.created_at)}
-                          </span>
-                        </div>
-                        <p className="mt-1 line-clamp-1 text-base text-gray-600 sm:mt-2">
-                          {notification.message}
-                        </p>
-                        <div className="mt-4">
-                          <NotificationActions
-                            notificationId={notification.id}
-                            notificationStatus={notification.status}
-                            changeStatus={changeStatus}
-                          />
-                        </div>
-                      </div>
-
-                      <div className="shrink-0 self-center">
-                        <ChevronRightIcon className="h-5 w-5 text-gray-400 sm:h-6 sm:w-6" />
-                      </div>
+                  <div className="min-w-0">
+                    <div className="flex items-start gap-x-3">
+                      <p className="text-sm/6 font-semibold text-gray-900">{notification.title}</p>
+                      <p
+                        className={clsx(
+                          statuses[
+                            notification.status === NotificationStatus.UNREAD ? "unread" : "read"
+                          ],
+                          "mt-0.5 rounded-md px-1.5 py-0.5 text-xs font-medium whitespace-nowrap ring-1 ring-inset",
+                        )}
+                      >
+                        {notification.status === NotificationStatus.UNREAD ? "New" : "Read"}
+                      </p>
                     </div>
-                  </li>
-                ))}
-            </ul>
-          </div>
+                    <div className="mt-1 flex items-center gap-x-2 text-xs/5 text-gray-500">
+                      <p className="whitespace-nowrap">
+                        Received on{" "}
+                        <time dateTime={notification.created_at}>
+                          {formatDate(notification.created_at, "MM/DD/YYYY, h:MM A")}
+                        </time>
+                      </p>
+                    </div>
+                    <p className="mt-2 text-sm text-gray-600">{notification.message}</p>
+                  </div>
+                  <div className="flex flex-none items-center gap-x-4">
+                    <NotificationActions
+                      notificationId={notification.id}
+                      notificationStatus={notification.status}
+                      changeStatus={changeStatus}
+                    />
+                  </div>
+                </li>
+              ))}
+          </ul>
         </div>
       )}
     </div>
