@@ -161,25 +161,52 @@ const passwordConstraints = {
   },
 }
 
-export async function resetPassowrdByEmail(): Promise<FormResult> {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await getCurrentUser()
+const emailConstraints = {
+  email: {
+    presence: true,
+    email: true,
+  },
+}
 
-  if (!user)
+export async function resetPassowrdByEmail(
+  _prevState?: any,
+  formData?: FormData,
+): Promise<FormResult> {
+  const supabase = await createClient()
+
+  const emailInput = (formData?.get("email") as string) || undefined
+
+  let email = emailInput
+  if (!email) {
+    const {
+      data: { user },
+    } = await getCurrentUser()
+
+    email = user?.email
+  }
+
+  if (!email) {
     return {
       status: "error",
-      message: "No user found",
+      message: "Email not provided",
     }
+  }
 
-  await supabase.auth.resetPasswordForEmail(user.email!, {
+  const validationResult = validate({ email: email }, emailConstraints)
+  if (validationResult) {
+    return {
+      status: "VALIDATION_ERROR",
+      message: Object.values(validationResult)[0] as string,
+    }
+  }
+
+  await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: `${process.env.URL}/reset`,
   })
 
   return {
     status: "success",
-    message: "A password reset email has been sent",
+    message: "Password reset email will be sent if the account exists and is active",
   }
 }
 

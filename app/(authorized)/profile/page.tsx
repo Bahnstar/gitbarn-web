@@ -23,7 +23,7 @@ export default async function ProfilePage() {
             <div>
               <h2 className="text-base leading-7 font-semibold">Personal Information</h2>
               <p className="mt-1 text-sm leading-6 text-gray-400">
-                Use a permanent address where you can receive mail.
+                Use a permanent email address where you can receive mail.
               </p>
             </div>
 
@@ -38,20 +38,6 @@ export default async function ProfilePage() {
                     id={profile?.id}
                     image={profile?.avatar_url}
                   />
-                  {/* <img
-                  src={profile?.avatar_url}
-                  alt=""
-                  className="h-24 w-24 flex-none rounded-lg bg-gray-800 object-cover"
-                />
-                <div>
-                  <button
-                    type="button"
-                    className="rounded-md bg-gray-200 px-3 py-2 text-sm  font-semibold shadow-xs hover:bg-black/20"
-                  >
-                    Change avatar
-                  </button>
-                  <p className="mt-2 text-xs leading-5 text-gray-400">JPG, GIF or PNG. 1MB max.</p>
-                </div> */}
                 </div>
 
                 <input id="id" name="id" defaultValue={profile?.id} hidden />
@@ -113,7 +99,7 @@ export default async function ProfilePage() {
             </Form>
           </div>
 
-          {/* <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 overflow-x-hidden rounded-lg border border-gray-200 bg-white px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8">
+          <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 overflow-x-hidden rounded-lg border border-gray-200 bg-white px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8">
             <div>
               <h2 className="text-base leading-7 font-semibold">Change password</h2>
               <p className="mt-1 text-sm leading-6 text-gray-400">
@@ -128,7 +114,7 @@ export default async function ProfilePage() {
                 </button>
               </div>
             </Form>
-          </div> */}
+          </div>
 
           {/* <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 overflow-x-hidden rounded-lg border border-gray-200 bg-white px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8">
             <div>
