@@ -2,6 +2,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import navigation from "@/data/navigation"
+import { CloseButton } from "@headlessui/react"
 
 type NavButton = {
   name: string
@@ -43,7 +44,8 @@ const NavButtons = (props: {
 
           return (
             <li key={item.name}>
-              <Link
+              <CloseButton
+                as={Link}
                 href={item.href}
                 className={classNames(
                   item.href === pathname
@@ -69,7 +71,7 @@ const NavButtons = (props: {
                   )}
                 </div>
                 {item.name}
-              </Link>
+              </CloseButton>
             </li>
           )
         })}

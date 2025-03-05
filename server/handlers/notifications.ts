@@ -59,12 +59,22 @@ export const batchCreateNotifications = async (
 
 export const createNotification = async (userId: string, title: string, message: string) => {
   const supabase = await createClient()
-  return await supabase.from("Notifications").insert({
-    user_id: userId,
-    title,
-    message,
-    status: NotificationStatus.UNREAD,
-  })
+  const { data, error } = await supabase
+    .from("Notifications")
+    .insert({
+      user_id: userId,
+      title,
+      message,
+      status: NotificationStatus.UNREAD,
+    })
+    .select()
+    .single()
+
+  if (error) {
+    console.error(error)
+  }
+
+  return data
 }
 
 export const updateNotification = async (
