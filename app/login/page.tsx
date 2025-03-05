@@ -85,18 +85,11 @@ export default async function Login({ searchParams }: { searchParams: SearchPara
         </div>
 
         <div className="flex flex-col gap-2">
-          <SubmitButton
-            formAction={login}
-            className="flex w-full justify-center rounded-md bg-green-700 px-3 py-1.5 text-sm leading-6 font-semibold text-white hover:bg-green-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-700"
-            pendingText="Signing in..."
-          >
+          <SubmitButton formAction={login} className="btn-primary" pendingText="Signing in...">
             Sign in
           </SubmitButton>
 
-          <Link
-            className="flex w-full justify-center rounded-md border border-1 border-green-700 px-3 py-1.5 text-sm leading-6 font-semibold text-green-700 hover:bg-green-600 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-700"
-            href="/signup"
-          >
+          <Link className="btn-secondary" href="/signup">
             Sign Up
           </Link>
         </div>
