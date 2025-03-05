@@ -47,7 +47,7 @@ const MobileSidebar = ({
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0"
                 >
-                  <div className="absolute left-full top-0 flex w-16 justify-center pt-5">
+                  <div className="absolute top-0 left-full flex w-16 justify-center pt-5">
                     <button
                       type="button"
                       className="-m-2.5 p-2.5"
@@ -74,7 +74,7 @@ const MobileSidebar = ({
           <span className="sr-only">Open sidebar</span>
           <Bars3Icon className="h-6 w-6" aria-hidden="true" />
         </button>
-        <div className="flex-1 text-sm font-semibold leading-6 text-gray-900">GitBarn</div>
+        <div className="flex-1 text-sm leading-6 font-semibold text-gray-900">GitBarn</div>
         <Link href="/profile">
           <span className="sr-only">Your profile</span>
           <Image
