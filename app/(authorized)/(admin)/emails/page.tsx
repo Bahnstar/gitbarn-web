@@ -6,6 +6,7 @@ import { Role } from "@/types/profile"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
+import Link from "next/link"
 
 export default function MassEmailPage() {
   const router = useRouter()
@@ -77,7 +78,7 @@ export default function MassEmailPage() {
   return (
     <div className="flex w-full flex-1 flex-col gap-6 p-4 sm:gap-10">
       <h1 className="text-4xl leading-6 font-semibold text-gray-900">Mass Email</h1>
-      <div className="max-w-4xl min-w-4xl rounded-lg bg-white p-6 shadow-sm">
+      <div className="max-w-4xl rounded-lg bg-white p-6 shadow-sm">
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <h3 className="text-md block font-medium text-gray-700">Select Recipient Roles:</h3>
           <div className="mt-4 flex w-full justify-start gap-6">
@@ -138,12 +139,12 @@ export default function MassEmailPage() {
           </div>
 
           <div className="col-span-2 mt-4">
-            <button
-              type="submit"
-              className="w-full rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
-            >
+            <button type="submit" className="mb-2 w-full btn-primary">
               Send Email
             </button>
+            <Link className="w-full btn-secondary" href="/users">
+              Return to user list
+            </Link>
           </div>
         </form>
       </div>

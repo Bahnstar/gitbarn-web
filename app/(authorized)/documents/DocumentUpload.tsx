@@ -6,6 +6,7 @@ import Image from "next/image"
 import { toast } from "sonner"
 import { getUserWithProfile } from "@/server/handlers/users"
 import PersonAutocomplete from "@/components/PersonAutocomplete"
+import revalidateTag from "@/utils/clientRevalidate"
 
 type FilePreview = {
   file: File
@@ -89,6 +90,7 @@ export default function DocumentUpload(props: { action: any }) {
 
       toast.success(`${filePreview.file.name} was successfully uploaded`)
       setIsModalOpen(false)
+      revalidateTag("/documents")
     }
   }
 
@@ -110,13 +112,9 @@ export default function DocumentUpload(props: { action: any }) {
 
   return (
     <div>
-      <button
-        onClick={() => setIsModalOpen(true)}
-        className="btn-primary"
-        disabled={isLoading}
-      >
-        <UploadIcon className="h-4 w-4" />
+      <button onClick={() => setIsModalOpen(true)} className="btn-primary" disabled={isLoading}>
         <span>Upload</span>
+        <UploadIcon className="h-4 w-4" />
       </button>
 
       {isModalOpen && (
@@ -177,14 +175,16 @@ export default function DocumentUpload(props: { action: any }) {
               <button
                 type="submit"
                 // disabled={!filePreview}
-                className="mt-4 flex w-full justify-center rounded-sm bg-blue-500 px-4 py-2 text-white disabled:bg-gray-300"
+                className="mt-6 w-full btn-primary"
               >
                 {isLoading ? (
                   <>
                     Uploading... <Loader2 className="h-5 w-5 animate-spin" />
                   </>
                 ) : (
-                  "Upload Document"
+                  <>
+                    Upload Document <UploadIcon className="h-4 w-4" />
+                  </>
                 )}
               </button>
             </form>
@@ -194,7 +194,7 @@ export default function DocumentUpload(props: { action: any }) {
                 setUserId("")
                 setFilePreview(null)
               }}
-              className="w-full rounded-md bg-gray-100 px-4 py-2 text-gray-700 hover:bg-gray-200"
+              className="w-full btn-secondary"
               disabled={isLoading}
             >
               Cancel

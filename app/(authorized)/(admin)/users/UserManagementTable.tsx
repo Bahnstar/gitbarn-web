@@ -143,19 +143,7 @@ export default function UserManagementTable({ initialUsers }: { initialUsers: Pr
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                   >
-                    Username
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                  >
                     Role
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                  >
-                    Last Updated
                   </th>
                   <th scope="col" className="relative py-3.5 pr-4 pl-3 sm:pr-6">
                     <span className="sr-only">Actions</span>
@@ -171,9 +159,6 @@ export default function UserManagementTable({ initialUsers }: { initialUsers: Pr
                       </td>
                       <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
                         {user.email}
-                      </td>
-                      <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
-                        {user.username}
                       </td>
                       <td className="px-3 py-4 text-sm whitespace-nowrap">
                         {editingUser === user.id ? (
@@ -213,9 +198,6 @@ export default function UserManagementTable({ initialUsers }: { initialUsers: Pr
                             {user.role}
                           </span>
                         )}
-                      </td>
-                      <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
-                        {user.updated_at ? formatDate(user.updated_at, "MM/dd/yyyy") : "N/A"}
                       </td>
                       <td className="relative py-4 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-6">
                         <div className="flex items-center justify-end space-x-3">

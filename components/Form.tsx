@@ -1,8 +1,9 @@
 "use client"
-import { PropsWithChildren, useActionState } from "react"
+import { PropsWithChildren, useActionState, useEffect } from "react"
 import { useFormStatus } from "react-dom"
 import Link from "next/link"
 import { redirect } from "next/navigation"
+import { toast } from "sonner"
 
 import Toaster from "@/components/Toaster"
 
@@ -29,10 +30,7 @@ const SubmitButton = () => {
             >
               Cancel
             </Link>
-            <button
-              type="submit"
-              className="rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
+            <button type="submit" className="btn-primary">
               Save
             </button>
           </>
@@ -57,13 +55,22 @@ const Form = (
 
   const [state, formAction] = useActionState(props.action, initialState)
 
+  useEffect(() => {
+    if (state.status === "error") toast.error(state?.message)
+
+    if (state.status === "info") toast.info(state?.message)
+
+    if (state.status === "success") {
+      toast.info(state?.message)
+      props.redirect && redirect(props.redirect)
+    }
+  }, [state])
+
   return (
     <form
       className={`${props.className ? props.className : "flex flex-col gap-6"}`}
       action={formAction}
     >
-      {state.status !== "unknown" && <Toaster message={state?.message} />}
-      {state.status === "success" && props.redirect && redirect(props.redirect)}
       {props.children}
       {props.showSubmitButton && <SubmitButton />}
     </form>

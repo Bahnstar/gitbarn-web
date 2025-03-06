@@ -51,19 +51,20 @@ const SupportPage = async () => {
 
   return (
     <div className="px-4 sm:px-6 lg:px-8">
-      <div className="flex flex-wrap items-center justify-between">
-        <h1 className="self-start text-4xl leading-6 font-semibold text-gray-900">Support</h1>
-        <div className="mt-4 sm:mt-0">
-          <NewConversationButton user={userProfile} />
-        </div>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <h1 className="self-start text-4xl font-semibold text-gray-900">Support</h1>
+        <NewConversationButton user={userProfile} />
       </div>
 
       <ul
         role="list"
-        className="mt-10 divide-y divide-gray-100 overflow-hidden bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl"
+        className="mt-10 divide-y divide-gray-100 overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5"
       >
         {data?.map((chat) => (
-          <li key={chat.id} className="flex items-center justify-between gap-x-6 px-2 py-5 md:px-6">
+          <li
+            key={chat.id}
+            className="flex flex-col items-center justify-between gap-4 gap-x-6 px-2 py-5 md:flex-row md:px-6"
+          >
             <div className="min-w-0">
               <div className="flex items-start gap-x-3">
                 <p className="text-sm/6 font-semibold text-gray-900">{chat.title}</p>

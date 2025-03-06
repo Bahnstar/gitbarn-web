@@ -11,6 +11,7 @@ import { getUnreadNotificationCount } from "@/server/handlers/notifications"
 import { toast } from "sonner"
 import { getCartsCount } from "@/server/handlers/carts"
 import { LogOutIcon, UserPenIcon } from "lucide-react"
+import { CloseButton } from "@headlessui/react"
 
 const Sidebar = async ({ children }: Readonly<{ children: React.ReactNode }>) => {
   const { data: user } = await getUserWithProfile()
@@ -86,7 +87,8 @@ const SidebarContent = ({
         />
 
         <li className="-mx-6 mt-auto">
-          <Link
+          <CloseButton
+            as={Link}
             href="/profile"
             className="flex w-full items-center justify-between gap-x-4 px-6 py-3 text-sm leading-6 font-semibold text-gray-900 hover:bg-gray-50"
           >
@@ -102,7 +104,7 @@ const SidebarContent = ({
               {user.first_name} {user.last_name}
             </div>
             <UserPenIcon />
-          </Link>
+          </CloseButton>
           <div className="mx-4 mb-3">
             <form action={logout}>
               <button className="w-full btn-primary">

@@ -57,38 +57,15 @@ const OrdersList = ({ initialOrders, role }: { initialOrders: Transaction[]; rol
   }
 
   return (
-    <div className="mx-auto w-full max-w-6xl">
+    <div>
       {(role === "admin" || role === "support") && (
-        <div className="mx-auto mb-5 flex max-w-7xl items-center justify-center gap-5 sm:px-2 lg:px-8">
+        <div className="mx-auto my-5 flex max-w-7xl items-center justify-center gap-5 sm:px-2 lg:px-8">
           Viewing as{" "}
           <span className="w-80">
             <PersonAutocomplete setCustomerId={setFilterUser} autoInitialCustomer={true} />
           </span>
         </div>
       )}
-      {/* <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="relative w-full max-w-md">
-          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 16 16"
-              fill="currentColor"
-              className="h-5 w-5 text-gray-400"
-            >
-              <path
-                fillRule="evenodd"
-                d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </div>
-          <input
-            type="text"
-            className="w-full rounded-xl border border-gray-200 bg-white py-3 pl-11 pr-4 text-base placeholder:text-gray-500 focus:border-green-500 focus:outline-hidden focus:ring-1 focus:ring-green-500"
-            placeholder="Search Orders"
-          />
-        </div>
-      </div> */}
 
       {!loadingInitial ? (
         <div>
@@ -98,7 +75,7 @@ const OrdersList = ({ initialOrders, role }: { initialOrders: Transaction[]; rol
               {orders.map((order) => (
                 <div
                   key={order.transaction_id}
-                  className="border-t border-b border-gray-200 bg-white shadow-xs sm:rounded-lg sm:border"
+                  className="rounded-lg border border-t border-b border-gray-200 bg-white shadow-xs"
                 >
                   <h3 className="sr-only">
                     Order placed on{" "}
@@ -141,37 +118,22 @@ const OrdersList = ({ initialOrders, role }: { initialOrders: Transaction[]; rol
                       >
                         <div className="py-1">
                           <MenuItem>
-                            <a
+                            <Link
                               href={`/orders/${order.transaction_id}`}
                               className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
                             >
-                              View
-                            </a>
+                              View Order
+                            </Link>
                           </MenuItem>
-                          {/* <MenuItem>
-                          <a
-                            href="#"
-                            className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
-                          >
-                            Invoice
-                          </a>
-                        </MenuItem> */}
                         </div>
                       </MenuItems>
                     </Menu>
 
                     <div className="hidden lg:col-span-2 lg:flex lg:items-center lg:justify-end lg:space-x-4">
-                      <a href={`/orders/${order.transaction_id}`} className="btn-primary">
+                      <Link href={`/orders/${order.transaction_id}`} className="btn-primary">
                         <span>View Order</span>
                         <span className="sr-only">{order.transaction_id}</span>
-                      </a>
-                      {/* <a
-                      href="#"
-                      className="flex items-center justify-center rounded-md border border-gray-300 bg-white px-2.5 py-2 text-sm font-medium text-gray-700 shadow-xs hover:bg-gray-50 focus:outline-hidden focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                    >
-                      <span>View Invoice</span>
-                      <span className="sr-only">for order {order.transaction_id}</span>
-                    </a> */}
+                      </Link>
                     </div>
                   </div>
 

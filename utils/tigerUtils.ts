@@ -26,6 +26,21 @@ export const postTransactions = async (args?: any): Promise<TransactionResponse>
   return transformedResult as TransactionResponse
 }
 
+export const fetchTigerHTML = async (args?: any): Promise<any> => {
+  const url = process.env.TIGER_QUERY_API!
+  const params = new URLSearchParams({
+    security_key: process.env.TIGER_API_KEY!,
+    ...args,
+  })
+
+  const response = await fetch(url, {
+    method: "POST",
+    body: params,
+  })
+
+  return await response.text()
+}
+
 export const fetchTransactions = async (args?: any): Promise<Transaction[]> => {
   const url = process.env.TIGER_QUERY_API!
   const params = new URLSearchParams({

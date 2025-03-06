@@ -50,8 +50,8 @@ const DocumentTable = ({
     toast.success(`${doc.name} downloaded`)
   }
 
-  const handleDelete = async (id: string) => {
-    await deleteDocument(id)
+  const handleDelete = async (id: string, userId: string) => {
+    await deleteDocument(id, userId)
     revalidateTag("/documents")
   }
 
@@ -64,8 +64,16 @@ const DocumentTable = ({
     setLoadingInitial(false)
   }
 
+  const getDocumentType = (name: string) => {
+    const index = name.lastIndexOf(".")
+    if (index === -1) return "N/A"
+
+    return name.substring(index + 1).toUpperCase()
+  }
+
   useEffect(() => {
     const supabase = createClient()
+    setDocuments([...initialDocuments])
 
     const getSession = async () => {
       const { data } = await supabase.auth.getSession()
@@ -73,7 +81,7 @@ const DocumentTable = ({
     }
 
     getSession()
-  }, [])
+  }, [initialDocuments])
 
   return (
     <div className="mt-8 flow-root">
@@ -98,20 +106,23 @@ const DocumentTable = ({
               <div className="flex w-full items-center justify-between p-6 pb-4">
                 <div className="flex-1 truncate">
                   <div className="flex items-center space-x-3">
-                    <h3 className="truncate text-sm font-medium text-gray-900">
+                    <h3 className="truncate font-medium text-gray-900">
                       {document.name.split(".")[0]}
                     </h3>
                     <span className="inline-flex shrink-0 items-center rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset">
-                      {document.name.split(".")[1].toUpperCase()}
+                      {getDocumentType(document.name)}
                     </span>
                   </div>
-                  <p className="mt-1 truncate text-sm text-gray-500">
+                  <p className="my-2 text-sm">
+                    {document.profiles?.first_name} {document.profiles?.last_name}
+                    <br />
+                    {document.profiles?.email}
+                  </p>
+                  <p className="truncate text-sm text-gray-500">
                     Uploaded{" "}
                     {document.created_at
                       ? formatDate(document?.created_at, "MM/d/YY [at] h:mm A")
                       : "Unknown"}
-                    <br />
-                    {document.profiles?.email}
                   </p>
                 </div>
               </div>
@@ -127,7 +138,11 @@ const DocumentTable = ({
                     </button>
                   </div>
                   <div>
-                    <DeleteDocumentButton documentId={document.id} onClose={handleDelete} />
+                    <DeleteDocumentButton
+                      userId={document.user_id}
+                      documentId={document.id}
+                      onClose={handleDelete}
+                    />
                   </div>
                 </div>
               </div>
