@@ -6,19 +6,20 @@ import { toast } from "sonner"
 
 type Props = {
   documentId: string
-  onClose: (documentId: string) => Promise<void>
+  userId: string
+  onClose: (documentId: string, userId: string) => Promise<void>
 }
 
-const DeleteDocumentButton = ({ documentId, onClose }: Props) => {
+const DeleteDocumentButton = ({ documentId, userId, onClose }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
   const handleClose = async () => {
     setIsLoading(true)
     try {
-      await onClose(documentId)
+      await onClose(documentId, userId)
     } catch (error) {
-      toast.error("Failed to close conversation")
+      toast.error("Failed to delete document")
     } finally {
       setIsLoading(false)
       setIsModalOpen(false)

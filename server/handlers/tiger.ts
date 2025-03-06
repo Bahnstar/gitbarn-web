@@ -8,7 +8,7 @@ import {
   TransactionQueryParams,
   TransactionResponse,
 } from "@/types/tigerTransaction"
-import { fetchTransactions, postTransactions } from "@/utils/tigerUtils"
+import { fetchTigerHTML, fetchTransactions, postTransactions } from "@/utils/tigerUtils"
 import { deleteAllCarts, getCartWithTotal } from "./carts"
 import { getCurrentUser, getUserWithProfile } from "@/server/handlers/users"
 import { revalidatePath } from "next/cache"
@@ -34,6 +34,15 @@ export const manageTigerProduct = async (
 
   const response = await postTransactions(params)
   return response
+}
+
+export const getTigerReceipt = async (transactionId: string) => {
+  const params: TransactionQueryParams = {
+    report_type: "receipt",
+    transaction_id: transactionId,
+  }
+
+  return await fetchTigerHTML(params)
 }
 
 const getMonthBoundaryDates = () => {
@@ -112,7 +121,7 @@ export const getCompletedTransactions = cache(
       result_limit: resultLimit || 10,
       page_number: page,
       condition: "pendingsettlement,complete",
-      email: userData?.role === Role.ADMIN ? "" : userData?.email,
+      email: userData?.email,
     }
 
     return await fetchTransactions(params)

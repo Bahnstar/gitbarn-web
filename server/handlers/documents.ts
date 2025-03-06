@@ -33,12 +33,17 @@ export const updateDocument = async (
   return await supabase.from("Documents").update(document).eq("id", id).select().single()
 }
 
-export const deleteDocument = async (id: string): Promise<void> => {
+export const deleteDocument = async (id: string, userId?: string): Promise<void> => {
   const supabase = await createClient()
-  const { data: userData } = await getCurrentUser()
 
-  const { data, error } = await supabase.storage
-    .from("documents")
-    .remove([`${userData.user?.id}/${id}`])
+  if (!userId) {
+    const { data: userData } = await getCurrentUser()
+    userId = userData.user?.id || ""
+  }
+
+  console.log("Path", userId, "/", id)
+  const { data, error } = await supabase.storage.from("documents").remove([`${userId}/${id}`])
+  if (data?.length === 0) throw new Error("File not found")
+
   await supabase.from("Documents").delete().eq("id", id)
 }

@@ -2,6 +2,7 @@ import { getTransaction } from "@/server/handlers/tiger"
 import { formatDate } from "@/utils/utils"
 import Link from "next/link"
 import { redirect } from "next/navigation"
+import { ReceiptText } from "lucide-react"
 import { PaymentIcon } from "react-svg-credit-card-payment-icons"
 
 type Params = Promise<{ orderId: string }>
@@ -26,24 +27,20 @@ const OrderDetailsPage = async ({ params }: { params: Params }) => {
           <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
             Order #{transaction.transaction_id}
           </h1>
-          {/* <a
-              href="#"
-              className="hidden text-sm font-medium text-green-600 hover:text-green-500 sm:block"
-            >
-              View invoice
-              <span aria-hidden="true"> &rarr;</span>
-            </a> */}
         </div>
-        <p className="text-sm text-gray-600">
-          Order placed{" "}
-          <time dateTime={transaction.actions[0].date} className="font-medium text-gray-900">
-            {formatDate(transaction.actions[0].date, "MMMM DD, YYYY")}
-          </time>
-        </p>
-        <a href="#" className="btn-primary sm:hidden">
-          View invoice
-          <span aria-hidden="true"> &rarr;</span>
-        </a>
+
+        <div className="flex items-center justify-between gap-4">
+          <p className="text-sm text-gray-600">
+            Order placed{" "}
+            <time dateTime={transaction.actions[0].date} className="font-medium text-gray-900">
+              {formatDate(transaction.actions[0].date, "MMMM DD, YYYY")}
+            </time>
+          </p>
+          <Link href={`/orders/${orderId}/receipt`} target="_blank" className="btn-primary">
+            Print Receipt
+            <ReceiptText className="h-4 w-4" />
+          </Link>
+        </div>
       </div>
 
       {/* Products */}
@@ -54,7 +51,7 @@ const OrderDetailsPage = async ({ params }: { params: Params }) => {
           {transaction.products.map((product) => (
             <div
               key={product.supabase?.id || product.tiger.sku}
-              className="border-t border-b border-gray-200 bg-white shadow-xs sm:rounded-lg sm:border"
+              className="rounded-lg border border-t border-b border-gray-200 bg-white shadow-xs"
             >
               <div className="px-4 py-6 sm:px-6 lg:grid lg:grid-cols-12 lg:gap-x-8 lg:p-8">
                 <div className="sm:flex lg:col-span-7">

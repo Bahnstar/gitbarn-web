@@ -18,7 +18,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   return (
     <html lang="en" className={GeistSans.className}>
       <body>
-        <main className="min-w-screen flex min-h-screen flex-col bg-gray-100">
+        <main className="flex min-h-screen flex-col bg-gray-100">
           <Toaster />
           {children}
           <Footer />

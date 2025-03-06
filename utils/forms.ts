@@ -98,7 +98,7 @@ const processProduct = async (prevState: any, formData: FormData): Promise<FormR
   }
 
   revalidatePath("/products")
-  return { message: "Product successfully created", status: "success" }
+  return { message: "Changes applied successfully", status: "success" }
 }
 
 const processProfile = async (prevState: any, formData: FormData): Promise<FormResult> => {

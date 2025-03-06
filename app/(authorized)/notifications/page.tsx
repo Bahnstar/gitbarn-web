@@ -70,14 +70,14 @@ export default async function NotificationsPage() {
           </div>
           <ul
             role="list"
-            className="divide-y divide-gray-100 overflow-hidden bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl"
+            className="divide-y divide-gray-100 overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5"
           >
             {notifications
               .filter((notification) => notification.status !== NotificationStatus.DISMISSED)
               .map((notification) => (
                 <li
                   key={notification.id}
-                  className="flex items-center justify-between gap-x-6 px-2 py-5 md:px-6"
+                  className="flex flex-col items-center justify-between gap-4 gap-x-6 px-2 py-5 md:flex-row md:px-6"
                 >
                   <div className="min-w-0">
                     <div className="flex items-start gap-x-3">
