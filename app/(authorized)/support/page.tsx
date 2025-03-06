@@ -66,7 +66,7 @@ const SupportPage = async () => {
             className="flex flex-col items-center justify-between gap-4 gap-x-6 px-2 py-5 md:flex-row md:px-6"
           >
             <div className="min-w-0">
-              <div className="flex items-start gap-x-3">
+              <div className="flex items-start justify-center gap-x-3 md:justify-start">
                 <p className="text-sm/6 font-semibold text-gray-900">{chat.title}</p>
                 <p
                   className={clsx(
