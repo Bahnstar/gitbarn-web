@@ -10,23 +10,23 @@
 - [X] Add a page to manage/send mass emails for admins
 - [X] User management page
 - [X] Proper signup page
-- [ ] Notifications should be created everywhere that an email is sent
+- [X] Notifications should be created everywhere that an email is sent
 - [X] Delete products
-- [ ] Cart/Notifications in sidebar should have an indicator if there are things inside
+- [X] Cart/Notifications in sidebar should have an indicator if there are things inside
 - [ ] Integrate pulling customer data from Tiger on sign-up
 - [ ] Add "drops per month" analytic to the dashboard (Low priority)
 - [X] Think about removing all tables
-- [x] Allow admins to upload documents for other users
-- [x] Send a notification to admins on order submission
-- [x] Allow support to open a new chat with a specific user
-- [x] Order details page
-- [x] Order page should implement proper filtering
-- [x] Move products to use Tiger instead of supabase
-- [x] Allow support users to claim a chat
-- [x] Chats should show avatar URL and name
-- [x] Chat list should show who's claimed it (To both client/user)
-- [x] Support/Admins should be able to see order details for all orders
-- [x] Only Admins can manage products
+- [X] Allow admins to upload documents for other users
+- [X] Send a notification to admins on order submission
+- [X] Allow support to open a new chat with a specific user
+- [X] Order details page
+- [X] Order page should implement proper filtering
+- [X] Move products to use Tiger instead of supabase
+- [X] Allow support users to claim a chat
+- [X] Chats should show avatar URL and name
+- [X] Chat list should show who's claimed it (To both client/user)
+- [X] Support/Admins should be able to see order details for all orders
+- [X] Only Admins can manage products
 
 # Bugs
 

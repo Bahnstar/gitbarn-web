@@ -6,7 +6,12 @@ import { NextRequest } from "next/server"
 export async function GET(request: NextRequest) {
   // Check if the request is authorized
   const authHeader = request.headers.get("authorization")
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  console.log(process.env.ENVIRONMENT)
+  if (
+    authHeader !== `Bearer ${process.env.CRON_SECRET}` &&
+    process.env.ENVIRONMENT !== "development"
+  ) {
+    console.error("MonthlyStats failed to run")
     return new Response("Unauthorized", {
       status: 401,
     })

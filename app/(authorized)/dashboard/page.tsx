@@ -11,7 +11,7 @@ export default async function DashboardPage() {
       getUserWithProfile(),
       getCompletedTransactions(0, undefined, 5),
       getRecentConversations(5),
-      getMonthlyStatsByYearAndType(new Date().getFullYear() - 1, "orders"),
+      getMonthlyStatsByYearAndType(new Date().getFullYear(), "orders"),
     ])
 
   return (
