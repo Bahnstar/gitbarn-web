@@ -17,7 +17,8 @@ export async function GET(request: NextRequest) {
     })
   }
 
-  const stats: MonthlyStat[] = await getMonthOrderCounts()
+  const currentYear = new Date().getFullYear()
+  const stats: MonthlyStat[] = await getMonthOrderCounts(currentYear)
   await Promise.all(
     stats.map(async (stat) => {
       await updateMonthlyStats(stat)

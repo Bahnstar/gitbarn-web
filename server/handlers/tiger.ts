@@ -45,15 +45,15 @@ export const getTigerReceipt = async (transactionId: string) => {
   return await fetchTigerHTML(params)
 }
 
-const getMonthBoundaryDates = () => {
+const getMonthBoundaryDates = (year?: number) => {
   const currentDate = new Date()
-  const currentYear = currentDate.getFullYear()
-  const currentMonth = currentDate.getMonth()
+  const targetYear = year || currentDate.getFullYear()
+  const currentMonth = year === currentDate.getFullYear() ? currentDate.getMonth() : 11
   const dates = []
 
   for (let month = 0; month <= currentMonth; month++) {
-    const firstDay = new Date(currentYear, month, 1)
-    const lastDay = new Date(currentYear, month + 1, 0)
+    const firstDay = new Date(targetYear, month, 1)
+    const lastDay = new Date(targetYear, month + 1, 0)
 
     const firstDayStr = {
       year: firstDay.getFullYear(),
@@ -76,7 +76,7 @@ const getMonthBoundaryDates = () => {
   return dates
 }
 
-export const getMonthOrderCounts = async () => {
+export const getMonthOrderCounts = async (year?: number) => {
   const { data: userData } = await getCurrentUser()
   const { data: userProfile } = await getProfile(userData.user?.id!)
 
@@ -84,7 +84,7 @@ export const getMonthOrderCounts = async () => {
     return []
   }
 
-  const monthBoundaries = getMonthBoundaryDates()
+  const monthBoundaries = getMonthBoundaryDates(year)
 
   const params = new URLSearchParams({
     security_key: process.env.TIGER_API_KEY!,
@@ -103,7 +103,7 @@ export const getMonthOrderCounts = async () => {
 
       res.push({
         month: i,
-        year: new Date().getFullYear(),
+        year: year || new Date().getFullYear(),
         type: "orders",
         value: data.length,
       })

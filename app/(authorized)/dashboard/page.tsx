@@ -2,7 +2,7 @@ import { getRecentConversations } from "@/server/handlers/conversations"
 import { getMonthOrderCounts, getCompletedTransactions } from "@/server/handlers/tiger"
 import { getUserWithProfile } from "@/server/handlers/users"
 import Chart from "./Chart"
-import { getMonthlyStatsByYearAndType } from "@/server/handlers/monthlyStats"
+import { getLast12MonthsStatsByType } from "@/server/handlers/monthlyStats"
 import { Role } from "@/types/profile"
 
 export default async function DashboardPage() {
@@ -11,7 +11,7 @@ export default async function DashboardPage() {
       getUserWithProfile(),
       getCompletedTransactions(0, undefined, 5),
       getRecentConversations(5),
-      getMonthlyStatsByYearAndType(new Date().getFullYear(), "orders"),
+      getLast12MonthsStatsByType("orders"),
     ])
 
   return (
@@ -31,7 +31,7 @@ export default async function DashboardPage() {
                 <p className="text-sm text-gray-500">View the number of orders placed per month.</p>
               </div>
               <div className="h-[300px] w-full">
-                <Chart orderStats={orderStats!} />
+                <Chart orderStats={orderStats.reverse()} />
               </div>
             </div>
           </div>
